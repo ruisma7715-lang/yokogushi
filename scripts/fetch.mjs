@@ -370,6 +370,25 @@ async function main() {
     ),
   };
 
+  // --- attribution.json : 「なぜ増えた・減ったか」を分解するための素材。
+  //     日次リターンをそのまま渡し、配分を掛ける計算は画面側で行う
+  //     （保有内容はブラウザの外に出さないため、サーバー側では計算できない）。
+  //
+  //     現地通貨の値動きと為替を分けて渡すのが肝。
+  //     日本人がS&P500を持つと「米国株の値動き」と「円高・円安」の2つが効くが、
+  //     これを分けないと「なぜ減ったか」が説明できない。
+  const pctSeries = (id) =>
+    (returnsById[id] ?? []).map((v) => Number((v * 100).toFixed(4)));
+
+  const attribution = {
+    asOf,
+    days: days.slice(1), // リターンは前日比なので1日短い
+    local: Object.fromEntries(ids.map((id) => [id, pctSeries(id)])),
+    fx: pctSeries("usdjpy"),
+    // 現地通貨がドルのもの。円換算では、ここに為替の影響が上乗せされる
+    usdBased: ["sp500", "gold", "btc"].filter((id) => ids.includes(id)),
+  };
+
   // --- highlights.json : 今日なにが普通と違ったかを文章にしたもの
   const highlights = buildHighlights({
     live,
@@ -386,6 +405,7 @@ async function main() {
   await writeFile(join(OUT_DIR, "correlation.json"), JSON.stringify(correlations, null, 2));
   await writeFile(join(OUT_DIR, "history.json"), JSON.stringify(history, null, 2));
   await writeFile(join(OUT_DIR, "highlights.json"), JSON.stringify(highlights, null, 2));
+  await writeFile(join(OUT_DIR, "attribution.json"), JSON.stringify(attribution, null, 2));
 
   console.log(`\n  今日のハイライト（自動生成）:`);
   if (highlights.regime) console.log(`    [${highlights.regime.label}] ${highlights.regime.detail}`);

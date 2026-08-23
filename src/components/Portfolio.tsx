@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { AssetSnapshot, CorrelationWindow, History, Shift } from "../types";
+import { setHoldings, useHoldings } from "../portfolio/useHoldings";
 import {
   ACCOUNTS,
   ACCOUNT_BY_ID,
@@ -29,8 +30,6 @@ import {
 const toMan = (v: number) => (v ? String(Math.round(v / 100) / 100) : "");
 const fromMan = (s: string) => Math.round((Number(s.replace(/[^0-9.]/g, "")) || 0) * 10000);
 
-const STORE_KEY = "yokogushi-holdings-v1";
-
 /** 分散の効き具合を、数字ではなく言葉で伝える */
 function plainVerdict(benefit: number, topShare: number, topName: string) {
   if (topShare >= 0.5)
@@ -55,8 +54,8 @@ export default function Portfolio({
   history: History;
   shifts: Shift[];
 }) {
-  const [holdings, setHoldings] = useState<Holding[]>([]);
-  const [loaded, setLoaded] = useState(false);
+  // 保有データは「値動きの通訳」とも共有するため、共通ストアから読む
+  const holdings = useHoldings();
   const [paste, setPaste] = useState("");
   const [pasteAccount, setPasteAccount] = useState<AccountId>("tokutei");
   const [pasteMsg, setPasteMsg] = useState<string | null>(null);
@@ -70,24 +69,7 @@ export default function Portfolio({
     return out;
   }, [history]);
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (raw) setHoldings(JSON.parse(raw));
-    } catch {
-      /* 保存が使えない環境でも入力自体はできる */
-    }
-    setLoaded(true);
-  }, []);
-
-  const save = (next: Holding[]) => {
-    setHoldings(next);
-    try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(next));
-    } catch {
-      /* 保存できなくても表示は動く */
-    }
-  };
+  const save = (next: Holding[]) => setHoldings(next);
 
   // 資産クラスを変えたとき、その商品では選べない口座や入力方法が残らないようにする
   const patch = (key: string, field: Partial<Holding>) =>
@@ -218,8 +200,6 @@ export default function Portfolio({
 
   const assetName = (proxy: string) =>
     CLASSES.find((c) => c.proxy === proxy)?.name ?? assets.find((a) => a.id === proxy)?.name ?? proxy;
-
-  if (!loaded) return null;
 
   return (
     <section className="pf-section">

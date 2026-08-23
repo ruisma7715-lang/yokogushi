@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Correlation, Highlights as HighlightsData, History, Latest } from "./types";
+import type { AttributionData } from "./portfolio/attribution";
+import { hydrateHoldings } from "./portfolio/useHoldings";
 import AssetCard from "./components/AssetCard";
+import Attribution from "./components/Attribution";
 import StartHere from "./components/StartHere";
 import Glossary from "./components/Glossary";
 import Highlights from "./components/Highlights";
@@ -23,23 +26,27 @@ export default function App() {
   const [correlation, setCorrelation] = useState<Correlation | null>(null);
   const [history, setHistory] = useState<History | null>(null);
   const [highlights, setHighlights] = useState<HighlightsData | null>(null);
+  const [attribution, setAttribution] = useState<AttributionData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
+    hydrateHoldings();
 
     Promise.all([
       loadJSON<Latest>("latest.json"),
       loadJSON<Correlation>("correlation.json"),
       loadJSON<History>("history.json"),
       loadJSON<HighlightsData>("highlights.json"),
+      loadJSON<AttributionData>("attribution.json"),
     ])
-      .then(([l, c, h, hl]) => {
+      .then(([l, c, h, hl, at]) => {
         if (!alive) return;
         setLatest(l);
         setCorrelation(c);
         setHistory(h);
         setHighlights(hl);
+        setAttribution(at);
       })
       .catch((err: Error) => alive && setError(err.message));
 
@@ -60,7 +67,7 @@ export default function App() {
     );
   }
 
-  if (!latest || !correlation || !history || !highlights) {
+  if (!latest || !correlation || !history || !highlights || !attribution) {
     return (
       <div className="app">
         <p className="state">読み込み中…</p>
@@ -86,6 +93,8 @@ export default function App() {
             <AssetCard key={asset.id} asset={asset} />
           ))}
         </div>
+
+        <Attribution latest={latest} history={history} data={attribution} />
 
         <Highlights data={highlights} assets={latest.assets} />
 
