@@ -35,7 +35,7 @@ export default function TodayNote({ base }: { base: string }) {
   return (
     <section className="note-section">
       <div className="note-head">
-        <h2 className="section-title">今日の3行</h2>
+        <h2 className="section-title">編集後記</h2>
         <span className="note-date">{today.date}</span>
       </div>
 

@@ -32,3 +32,12 @@ export type History = {
   days: string[];
   series: Record<string, number[]>;
 };
+
+export type Shift = { a: string; b: string; now: number; base: number; diff: number };
+
+export type Highlights = {
+  asOf: string;
+  regime: { label: string; detail: string } | null;
+  items: { kind: "move" | "unusual" | "shift"; text: string }[];
+  shifts: Shift[];
+};

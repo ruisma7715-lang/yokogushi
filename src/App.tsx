@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import type { Correlation, History, Latest } from "./types";
+import type { Correlation, Highlights as HighlightsData, History, Latest } from "./types";
 import AssetCard from "./components/AssetCard";
+import Highlights from "./components/Highlights";
+import Diversification from "./components/Diversification";
 import CorrelationMatrix from "./components/CorrelationMatrix";
 import OverlayChart from "./components/OverlayChart";
 import TodayNote from "./components/TodayNote";
@@ -18,6 +20,7 @@ export default function App() {
   const [latest, setLatest] = useState<Latest | null>(null);
   const [correlation, setCorrelation] = useState<Correlation | null>(null);
   const [history, setHistory] = useState<History | null>(null);
+  const [highlights, setHighlights] = useState<HighlightsData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -27,12 +30,14 @@ export default function App() {
       loadJSON<Latest>("latest.json"),
       loadJSON<Correlation>("correlation.json"),
       loadJSON<History>("history.json"),
+      loadJSON<HighlightsData>("highlights.json"),
     ])
-      .then(([l, c, h]) => {
+      .then(([l, c, h, hl]) => {
         if (!alive) return;
         setLatest(l);
         setCorrelation(c);
         setHistory(h);
+        setHighlights(hl);
       })
       .catch((err: Error) => alive && setError(err.message));
 
@@ -53,7 +58,7 @@ export default function App() {
     );
   }
 
-  if (!latest || !correlation || !history) {
+  if (!latest || !correlation || !history || !highlights) {
     return (
       <div className="app">
         <p className="state">読み込み中…</p>
@@ -78,11 +83,15 @@ export default function App() {
           ))}
         </div>
 
-        <TodayNote base={BASE} />
+        <Highlights data={highlights} assets={latest.assets} />
+
+        <Diversification assets={latest.assets} matrix={correlation.windows.d90} />
 
         <CorrelationMatrix assets={latest.assets} correlation={correlation} />
 
         <OverlayChart assets={latest.assets} history={history} />
+
+        <TodayNote base={BASE} />
       </main>
 
       <footer className="footnote">

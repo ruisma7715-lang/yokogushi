@@ -152,6 +152,116 @@ function correlationMatrix(ids, returnsById, window) {
   return matrix;
 }
 
+// ---------------------------------------------------------------- 分析
+// 数字を並べるだけでは読者は何も判断できないので、
+// 「今日なにが普通と違ったか」をここで文章にしてしまう。
+
+const mean = (a) => a.reduce((s, v) => s + v, 0) / a.length;
+
+const stdev = (a) => {
+  const m = mean(a);
+  return Math.sqrt(a.reduce((s, v) => s + (v - m) ** 2, 0) / a.length);
+};
+
+const signed = (v, digits = 2) => (v >= 0 ? "+" : "−") + Math.abs(v).toFixed(digits);
+
+// 相関の強さを言葉にする。マトリクスの色分けと同じ境界を使う。
+const relation = (r) =>
+  r >= 0.6 ? "強く一緒に動く" : r >= 0.25 ? "ゆるく一緒に動く" : r > -0.25 ? "ほぼ無関係" : r > -0.6 ? "ゆるく逆に動く" : "強く逆に動く";
+
+// 株と金がどちらに動いたかで、資金がリスクを取りに行ったか逃げたかが読める。
+function judgeRegime(dayChange) {
+  const eq = ["nikkei", "sp500"].map((id) => dayChange[id]).filter((v) => v !== undefined);
+  const gold = dayChange.gold;
+  if (eq.length === 0 || gold === undefined) return null;
+
+  const e = mean(eq);
+  const g = gold;
+  const T = 0.3; // これ未満は「動いていない」とみなす（%）
+
+  if (e > T && g < -T)
+    return { label: "リスクオン", detail: "株が買われ、金が売られました。資金がリスクを取りにいった一日です。" };
+  if (e < -T && g > T)
+    return { label: "リスクオフ", detail: "株が売られ、金が買われました。資金が安全な置き場所に逃げています。" };
+  if (e < -T && g < -T)
+    return { label: "全面安", detail: "株も金も下がりました。逃げ場を探すというより、現金化が進んだ形です。" };
+  if (e > T && g > T)
+    return { label: "全面高", detail: "株も金も上がりました。お金の量そのものが増えているときに出やすい形です。" };
+  return { label: "方向感なし", detail: "株も金も大きくは動いていません。様子見の一日です。" };
+}
+
+function buildHighlights({ live, ids, returnsById, corr30, corr365, asOf }) {
+  const nameOf = (id) => live.find((a) => a.id === id)?.name ?? id;
+  const items = [];
+
+  // 直近1日の変化率（%）
+  const dayChange = {};
+  for (const id of ids) {
+    const r = returnsById[id];
+    dayChange[id] = r[r.length - 1] * 100;
+  }
+
+  // 1) いちばん大きく動いたもの
+  const moves = ids
+    .map((id) => ({ id, chg: dayChange[id] }))
+    .sort((x, y) => Math.abs(y.chg) - Math.abs(x.chg));
+
+  if (moves.length) {
+    items.push({
+      kind: "move",
+      text: `最も大きく動いたのは${nameOf(moves[0].id)}で、前日比 ${signed(moves[0].chg)}% でした。`,
+    });
+  }
+
+  // 2) 普段と比べて異常な動きだったか（直近90日のばらつきの何倍か）
+  for (const m of moves) {
+    const sd = stdev(returnsById[m.id].slice(-90)) * 100;
+    if (!sd) continue;
+    const z = Math.abs(m.chg) / sd;
+    if (z >= 2) {
+      items.push({
+        kind: "unusual",
+        text: `${nameOf(m.id)}のこの動きは、直近90日の平均的な変動幅の ${z.toFixed(1)} 倍です。通常の範囲を超えています。`,
+      });
+      break; // いちばん目立つ1件だけで十分
+    }
+  }
+
+  // 3) 資産どうしの関係が変わっていないか。
+  //    1年の姿を「平常時」とみなし、直近30日とのズレを探す。ここがこのサイトの核心。
+  const shifts = [];
+  for (let i = 0; i < ids.length; i++) {
+    for (let j = i + 1; j < ids.length; j++) {
+      const a = ids[i];
+      const b = ids[j];
+      const now = corr30[a]?.[b];
+      const base = corr365[a]?.[b];
+      if (typeof now !== "number" || typeof base !== "number") continue;
+      shifts.push({ a, b, now, base, diff: Number((now - base).toFixed(3)) });
+    }
+  }
+  shifts.sort((x, y) => Math.abs(y.diff) - Math.abs(x.diff));
+
+  const big = shifts[0];
+  if (big && Math.abs(big.diff) >= 0.3) {
+    const flipped = relation(big.now) !== relation(big.base);
+    items.push({
+      kind: "shift",
+      text:
+        `${nameOf(big.a)}と${nameOf(big.b)}の関係が変わっています。` +
+        `1年では ${signed(big.base)}（${relation(big.base)}）でしたが、直近30日は ${signed(big.now)}（${relation(big.now)}）。` +
+        (flipped ? "前提が入れ替わりました。" : "関係が強まっています。"),
+    });
+  }
+
+  return {
+    asOf,
+    regime: judgeRegime(dayChange),
+    items,
+    shifts: shifts.slice(0, 6),
+  };
+}
+
 // ---------------------------------------------------------------- 本体
 
 async function main() {
@@ -237,11 +347,26 @@ async function main() {
     ),
   };
 
+  // --- highlights.json : 今日なにが普通と違ったかを文章にしたもの
+  const highlights = buildHighlights({
+    live,
+    ids,
+    returnsById,
+    corr30: correlations.windows.d30,
+    corr365: correlations.windows.d365,
+    asOf,
+  });
+
   await mkdir(OUT_DIR, { recursive: true });
   await writeFile(join(OUT_DIR, "latest.json"),
     JSON.stringify({ asOf, assets: snapshot, skipped: skipped.map((s) => s.id) }, null, 2));
   await writeFile(join(OUT_DIR, "correlation.json"), JSON.stringify(correlations, null, 2));
   await writeFile(join(OUT_DIR, "history.json"), JSON.stringify(history, null, 2));
+  await writeFile(join(OUT_DIR, "highlights.json"), JSON.stringify(highlights, null, 2));
+
+  console.log(`\n  今日のハイライト（自動生成）:`);
+  if (highlights.regime) console.log(`    [${highlights.regime.label}] ${highlights.regime.detail}`);
+  for (const it of highlights.items) console.log(`    ・${it.text}`);
 
   console.log(`\n  書き出し完了: public/data/ (${asOf} 時点)`);
   console.log(`  稼働中: ${live.map((a) => a.name).join(" / ")}`);
