@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Correlation, Highlights as HighlightsData, History, Latest } from "./types";
 import AssetCard from "./components/AssetCard";
 import Highlights from "./components/Highlights";
-import Diversification from "./components/Diversification";
+import Portfolio from "./components/Portfolio";
 import CorrelationMatrix from "./components/CorrelationMatrix";
 import OverlayChart from "./components/OverlayChart";
 import TodayNote from "./components/TodayNote";
@@ -85,7 +85,11 @@ export default function App() {
 
         <Highlights data={highlights} assets={latest.assets} />
 
-        <Diversification assets={latest.assets} matrix={correlation.windows.d90} />
+        <Portfolio
+          assets={latest.assets}
+          matrix={correlation.windows.d90}
+          shifts={highlights.shifts}
+        />
 
         <CorrelationMatrix assets={latest.assets} correlation={correlation} />
 

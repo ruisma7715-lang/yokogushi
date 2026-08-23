@@ -12,6 +12,8 @@ export type AssetSnapshot = {
   changeDay: number | null;
   changeWeek: number | null;
   changeMonth: number | null;
+  /** 年率換算の変動率(%)。ポートフォリオのリスク試算に使う */
+  vol: number;
 };
 
 export type Latest = {

@@ -317,10 +317,15 @@ async function main() {
       const i = p.length - 1 - back;
       return i >= 0 && p[i] !== 0 ? Number(((last / p[i] - 1) * 100).toFixed(2)) : null;
     };
+    // 年率換算の変動率。ポートフォリオのリスク試算に使う。
+    // 日次のばらつき × √252（年間の営業日数）が慣例。
+    const vol = stdev(returnsById[a.id].slice(-90)) * Math.sqrt(252) * 100;
+
     return {
       id: a.id, name: a.name, cls: a.cls, unit: a.unit,
       value: Number(last.toFixed(a.unit === "%" ? 3 : 2)),
       changeDay: pct(1), changeWeek: pct(5), changeMonth: pct(21),
+      vol: Number(vol.toFixed(2)),
     };
   });
 

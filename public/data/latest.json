@@ -9,7 +9,8 @@
       "value": 66216.79,
       "changeDay": 1.36,
       "changeWeek": -3.06,
-      "changeMonth": -0.02
+      "changeMonth": -0.02,
+      "vol": 34.67
     },
     {
       "id": "sp500",
@@ -19,7 +20,8 @@
       "value": 7641.16,
       "changeDay": -0.87,
       "changeWeek": -2.02,
-      "changeMonth": 1.76
+      "changeMonth": 1.76,
+      "vol": 13.47
     },
     {
       "id": "usdjpy",
@@ -29,7 +31,8 @@
       "value": 158.76,
       "changeDay": -0.21,
       "changeWeek": -0.36,
-      "changeMonth": -2.45
+      "changeMonth": -2.45,
+      "vol": 7.24
     },
     {
       "id": "gold",
@@ -39,7 +42,8 @@
       "value": 4498.24,
       "changeDay": 3.73,
       "changeWeek": 2.15,
-      "changeMonth": 12.42
+      "changeMonth": 12.42,
+      "vol": 27.15
     },
     {
       "id": "btc",
@@ -49,7 +53,8 @@
       "value": 69418.44,
       "changeDay": 7.35,
       "changeWeek": 9.48,
-      "changeMonth": 6.49
+      "changeMonth": 6.49,
+      "vol": 36.81
     },
     {
       "id": "us10y",
@@ -59,7 +64,8 @@
       "value": 4.69,
       "changeDay": 0.86,
       "changeWeek": 1.3,
-      "changeMonth": 1.3
+      "changeMonth": 1.3,
+      "vol": 14.9
     }
   ],
   "skipped": []

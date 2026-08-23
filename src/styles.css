@@ -733,6 +733,289 @@ td.cell.self,
   border-top: 1px solid var(--rule);
 }
 
+/* ---------------------------------------------------------------- ポートフォリオ */
+
+.pf-section {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+}
+
+.pf-privacy {
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border-radius: 4px;
+  padding: 0.625rem 0.875rem;
+  margin: 0.875rem 0 1rem;
+}
+
+.pf-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 0.5rem;
+}
+
+.pf-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+}
+
+.pf-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex: none;
+}
+
+.pf-name {
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.pf-field input {
+  flex: 1;
+  min-width: 0;
+  appearance: none;
+  border: none;
+  border-bottom: 1px solid var(--rule-strong);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--ff-mono);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding: 0.125rem 0.25rem;
+}
+
+.pf-field input:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.pf-unit {
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+.pf-empty {
+  font-size: 0.8125rem;
+  color: var(--ink-3);
+  margin-top: 1rem;
+}
+
+.pf-total {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+
+.pf-total strong {
+  font-family: var(--ff-mono);
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.pf-bar {
+  display: flex;
+  height: 2.25rem;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.625rem 0 0.875rem;
+  gap: 2px;
+  background: var(--surface-2);
+}
+
+.pf-seg {
+  height: 100%;
+}
+
+.pf-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.pf-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--rule);
+  margin: 0;
+}
+
+.pf-lname {
+  flex: 1;
+}
+
+.pf-pct,
+.pf-amt {
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pf-pct {
+  width: 3.5rem;
+  text-align: right;
+  font-weight: 600;
+}
+
+.pf-amt {
+  width: 6rem;
+  text-align: right;
+  color: var(--ink-3);
+  font-size: 0.75rem;
+}
+
+.pf-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.pf-metric {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.875rem 1rem;
+}
+
+.pf-metric dt {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  margin: 0 0 0.125rem;
+}
+
+.pf-metric dd {
+  margin: 0;
+  font-family: var(--ff-mono);
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  color: var(--accent);
+}
+
+.pf-metric p {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+.pf-flag {
+  margin-top: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--up);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.8;
+}
+
+.pf-now {
+  margin-top: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.875rem 1.125rem;
+}
+
+.pf-now h3,
+.pf-sim h3 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.pf-now ul {
+  margin: 0;
+  padding-left: 1.125rem;
+  font-size: 0.8125rem;
+  line-height: 1.85;
+}
+
+.pf-sim {
+  margin-top: 1.25rem;
+}
+
+.pf-sim-lead {
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  line-height: 1.8;
+  margin: 0 0 0.625rem;
+}
+
+.pf-moves {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pf-moves li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.pf-move-path {
+  font-weight: 600;
+}
+
+.pf-move-num {
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  color: var(--ink-2);
+}
+
+.pf-move-num strong {
+  color: var(--ink);
+  font-size: 0.875rem;
+}
+
+.pf-move-num .down {
+  color: var(--down);
+}
+.pf-move-num .up {
+  color: var(--up);
+}
+
+.pf-caveat {
+  margin-top: 1rem;
+  font-size: 0.6875rem;
+  line-height: 1.8;
+  color: var(--ink-3);
+}
+
 /* ---------------------------------------------------------------- 分散スコア */
 
 .div-section {
