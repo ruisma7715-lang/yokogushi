@@ -2,19 +2,34 @@ import { useEffect, useMemo, useState } from "react";
 import type { AssetSnapshot, CorrelationWindow, History, Shift } from "../types";
 import {
   ACCOUNTS,
+  ACCOUNT_BY_ID,
   CLASSES,
   CLASS_BY_ID,
-  NISA_LIFETIME,
+  TAX_LABEL,
   maxDrawdown,
   newHolding,
+  parseHoldingsText,
   portfolioVol,
+  taxOf,
   yen,
   type AccountId,
   type ClassId,
   type Holding,
+  type TaxKind,
 } from "../portfolio/model";
 
 const STORE_KEY = "yokogushi-holdings-v1";
+
+/** 分散の効き具合を、数字ではなく言葉で伝える */
+function plainVerdict(benefit: number, topShare: number, topName: string) {
+  if (topShare >= 0.5)
+    return `${topName}だけで全体の${Math.round(topShare * 100)}%を占めています。この1つが下がると、資産全体がほぼそのまま同じだけ下がります。`;
+  if (benefit >= 25)
+    return "値動きの理由がうまくバラけています。どれかが下がっても、他がある程度支えてくれる形です。";
+  if (benefit >= 12)
+    return "そこそこバラけています。ただ、似た動きをするものも混ざっています。";
+  return "銘柄の数は分かれていても、値動きはほとんど揃っています。分けて持っている効果は小さい状態です。";
+}
 
 export default function Portfolio({
   assets,
@@ -29,6 +44,9 @@ export default function Portfolio({
 }) {
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [paste, setPaste] = useState("");
+  const [pasteAccount, setPasteAccount] = useState<AccountId>("tokutei");
+  const [pasteMsg, setPasteMsg] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -49,10 +67,29 @@ export default function Portfolio({
     }
   };
 
+  // 資産クラスを変えたとき、その商品では選べない口座が残らないようにする
   const patch = (key: string, field: Partial<Holding>) =>
-    save(holdings.map((h) => (h.key === key ? { ...h, ...field } : h)));
+    save(
+      holdings.map((h) => {
+        if (h.key !== key) return h;
+        const next = { ...h, ...field };
+        const allowed = CLASS_BY_ID[next.klass].accounts;
+        if (!allowed.includes(next.account)) next.account = allowed[0];
+        return next;
+      })
+    );
 
-  // 各クラスの変動率。cash は動かないので 0、other は試算対象外。
+  const runImport = () => {
+    const rows = parseHoldingsText(paste, pasteAccount);
+    if (rows.length === 0) {
+      setPasteMsg("読み取れませんでした。銘柄名と評価額が並んだ表を貼ってください。");
+      return;
+    }
+    save([...holdings, ...rows]);
+    setPaste("");
+    setPasteMsg(`${rows.length}件を取り込みました。資産クラスは自動で推測しています。下の一覧で確認してください。`);
+  };
+
   const vols = useMemo(() => {
     const v: Record<string, number> = { cash: 0 };
     for (const a of assets) v[a.id] = a.vol;
@@ -64,18 +101,19 @@ export default function Portfolio({
   const analysis = useMemo(() => {
     if (total <= 0) return null;
 
-    // クラス別に集計
     const byClass: Record<string, number> = {};
-    for (const h of holdings) byClass[h.klass] = (byClass[h.klass] || 0) + (h.amount || 0);
-
-    // 口座別に集計
     const byAccount: Record<string, number> = {};
-    for (const h of holdings) byAccount[h.account] = (byAccount[h.account] || 0) + (h.amount || 0);
+    const byTax: Record<TaxKind, number> = { separate: 0, aggregate: 0, depends: 0, none: 0 };
 
-    // 実質ドル建ての比率（円高で目減りする部分）
+    for (const h of holdings) {
+      const amt = h.amount || 0;
+      byClass[h.klass] = (byClass[h.klass] || 0) + amt;
+      byAccount[h.account] = (byAccount[h.account] || 0) + amt;
+      byTax[taxOf(h.klass, h.account)] += amt;
+    }
+
     const usdAmount = CLASSES.filter((c) => c.usd).reduce((s, c) => s + (byClass[c.id] || 0), 0);
 
-    // 試算対象（proxyを持つクラス）だけで重みを作り直す
     const excluded = byClass.other || 0;
     const base = total - excluded;
 
@@ -92,7 +130,6 @@ export default function Portfolio({
     const benefit = naive > 0 ? (1 - sigma / naive) * 100 : 0;
     const dd = base > 0 ? maxDrawdown(weights, history) : null;
 
-    // 1割を別クラスへ動かすと変動率がどうなるか。総当たりで試算する。
     const movable = CLASSES.filter((c) => c.proxy);
     const moves: { from: ClassId; to: ClassId; sigma: number; delta: number }[] = [];
     const step = 0.1;
@@ -103,28 +140,26 @@ export default function Portfolio({
         const w = { ...weights };
         w[from.proxy!] -= step;
         w[to.proxy!] = (w[to.proxy!] ?? 0) + step;
-        const s = portfolioVol(w, vols, matrix);
-        moves.push({ from: from.id, to: to.id, sigma: s, delta: s - sigma });
+        moves.push({ from: from.id, to: to.id, sigma: portfolioVol(w, vols, matrix), delta: 0 });
       }
     }
+    for (const m of moves) m.delta = m.sigma - sigma;
     moves.sort((a, b) => a.delta - b.delta);
 
     const shown = CLASSES.filter((c) => (byClass[c.id] || 0) / total > 0.005).sort(
       (a, b) => (byClass[b.id] || 0) - (byClass[a.id] || 0)
     );
 
-    // いま関係が変わりつつある組み合わせのうち、実際に保有しているものだけ
     const relevant = shifts.filter(
       (s) => Math.abs(s.diff) >= 0.3 && ((weights[s.a] ?? 0) > 0.05 || (weights[s.b] ?? 0) > 0.05)
     );
 
-    const nisa = (byAccount.nisa_growth || 0) + (byAccount.nisa_tsumitate || 0);
-    const taxed = ACCOUNTS.filter((a) => !a.taxFree).reduce((s, a) => s + (byAccount[a.id] || 0), 0);
+    const topShare = shown.length ? (byClass[shown[0].id] || 0) / total : 0;
 
     return {
-      byClass, byAccount, shown, weights, sigma, naive, benefit, dd,
-      moves: moves.slice(0, 3), relevant, usdRatio: usdAmount / total,
-      excluded, nisa, taxed,
+      byClass, byAccount, byTax, shown, weights, sigma, naive, benefit, dd,
+      moves: moves.slice(0, 3), relevant, usdRatio: usdAmount / total, usdAmount,
+      excluded, base, topShare,
     };
   }, [holdings, total, vols, matrix, history, shifts]);
 
@@ -139,24 +174,60 @@ export default function Portfolio({
         <div>
           <h2 className="section-title">わたしのポートフォリオ</h2>
           <p className="section-sub">
-            銘柄ごとに、資産クラスと口座区分を選んで金額を入れてください。
+            持っているものを入れると、<strong>どのくらい増減しうるか</strong>を金額で見られます。
           </p>
         </div>
       </div>
 
       <p className="pf-privacy">
         入力内容は<strong>このブラウザの中だけに保存</strong>され、どこにも送信されません。
-        サーバーを持たない構成なので、運営者からも見ることはできません。
+        サーバーを持たない作りなので、運営者から見ることもできません。
       </p>
+
+      {/* ---------------- 一括取り込み ---------------- */}
+
+      <details className="pf-import">
+        <summary>証券会社の一覧をコピーして、まとめて入れる</summary>
+        <p className="pf-import-lead">
+          証券会社アプリの「保有商品一覧」を選択してコピーし、そのまま下に貼り付けてください。
+          エクセルやCSVからの貼り付けにも対応しています。銘柄名と評価額があれば読み取れます。
+        </p>
+        <textarea
+          value={paste}
+          onChange={(e) => setPaste(e.target.value)}
+          placeholder={"例\n銘柄名\t評価額\nトヨタ自動車\t520,000\neMAXIS Slim 米国株式(S&P500)\t1,240,000"}
+          rows={5}
+          aria-label="保有一覧の貼り付け欄"
+        />
+        <div className="pf-import-row">
+          <label>
+            この口座として取り込む
+            <select
+              value={pasteAccount}
+              onChange={(e) => setPasteAccount(e.target.value as AccountId)}
+            >
+              {ACCOUNTS.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button type="button" onClick={runImport} disabled={!paste.trim()}>
+            取り込む
+          </button>
+        </div>
+        {pasteMsg && <p className="pf-import-msg">{pasteMsg}</p>}
+      </details>
 
       {/* ---------------- 明細 ---------------- */}
 
       <div className="hold-list">
         <div className="hold-head" aria-hidden="true">
           <span>銘柄名</span>
-          <span>資産クラス</span>
+          <span>種類</span>
           <span>口座</span>
-          <span className="right">評価額</span>
+          <span className="right">いまの金額</span>
           <span />
         </div>
 
@@ -165,7 +236,7 @@ export default function Portfolio({
             <input
               type="text"
               className="h-name"
-              placeholder="例: トヨタ / VOO"
+              placeholder="例: トヨタ / eMAXIS Slim 米国株式"
               value={h.name}
               onChange={(e) => patch(h.key, { name: e.target.value })}
               aria-label="銘柄名"
@@ -175,7 +246,7 @@ export default function Portfolio({
               className="h-class"
               value={h.klass}
               onChange={(e) => patch(h.key, { klass: e.target.value as ClassId })}
-              aria-label="資産クラス"
+              aria-label="資産の種類"
               style={{ borderLeftColor: CLASS_BY_ID[h.klass].color }}
             >
               {CLASSES.map((c) => (
@@ -191,9 +262,9 @@ export default function Portfolio({
               onChange={(e) => patch(h.key, { account: e.target.value as AccountId })}
               aria-label="口座区分"
             >
-              {ACCOUNTS.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
+              {CLASS_BY_ID[h.klass].accounts.map((id) => (
+                <option key={id} value={id}>
+                  {ACCOUNT_BY_ID[id].name}
                 </option>
               ))}
             </select>
@@ -207,7 +278,7 @@ export default function Portfolio({
               onChange={(e) =>
                 patch(h.key, { amount: Number(e.target.value.replace(/[^0-9]/g, "")) || 0 })
               }
-              aria-label="評価額（円）"
+              aria-label="いまの金額（円）"
             />
 
             <button
@@ -222,29 +293,30 @@ export default function Portfolio({
         ))}
 
         <button type="button" className="hold-add" onClick={() => save([...holdings, newHolding()])}>
-          ＋ 銘柄を追加
+          ＋ 手で1つ追加する
         </button>
-
-        {holdings.length > 0 && (
-          <p className="hold-hint">
-            資産クラスは「何と連動して動くか」で選びます。
-            {CLASSES.slice(0, 3).map((c) => `${c.name}=${c.hint}`).join(" / ")} など。
-          </p>
-        )}
       </div>
 
       {!analysis ? (
-        <p className="pf-empty">銘柄を追加して金額を入れると、診断が出ます。概算で構いません。</p>
+        <p className="pf-empty">
+          持っているものを入れると、診断が出ます。ざっくりした金額で構いません。
+        </p>
       ) : (
         <>
-          {/* ---------------- 構成 ---------------- */}
+          {/* ---------------- 結論 ---------------- */}
+
+          <div className="pf-verdict">
+            <p className="pf-verdict-main">
+              {plainVerdict(analysis.benefit, analysis.topShare, analysis.shown[0]?.name ?? "")}
+            </p>
+          </div>
 
           <div className="pf-total">
             合計 <strong>{yen(total)}</strong>
-            <span className="pf-count">（{holdings.length}銘柄）</span>
+            <span className="pf-count">（{holdings.length}件）</span>
           </div>
 
-          <div className="pf-bar" role="img" aria-label="資産クラス別の構成比">
+          <div className="pf-bar" role="img" aria-label="種類ごとの構成比">
             {analysis.shown.map((c) => (
               <div
                 key={c.id}
@@ -271,99 +343,117 @@ export default function Portfolio({
             ))}
           </ul>
 
-          {/* ---------------- 指標 ---------------- */}
+          {/* ---------------- 指標（金額で示す） ---------------- */}
 
           <div className="pf-metrics">
             <div className="pf-metric">
-              <dt>推定変動率（年率）</dt>
-              <dd>{analysis.sigma.toFixed(1)}%</dd>
-              <p>1年でこのくらい上下に振れうる、という目安です。</p>
+              <dt>1年でありうる増減</dt>
+              <dd>±{yen((analysis.sigma / 100) * analysis.base)}</dd>
+              <p>
+                ふつうの年なら、この幅の中で上下すると考えられます（年率{analysis.sigma.toFixed(1)}%）。
+                プラスにもマイナスにも同じだけ振れます。
+              </p>
             </div>
 
             {analysis.dd && (
               <div className="pf-metric">
-                <dt>過去1年の最大下落</dt>
-                <dd className="warn">{analysis.dd.drop.toFixed(1)}%</dd>
+                <dt>実際にあった一番の下げ</dt>
+                <dd className="warn">−{yen((Math.abs(analysis.dd.drop) / 100) * analysis.base)}</dd>
                 <p>
-                  同じ配分のまま過去をなぞると、{analysis.dd.from} から {analysis.dd.to} にかけて
-                  この幅まで下げていました。
+                  いまと同じ配分で過去1年をなぞると、{analysis.dd.from}から{analysis.dd.to}にかけて
+                  これだけ減っていました（{analysis.dd.drop.toFixed(1)}%）。想像ではなく実際の値動きです。
                 </p>
               </div>
             )}
 
             <div className="pf-metric">
-              <dt>実質ドル建ての比率</dt>
-              <dd>{(analysis.usdRatio * 100).toFixed(0)}%</dd>
+              <dt>円高で目減りする部分</dt>
+              <dd>{yen(analysis.usdAmount)}</dd>
               <p>
-                米国株・金・暗号資産はドル建てです。この割合の分だけ、
-                円高になると円換算の評価額が目減りします。
+                資産の{(analysis.usdRatio * 100).toFixed(0)}%はドルで持っているのと同じです。
+                1円の円高でおよそ{yen(analysis.usdAmount / 158)}減る計算になります。
               </p>
             </div>
 
             <div className="pf-metric">
-              <dt>分散が効いている度合い</dt>
+              <dt>分けて持てている度合い</dt>
               <dd>{analysis.benefit.toFixed(0)}%</dd>
               <p>
-                バラバラに持たなければ {analysis.naive.toFixed(1)}% でした。組み合わせで
-                {analysis.benefit.toFixed(0)}% 抑えられています。
+                同じ動きをするものばかりなら、増減幅は{analysis.naive.toFixed(1)}%でした。
+                バラけている分だけ、揺れが{analysis.benefit.toFixed(0)}%小さくなっています。
               </p>
             </div>
           </div>
 
           {analysis.excluded > 0 && (
             <p className="pf-note-small">
-              「債券・その他」{yen(analysis.excluded)}（{((analysis.excluded / total) * 100).toFixed(0)}%）は
-              値動きデータを持っていないため、上のリスク試算からは除いています。
+              「債券・その他」{yen(analysis.excluded)}は値動きのデータを持っていないため、
+              上の計算からは外しています。
             </p>
           )}
 
-          {/* ---------------- 口座 ---------------- */}
+          {/* ---------------- 税金 ---------------- */}
 
           <div className="pf-accounts">
-            <h3>口座区分ごとの内訳</h3>
+            <h3>売るときにかかる税金</h3>
+            <p className="pf-tax-lead">
+              利益が出た分にかかります。<strong>商品によって税率がまったく違う</strong>ので、
+              持っている場所より、まずここを知っておくと損をしません。
+            </p>
             <table>
               <thead>
                 <tr>
-                  <th>口座</th>
+                  <th>区分</th>
                   <th className="right">金額</th>
-                  <th className="right">比率</th>
-                  <th>課税</th>
+                  <th>税金の扱い</th>
                 </tr>
               </thead>
               <tbody>
-                {ACCOUNTS.filter((a) => (analysis.byAccount[a.id] || 0) > 0).map((a) => (
-                  <tr key={a.id}>
-                    <td>{a.name}</td>
-                    <td className="right mono">{yen(analysis.byAccount[a.id])}</td>
-                    <td className="right mono">
-                      {(((analysis.byAccount[a.id] || 0) / total) * 100).toFixed(0)}%
-                    </td>
-                    <td className={a.taxFree ? "free" : "taxed"}>
-                      {a.taxFree ? "非課税" : "約20%"}
-                    </td>
-                  </tr>
-                ))}
+                {(["none", "separate", "aggregate", "depends"] as TaxKind[])
+                  .filter((k) => analysis.byTax[k] > 0)
+                  .map((k) => (
+                    <tr key={k}>
+                      <td>
+                        {k === "none" && "NISA・iDeCo"}
+                        {k === "separate" && "株式・投資信託"}
+                        {k === "aggregate" && "暗号資産"}
+                        {k === "depends" && "金・外貨など"}
+                      </td>
+                      <td className="right mono">{yen(analysis.byTax[k])}</td>
+                      <td className={k === "none" ? "free" : k === "aggregate" ? "heavy" : "taxed"}>
+                        {TAX_LABEL[k]}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
 
             <ul className="pf-account-notes">
-              {analysis.nisa > 0 && (
+              {analysis.byTax.aggregate > 0 && (
                 <li>
-                  NISA口座の残高は <strong>{yen(analysis.nisa)}</strong>。生涯投資枠 1,800万円に対する
-                  目安です（枠の消費は取得価額で数えるため、評価額とはズレます）。
-                  {analysis.nisa > NISA_LIFETIME && "評価額が枠を超えているのは、利益が乗っている状態です。"}
+                  <strong>暗号資産は株式と扱いが違います。</strong>
+                  利益は雑所得として給与などと合算され、所得が多い人ほど税率が上がります
+                  （住民税を含め最大およそ55%）。株式の約20%とは別物です。
+                  なお分離課税へ変える案が議論されていますが、まだ決まっていません。
                 </li>
               )}
-              {analysis.taxed > 0 && (
+              {analysis.byTax.none > 0 && (
                 <li>
-                  課税口座に <strong>{yen(analysis.taxed)}</strong> あります。ここで売却して組み替えると、
-                  利益の約20%が税金として差し引かれます。配分を変える際は、この差が効きます。
+                  NISA・iDeCo の <strong>{yen(analysis.byTax.none)}</strong> は利益が出ても税金がかかりません。
+                  組み替えるなら、まずこちらのほうが手取りは減りにくくなります。
+                </li>
+              )}
+              {analysis.byTax.depends > 0 && (
+                <li>
+                  金や外貨は<strong>買い方によって税金が変わります</strong>。
+                  金ETFや投資信託なら約20%、金地金や純金積立なら給与と合算（年50万円の控除あり、
+                  5年超の保有で対象額が半分）。外貨預金の為替差益も合算されます。
                 </li>
               )}
               {(analysis.byAccount.ideco || 0) > 0 && (
                 <li>
                   iDeCo の <strong>{yen(analysis.byAccount.ideco)}</strong> は原則60歳まで引き出せません。
-                  生活資金として当てにはできない枠です。
+                  当面の生活資金としては数えないでください。
                 </li>
               )}
             </ul>
@@ -373,27 +463,27 @@ export default function Portfolio({
 
           {(analysis.relevant.length > 0 || analysis.usdRatio > 0.6) && (
             <div className="pf-now">
-              <h3>いまの相場との関係</h3>
+              <h3>いま気にしておきたいこと</h3>
               <ul>
                 {analysis.usdRatio > 0.6 && (
                   <li>
-                    資産の <strong>{(analysis.usdRatio * 100).toFixed(0)}%</strong> がドル建てです。
-                    銘柄は分かれていても、円高が来れば同時に目減りします。
-                    通貨という一点では分散されていない状態です。
+                    資産の <strong>{(analysis.usdRatio * 100).toFixed(0)}%</strong> がドルで持っているのと
+                    同じ状態です。銘柄は分かれていても、円高になれば<strong>まとめて目減りします</strong>。
+                    種類は分けていても、通貨は1つに賭けている形です。
                   </li>
                 )}
                 {analysis.relevant.map((s) => (
                   <li key={`${s.a}-${s.b}`}>
                     <strong>
-                      {assetName(s.a)} と {assetName(s.b)}
+                      {assetName(s.a)}と{assetName(s.b)}
                     </strong>
-                    の関係が、1年の {s.base >= 0 ? "+" : "−"}
-                    {Math.abs(s.base).toFixed(2)} から直近30日は {s.now >= 0 ? "+" : "−"}
-                    {Math.abs(s.now).toFixed(2)} に変化しています。
-                    どちらも保有しているため、
+                    は、これまで{s.base >= 0.25 ? "似た動き" : s.base <= -0.25 ? "反対の動き" : "無関係な動き"}
+                    でしたが、最近は
+                    {s.now >= 0.25 ? "似た動き" : s.now <= -0.25 ? "反対の動き" : "無関係な動き"}
+                    に変わっています。両方お持ちなので、
                     {s.diff > 0
-                      ? "これまでより値動きが重なりやすくなっています。"
-                      : "これまでより打ち消し合いやすくなっています。"}
+                      ? "以前より一緒に上下しやすくなっています。"
+                      : "以前より打ち消し合いやすくなっています。"}
                   </li>
                 ))}
               </ul>
@@ -404,11 +494,12 @@ export default function Portfolio({
 
           {analysis.moves.length > 0 && (
             <div className="pf-sim">
-              <h3>資産の1割を動かすと、どうなるか</h3>
+              <h3>もし1割を移したら、揺れはどうなるか</h3>
               <p className="pf-sim-lead">
-                変動率を下げる方向に効く順です。<strong>推奨ではありません。</strong>
-                変動率が低いことは、利益が大きいことを意味しません。
-                実行するなら、課税口座では税負担も併せて考える必要があります。
+                揺れが小さくなる順に並べています。
+                <strong>「こうしたほうがいい」という意味ではありません。</strong>
+                揺れが小さいことと、儲かることは別です。売れば税金もかかります。
+                考えるための材料として見てください。
               </p>
               <ul className="pf-moves">
                 {analysis.moves.map((m) => (
@@ -417,11 +508,8 @@ export default function Portfolio({
                       {CLASS_BY_ID[m.from].name} → {CLASS_BY_ID[m.to].name}
                     </span>
                     <span className="pf-move-num">
-                      {analysis.sigma.toFixed(1)}% → <strong>{m.sigma.toFixed(1)}%</strong>
-                      <span className={m.delta <= 0 ? "down" : "up"}>
-                        （{m.delta >= 0 ? "+" : "−"}
-                        {Math.abs(m.delta).toFixed(1)}pt）
-                      </span>
+                      1年の増減 ±{yen((analysis.sigma / 100) * analysis.base)} →{" "}
+                      <strong>±{yen((m.sigma / 100) * analysis.base)}</strong>
                     </span>
                   </li>
                 ))}
@@ -430,9 +518,10 @@ export default function Portfolio({
           )}
 
           <p className="pf-caveat">
-            すべて過去の値動きから計算した目安です。将来の成績を示すものではなく、
-            特定の売買を勧めるものでもありません。個別銘柄は資産クラスに束ねて計算しているため、
-            同じクラス内の銘柄ごとの違いは反映されません。最終的な判断はご自身で行ってください。
+            すべて過去の値動きをもとにした目安で、将来を約束するものではありません。
+            特定の売買を勧めるものでもありません。個別の銘柄は種類ごとにまとめて計算しているため、
+            同じ種類の中での違いは反映されません。税金の扱いは個別の事情で変わるため、
+            実際の判断は国税庁の情報や税理士にご確認ください。
           </p>
         </>
       )}
