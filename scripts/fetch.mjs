@@ -329,6 +329,24 @@ async function main() {
     };
   });
 
+  // --- 単価。数量だけ入れれば円建ての評価額が出せるようにするため。
+  //     個別株の現在価格は無料で取れないが、この3つは取れるので数量入力に対応できる。
+  const px = (id) => {
+    const p = values[id];
+    return p ? p[p.length - 1] : null;
+  };
+  const usdjpy = px("usdjpy");
+  const goldUsdPerOz = px("gold"); // PAXG は 1トークン = 金1トロイオンス
+  const btcUsd = px("btc");
+  const TROY_OZ_G = 31.1035;
+
+  const units = {
+    usd_jpy: usdjpy ? Number(usdjpy.toFixed(2)) : null,
+    btc_jpy: btcUsd && usdjpy ? Math.round(btcUsd * usdjpy) : null,
+    gold_jpy_per_g:
+      goldUsdPerOz && usdjpy ? Math.round((goldUsdPerOz / TROY_OZ_G) * usdjpy) : null,
+  };
+
   // --- correlation.json : 期間別の相関行列
   const correlations = {
     asOf,
@@ -364,7 +382,7 @@ async function main() {
 
   await mkdir(OUT_DIR, { recursive: true });
   await writeFile(join(OUT_DIR, "latest.json"),
-    JSON.stringify({ asOf, assets: snapshot, skipped: skipped.map((s) => s.id) }, null, 2));
+    JSON.stringify({ asOf, assets: snapshot, units, skipped: skipped.map((s) => s.id) }, null, 2));
   await writeFile(join(OUT_DIR, "correlation.json"), JSON.stringify(correlations, null, 2));
   await writeFile(join(OUT_DIR, "history.json"), JSON.stringify(history, null, 2));
   await writeFile(join(OUT_DIR, "highlights.json"), JSON.stringify(highlights, null, 2));

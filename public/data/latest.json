@@ -68,5 +68,10 @@
       "vol": 14.9
     }
   ],
+  "units": {
+    "usd_jpy": 158.76,
+    "btc_jpy": 11020871,
+    "gold_jpy_per_g": 22960
+  },
   "skipped": []
 }

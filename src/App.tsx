@@ -91,6 +91,7 @@ export default function App() {
 
         <Portfolio
           assets={latest.assets}
+          units={latest.units}
           matrix={correlation.windows.d90}
           history={history}
           shifts={highlights.shifts}

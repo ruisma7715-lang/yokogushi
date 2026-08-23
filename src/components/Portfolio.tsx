@@ -5,20 +5,29 @@ import {
   ACCOUNT_BY_ID,
   CLASSES,
   CLASS_BY_ID,
+  QTY_UNIT,
   SCENARIOS,
   TAX_LABEL,
   applyScenario,
+  currentValue,
+  lookupSymbol,
   maxDrawdown,
   newHolding,
   parseHoldingsText,
   portfolioVol,
   taxOf,
+  unitPrice,
   yen,
   type AccountId,
   type ClassId,
   type Holding,
   type TaxKind,
+  type Units,
 } from "../portfolio/model";
+
+/** 円 ⇄ 万円。7桁を打たせないための変換 */
+const toMan = (v: number) => (v ? String(Math.round(v / 100) / 100) : "");
+const fromMan = (s: string) => Math.round((Number(s.replace(/[^0-9.]/g, "")) || 0) * 10000);
 
 const STORE_KEY = "yokogushi-holdings-v1";
 
@@ -35,11 +44,13 @@ function plainVerdict(benefit: number, topShare: number, topName: string) {
 
 export default function Portfolio({
   assets,
+  units,
   matrix,
   history,
   shifts,
 }: {
   assets: AssetSnapshot[];
+  units: Units;
   matrix: CorrelationWindow;
   history: History;
   shifts: Shift[];
@@ -49,6 +60,15 @@ export default function Portfolio({
   const [paste, setPaste] = useState("");
   const [pasteAccount, setPasteAccount] = useState<AccountId>("tokutei");
   const [pasteMsg, setPasteMsg] = useState<string | null>(null);
+
+  // 各クラスの「いまの指数」。金額入力を値動きに追従させるのに使う。
+  const indexNow = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const [id, series] of Object.entries(history.series)) {
+      out[id] = series[series.length - 1];
+    }
+    return out;
+  }, [history]);
 
   useEffect(() => {
     try {
@@ -69,17 +89,43 @@ export default function Portfolio({
     }
   };
 
-  // 資産クラスを変えたとき、その商品では選べない口座が残らないようにする
+  // 資産クラスを変えたとき、その商品では選べない口座や入力方法が残らないようにする
   const patch = (key: string, field: Partial<Holding>) =>
     save(
       holdings.map((h) => {
         if (h.key !== key) return h;
         const next = { ...h, ...field };
+
         const allowed = CLASS_BY_ID[next.klass].accounts;
         if (!allowed.includes(next.account)) next.account = allowed[0];
+
+        // 数量入力に対応していないクラスに変えたら、金額入力へ戻す
+        if (next.mode === "qty" && !QTY_UNIT[next.klass]) next.mode = "amount";
+
         return next;
       })
     );
+
+  /** 銘柄名の欄を確定したとき、コードやティッカーなら名前と種類を補完する */
+  const resolveSymbol = (h: Holding) => {
+    const sym = lookupSymbol(h.name);
+    if (!sym) return;
+    const allowed = CLASS_BY_ID[sym.klass].accounts;
+    patch(h.key, {
+      name: sym.name,
+      klass: sym.klass,
+      account: allowed.includes(h.account) ? h.account : allowed[0],
+    });
+  };
+
+  /** 金額を入れ直したら、その時点の指数を基準として覚え直す */
+  const setAmount = (h: Holding, manText: string) => {
+    const proxy = CLASS_BY_ID[h.klass]?.proxy;
+    patch(h.key, {
+      amount: fromMan(manText),
+      baseIndex: proxy ? indexNow[proxy] : undefined,
+    });
+  };
 
   const runImport = () => {
     const rows = parseHoldingsText(paste, pasteAccount);
@@ -98,7 +144,13 @@ export default function Portfolio({
     return v;
   }, [assets]);
 
-  const total = holdings.reduce((s, h) => s + (h.amount || 0), 0);
+  // 表示・集計はすべて「いまの評価額」で行う。手入力した当時の金額ではない。
+  const valued = useMemo(
+    () => holdings.map((h) => ({ h, value: currentValue(h, units, indexNow) })),
+    [holdings, units, indexNow]
+  );
+
+  const total = valued.reduce((s, v) => s + v.value, 0);
 
   const analysis = useMemo(() => {
     if (total <= 0) return null;
@@ -107,11 +159,10 @@ export default function Portfolio({
     const byAccount: Record<string, number> = {};
     const byTax: Record<TaxKind, number> = { separate: 0, aggregate: 0, depends: 0, none: 0 };
 
-    for (const h of holdings) {
-      const amt = h.amount || 0;
-      byClass[h.klass] = (byClass[h.klass] || 0) + amt;
-      byAccount[h.account] = (byAccount[h.account] || 0) + amt;
-      byTax[taxOf(h.klass, h.account)] += amt;
+    for (const { h, value } of valued) {
+      byClass[h.klass] = (byClass[h.klass] || 0) + value;
+      byAccount[h.account] = (byAccount[h.account] || 0) + value;
+      byTax[taxOf(h.klass, h.account)] += value;
     }
 
     const usdAmount = CLASSES.filter((c) => c.usd).reduce((s, c) => s + (byClass[c.id] || 0), 0);
@@ -163,7 +214,7 @@ export default function Portfolio({
       moves: moves.slice(0, 3), relevant, usdRatio: usdAmount / total, usdAmount,
       excluded, base, topShare,
     };
-  }, [holdings, total, vols, matrix, history, shifts]);
+  }, [valued, total, vols, matrix, history, shifts]);
 
   const assetName = (proxy: string) =>
     CLASSES.find((c) => c.proxy === proxy)?.name ?? assets.find((a) => a.id === proxy)?.name ?? proxy;
@@ -226,77 +277,135 @@ export default function Portfolio({
 
       <div className="hold-list">
         <div className="hold-head" aria-hidden="true">
-          <span>銘柄名</span>
+          <span>銘柄名・コード</span>
           <span>種類</span>
           <span>口座</span>
-          <span className="right">いまの金額</span>
+          <span className="right">数量 または 金額</span>
           <span />
         </div>
 
-        {holdings.map((h) => (
-          <div className="hold-row" key={h.key}>
-            <input
-              type="text"
-              className="h-name"
-              placeholder="例: トヨタ / eMAXIS Slim 米国株式"
-              value={h.name}
-              onChange={(e) => patch(h.key, { name: e.target.value })}
-              aria-label="銘柄名"
-            />
+        {valued.map(({ h, value }) => {
+          const unit = QTY_UNIT[h.klass];
+          const price = unitPrice(h.klass, units);
+          return (
+            <div className="hold-row" key={h.key}>
+              <input
+                type="text"
+                className="h-name"
+                placeholder="7203 / VOO / オルカン"
+                value={h.name}
+                onChange={(e) => patch(h.key, { name: e.target.value })}
+                onBlur={() => resolveSymbol(h)}
+                aria-label="銘柄名または証券コード・ティッカー"
+              />
 
-            <select
-              className="h-class"
-              value={h.klass}
-              onChange={(e) => patch(h.key, { klass: e.target.value as ClassId })}
-              aria-label="資産の種類"
-              style={{ borderLeftColor: CLASS_BY_ID[h.klass].color }}
-            >
-              {CLASSES.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+              <select
+                className="h-class"
+                value={h.klass}
+                onChange={(e) => patch(h.key, { klass: e.target.value as ClassId })}
+                aria-label="資産の種類"
+                style={{ borderLeftColor: CLASS_BY_ID[h.klass].color }}
+              >
+                {CLASSES.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
 
-            <select
-              className="h-account"
-              value={h.account}
-              onChange={(e) => patch(h.key, { account: e.target.value as AccountId })}
-              aria-label="口座区分"
-            >
-              {CLASS_BY_ID[h.klass].accounts.map((id) => (
-                <option key={id} value={id}>
-                  {ACCOUNT_BY_ID[id].name}
-                </option>
-              ))}
-            </select>
+              <select
+                className="h-account"
+                value={h.account}
+                onChange={(e) => patch(h.key, { account: e.target.value as AccountId })}
+                aria-label="口座区分"
+              >
+                {CLASS_BY_ID[h.klass].accounts.map((id) => (
+                  <option key={id} value={id}>
+                    {ACCOUNT_BY_ID[id].name}
+                  </option>
+                ))}
+              </select>
 
-            <input
-              type="text"
-              inputMode="numeric"
-              className="h-amount"
-              placeholder="0"
-              value={h.amount ? h.amount.toLocaleString("ja-JP") : ""}
-              onChange={(e) =>
-                patch(h.key, { amount: Number(e.target.value.replace(/[^0-9]/g, "")) || 0 })
-              }
-              aria-label="いまの金額（円）"
-            />
+              <div className="h-value">
+                {h.mode === "qty" && unit && price ? (
+                  <>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      className="h-amount"
+                      placeholder="0"
+                      value={h.qty || ""}
+                      onChange={(e) =>
+                        patch(h.key, { qty: Number(e.target.value.replace(/[^0-9.]/g, "")) || 0 })
+                      }
+                      aria-label={`数量（${unit.label}）`}
+                    />
+                    <span className="h-unit">{unit.label}</span>
+                  </>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      className="h-amount"
+                      placeholder="0"
+                      value={toMan(h.amount)}
+                      onChange={(e) => setAmount(h, e.target.value)}
+                      aria-label="金額（万円）"
+                    />
+                    <span className="h-unit">万円</span>
+                  </>
+                )}
+              </div>
 
-            <button
-              type="button"
-              className="h-del"
-              onClick={() => save(holdings.filter((x) => x.key !== h.key))}
-              aria-label={`${h.name || "この行"}を削除`}
-            >
-              ×
-            </button>
-          </div>
-        ))}
+              <button
+                type="button"
+                className="h-del"
+                onClick={() => save(holdings.filter((x) => x.key !== h.key))}
+                aria-label={`${h.name || "この行"}を削除`}
+              >
+                ×
+              </button>
 
-        <button type="button" className="hold-add" onClick={() => save([...holdings, newHolding()])}>
-          ＋ 手で1つ追加する
+              <div className="h-foot">
+                {unit && price && (
+                  <button
+                    type="button"
+                    className="h-mode"
+                    onClick={() => patch(h.key, { mode: h.mode === "qty" ? "amount" : "qty" })}
+                  >
+                    {h.mode === "qty" ? "金額で入れる" : `数量（${unit.label}）で入れる`}
+                  </button>
+                )}
+                {value > 0 && (
+                  <span className="h-calc">
+                    = {yen(value)}
+                    {h.mode === "qty" && price && (
+                      <span className="h-rate">（1{unit?.label} = {price.toLocaleString("ja-JP")}円）</span>
+                    )}
+                    {h.mode === "amount" && h.baseIndex && (
+                      <span className="h-rate">値動きを反映した概算</span>
+                    )}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        <button
+          type="button"
+          className="hold-add"
+          onClick={() => save([...holdings, newHolding(holdings.at(-1)?.account ?? "tokutei")])}
+        >
+          ＋ 1つ追加する
         </button>
+
+        <p className="hold-hint">
+          銘柄名の欄は<strong>証券コード（7203）やティッカー（VOO）</strong>でも入ります。
+          ビットコイン・金・ドルは<strong>数量を入れるだけ</strong>で、毎日の価格で自動計算します。
+          株や投資信託は金額を一度入れれば、その後は指数の値動きに合わせて概算を更新します。
+        </p>
       </div>
 
       {!analysis ? (

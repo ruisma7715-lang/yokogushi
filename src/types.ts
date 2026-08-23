@@ -19,6 +19,8 @@ export type AssetSnapshot = {
 export type Latest = {
   asOf: string;
   assets: AssetSnapshot[];
+  /** 数量入力から円建ての評価額を出すための単価 */
+  units: { usd_jpy: number | null; btc_jpy: number | null; gold_jpy_per_g: number | null };
   skipped: AssetId[];
 };
 

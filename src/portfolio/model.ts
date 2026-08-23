@@ -144,16 +144,138 @@ export type Holding = {
   name: string;
   klass: ClassId;
   account: AccountId;
+  /** qty = 数量から自動計算（価格データがあるものだけ）、amount = 金額を直接入れる */
+  mode: "amount" | "qty";
+  /** 円。mode="qty" のときは計算結果が入る */
   amount: number;
+  /** BTCの枚数 / 金のグラム / 外貨のドル */
+  qty: number;
+  /** 金額を入れた時点のクラス指数。以後の値動きに自動で追従させるために覚えておく */
+  baseIndex?: number;
 };
 
-export const newHolding = (): Holding => ({
+export const newHolding = (account: AccountId = "tokutei"): Holding => ({
   key: Math.random().toString(36).slice(2, 10),
   name: "",
   klass: "jp_stock",
-  account: "tokutei",
+  account,
+  mode: "amount",
   amount: 0,
+  qty: 0,
 });
+
+/** 数量で入力できるクラスと、その単位。個別株は現在価格が取れないため対象外 */
+export const QTY_UNIT: Partial<Record<ClassId, { label: string; step: string }>> = {
+  crypto: { label: "BTC", step: "0.0001" },
+  gold: { label: "g", step: "1" },
+  fx: { label: "ドル", step: "1" },
+};
+
+export type Units = {
+  usd_jpy: number | null;
+  btc_jpy: number | null;
+  gold_jpy_per_g: number | null;
+};
+
+/** 1単位あたりの円価格 */
+export function unitPrice(klass: ClassId, units: Units): number | null {
+  if (klass === "crypto") return units.btc_jpy;
+  if (klass === "gold") return units.gold_jpy_per_g;
+  if (klass === "fx") return units.usd_jpy;
+  return null;
+}
+
+/**
+ * その保有の、いまの評価額（円）。
+ * 数量入力なら現在価格をかけ、金額入力なら入力時点からの値動き分だけ伸縮させる。
+ * 個別株は指数と完全には一致しないが、入れ直さずに概算を保てるほうが実用的と判断した。
+ */
+export function currentValue(
+  h: Holding,
+  units: Units,
+  indexNow: Record<string, number>
+): number {
+  if (h.mode === "qty") {
+    const p = unitPrice(h.klass, units);
+    return p ? Math.round(h.qty * p) : 0;
+  }
+  const proxy = CLASS_BY_ID[h.klass]?.proxy;
+  if (!proxy || !h.baseIndex || !indexNow[proxy]) return h.amount;
+  return Math.round(h.amount * (indexNow[proxy] / h.baseIndex));
+}
+
+// ---------------------------------------------------------------- 銘柄コード
+// ティッカーや証券コードから銘柄名と種類を補完する。
+// 全銘柄は載せられないので、よく持たれるものだけ。外れても手で直せる。
+
+const SYMBOLS: Record<string, { name: string; klass: ClassId }> = {
+  // 日本株（証券コード）
+  "7203": { name: "トヨタ自動車", klass: "jp_stock" },
+  "6758": { name: "ソニーグループ", klass: "jp_stock" },
+  "9432": { name: "NTT", klass: "jp_stock" },
+  "9433": { name: "KDDI", klass: "jp_stock" },
+  "8306": { name: "三菱UFJフィナンシャル・グループ", klass: "jp_stock" },
+  "8316": { name: "三井住友フィナンシャルグループ", klass: "jp_stock" },
+  "8411": { name: "みずほフィナンシャルグループ", klass: "jp_stock" },
+  "9984": { name: "ソフトバンクグループ", klass: "jp_stock" },
+  "8058": { name: "三菱商事", klass: "jp_stock" },
+  "8031": { name: "三井物産", klass: "jp_stock" },
+  "6861": { name: "キーエンス", klass: "jp_stock" },
+  "7974": { name: "任天堂", klass: "jp_stock" },
+  "6501": { name: "日立製作所", klass: "jp_stock" },
+  "7267": { name: "ホンダ", klass: "jp_stock" },
+  "4502": { name: "武田薬品工業", klass: "jp_stock" },
+  "4063": { name: "信越化学工業", klass: "jp_stock" },
+  "8035": { name: "東京エレクトロン", klass: "jp_stock" },
+  "6098": { name: "リクルートホールディングス", klass: "jp_stock" },
+  "2914": { name: "日本たばこ産業", klass: "jp_stock" },
+  "9101": { name: "日本郵船", klass: "jp_stock" },
+  "1306": { name: "TOPIX連動型上場投信", klass: "jp_stock" },
+  "1321": { name: "日経225連動型上場投信", klass: "jp_stock" },
+
+  // 米国ETF・株（ティッカー）
+  VOO: { name: "バンガード S&P500 ETF", klass: "us_stock" },
+  VTI: { name: "バンガード 全米株式 ETF", klass: "us_stock" },
+  VT: { name: "バンガード 全世界株式 ETF", klass: "us_stock" },
+  VYM: { name: "バンガード 高配当株式 ETF", klass: "us_stock" },
+  QQQ: { name: "インベスコ QQQ（ナスダック100）", klass: "us_stock" },
+  SPY: { name: "SPDR S&P500 ETF", klass: "us_stock" },
+  HDV: { name: "iShares 高配当株 ETF", klass: "us_stock" },
+  SPYD: { name: "SPDR ポートフォリオ高配当株式 ETF", klass: "us_stock" },
+  JEPI: { name: "JPモルガン 株式プレミアム・インカム ETF", klass: "us_stock" },
+  AAPL: { name: "アップル", klass: "us_stock" },
+  MSFT: { name: "マイクロソフト", klass: "us_stock" },
+  NVDA: { name: "エヌビディア", klass: "us_stock" },
+  GOOGL: { name: "アルファベット", klass: "us_stock" },
+  AMZN: { name: "アマゾン", klass: "us_stock" },
+  TSLA: { name: "テスラ", klass: "us_stock" },
+  META: { name: "メタ", klass: "us_stock" },
+  GLD: { name: "SPDR ゴールド・シェア", klass: "gold" },
+  IAU: { name: "iShares ゴールド・トラスト", klass: "gold" },
+
+  // 暗号資産
+  BTC: { name: "ビットコイン", klass: "crypto" },
+  ETH: { name: "イーサリアム", klass: "crypto" },
+  XRP: { name: "リップル", klass: "crypto" },
+
+  // 投資信託の通称
+  オルカン: { name: "eMAXIS Slim 全世界株式（オール・カントリー）", klass: "us_stock" },
+  スリム米国: { name: "eMAXIS Slim 米国株式（S&P500）", klass: "us_stock" },
+};
+
+/** 入力された文字列がコード・ティッカーなら、銘柄名と種類を返す */
+export function lookupSymbol(input: string): { name: string; klass: ClassId } | null {
+  const s = input.trim();
+  if (!s) return null;
+
+  const hit = SYMBOLS[s] ?? SYMBOLS[s.toUpperCase()];
+  if (hit) return hit;
+
+  // 表に無い4桁の数字は、日本の証券コードとみなす
+  if (/^\d{4}$/.test(s)) return { name: `${s}（日本株）`, klass: "jp_stock" };
+
+  return null;
+}
 
 // ---------------------------------------------------------------- 計算
 
@@ -324,15 +446,20 @@ export function parseHoldingsText(text: string, account: AccountId): Holding[] {
 
     if (!name || !Number.isFinite(amount) || amount <= 0) continue;
 
-    const klass = guessClass(name);
+    // コード・ティッカーで書かれていれば銘柄名まで補完する
+    const sym = lookupSymbol(name);
+    const finalName = sym ? sym.name : name.slice(0, 40);
+    const klass = sym ? sym.klass : guessClass(name);
     const allowed = CLASS_BY_ID[klass].accounts;
 
     out.push({
       key: Math.random().toString(36).slice(2, 10),
-      name: name.slice(0, 40),
+      name: finalName,
       klass,
       account: allowed.includes(account) ? account : allowed[0],
+      mode: "amount",
       amount: Math.round(amount),
+      qty: 0,
     });
   }
 
