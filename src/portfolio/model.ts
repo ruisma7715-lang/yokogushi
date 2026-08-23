@@ -339,6 +339,64 @@ export function parseHoldingsText(text: string, account: AccountId): Holding[] {
   return out;
 }
 
+// ---------------------------------------------------------------- ストレステスト
+// 「もしこうなったら、いくら減るか」を金額で見せる。
+// ここの数値は予測ではなく、過去に実際にあった下落局面を参考にした仮定。
+// 断定を避けつつ、初心者が規模を実感できる粒度に丸めている。
+
+export type Scenario = {
+  id: string;
+  name: string;
+  detail: string;
+  /** クラスごとの騰落（%）。書かれていないクラスは動かない扱い */
+  impact: Partial<Record<ClassId, number>>;
+};
+
+export const SCENARIOS: Scenario[] = [
+  {
+    id: "yen_up",
+    name: "円高が10%進んだら",
+    detail: "1ドル158円が142円ほどになる想定。ドルで持っているものは、中身が同じでも円に直すと目減りします。",
+    impact: { us_stock: -10, fx: -10, gold: -10, crypto: -10 },
+  },
+  {
+    id: "stock_down",
+    name: "世界の株が20%下がったら",
+    detail: "よくある調整局面の規模です。株と一緒に暗号資産はより大きく下げ、金は買われやすい傾向があります。",
+    impact: { jp_stock: -20, us_stock: -20, crypto: -30, gold: 3 },
+  },
+  {
+    id: "rate_up",
+    name: "金利が急に上がったら",
+    detail: "利息が付く預金や債券の魅力が増すため、利息を生まない資産から資金が抜けやすくなります。",
+    impact: { jp_stock: -7, us_stock: -10, gold: -8, crypto: -15 },
+  },
+  {
+    id: "crash",
+    name: "2020年3月級の暴落が来たら",
+    detail: "コロナショックの規模を想定。このときは安全資産とされる金も、現金化の売りで一時下げました。",
+    impact: { jp_stock: -30, us_stock: -30, crypto: -50, gold: -5, fx: -5 },
+  },
+];
+
+/** シナリオを当てたときの増減額（円）。値が動かないクラスは0として扱う */
+export function applyScenario(byClass: Record<string, number>, sc: Scenario) {
+  let delta = 0;
+  const lines: { klass: ClassId; amount: number; pct: number }[] = [];
+
+  for (const c of CLASSES) {
+    const held = byClass[c.id] || 0;
+    const pct = sc.impact[c.id];
+    if (!held || pct === undefined) continue;
+    const d = held * (pct / 100);
+    delta += d;
+    lines.push({ klass: c.id, amount: d, pct });
+  }
+
+  lines.sort((a, b) => a.amount - b.amount);
+  return { delta, lines };
+}
+
 // ---------------------------------------------------------------- 表示補助
 
 export const yen = (v: number) =>

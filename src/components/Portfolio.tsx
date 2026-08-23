@@ -5,7 +5,9 @@ import {
   ACCOUNT_BY_ID,
   CLASSES,
   CLASS_BY_ID,
+  SCENARIOS,
   TAX_LABEL,
+  applyScenario,
   maxDrawdown,
   newHolding,
   parseHoldingsText,
@@ -489,6 +491,53 @@ export default function Portfolio({
               </ul>
             </div>
           )}
+
+          {/* ---------------- ストレステスト ---------------- */}
+
+          <div className="pf-stress">
+            <h3>こうなったら、いくら減るか</h3>
+            <p className="pf-stress-lead">
+              過去に実際に起きた下落を参考にした<strong>仮の想定</strong>です。予測ではありません。
+              下がったときにいくら減るかを、あらかじめ知っておくためのものです。
+            </p>
+
+            <ul className="stress-list">
+              {SCENARIOS.map((sc) => {
+                const { delta, lines } = applyScenario(analysis.byClass, sc);
+                const after = total + delta;
+                return (
+                  <li key={sc.id}>
+                    <div className="stress-head">
+                      <span className="stress-name">{sc.name}</span>
+                      <span className={`stress-delta ${delta < 0 ? "minus" : "plus"}`}>
+                        {delta < 0 ? "−" : "+"}
+                        {yen(Math.abs(delta))}
+                      </span>
+                    </div>
+                    <p className="stress-after">
+                      {yen(total)} → <strong>{yen(after)}</strong>
+                      <span className="stress-pct">
+                        （{delta < 0 ? "" : "+"}
+                        {((delta / total) * 100).toFixed(1)}%）
+                      </span>
+                    </p>
+                    <p className="stress-detail">{sc.detail}</p>
+                    {lines.length > 0 && (
+                      <p className="stress-lines">
+                        内訳：
+                        {lines
+                          .map(
+                            (l) =>
+                              `${CLASS_BY_ID[l.klass].name} ${l.amount < 0 ? "−" : "+"}${yen(Math.abs(l.amount))}`
+                          )
+                          .join(" / ")}
+                      </p>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
 
           {/* ---------------- 試算 ---------------- */}
 

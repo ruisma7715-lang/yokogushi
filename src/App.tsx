@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Correlation, Highlights as HighlightsData, History, Latest } from "./types";
 import AssetCard from "./components/AssetCard";
+import StartHere from "./components/StartHere";
+import Glossary from "./components/Glossary";
 import Highlights from "./components/Highlights";
 import Portfolio from "./components/Portfolio";
 import CorrelationMatrix from "./components/CorrelationMatrix";
@@ -77,6 +79,8 @@ export default function App() {
       </header>
 
       <main>
+        <StartHere />
+
         <div className="grid">
           {latest.assets.map((asset) => (
             <AssetCard key={asset.id} asset={asset} />
@@ -97,6 +101,8 @@ export default function App() {
         <OverlayChart assets={latest.assets} history={history} />
 
         <TodayNote base={BASE} />
+
+        <Glossary />
       </main>
 
       <footer className="footnote">

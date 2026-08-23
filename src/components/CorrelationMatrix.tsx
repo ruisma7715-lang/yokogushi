@@ -28,6 +28,15 @@ function band(r: number): "pos2" | "pos1" | "neu" | "neg1" | "neg2" {
   return "neg2";
 }
 
+// 数字が読めなくても意味が伝わるように、段階ごとの言い換えを持っておく。
+const WORD: Record<ReturnType<typeof band>, string> = {
+  pos2: "そっくり",
+  pos1: "似てる",
+  neu: "無関係",
+  neg1: "やや逆",
+  neg2: "正反対",
+};
+
 function describe(a: string, b: string, r: number) {
   const v = Math.abs(r).toFixed(2);
   switch (band(r)) {
@@ -53,6 +62,8 @@ export default function CorrelationMatrix({
 }) {
   const [win, setWin] = useState<WindowKey>("d90");
   const [picked, setPicked] = useState<{ a: string; b: string; r: number } | null>(null);
+  // 初見の人には数字より言葉のほうが伝わるので、こちらを初期表示にしている
+  const [mode, setMode] = useState<"word" | "number">("word");
 
   const matrix: CorrelationWindow = correlation.windows[win];
   const ids = assets.map((a) => a.id);
@@ -62,25 +73,48 @@ export default function CorrelationMatrix({
     <section className="matrix-section">
       <div className="section-head">
         <div>
-          <h2 className="section-title">相関マトリクス</h2>
-          <p className="section-sub">一緒に動くもの／逆に動くものが、色で一目で分かります。</p>
+          <h2 className="section-title">どれとどれが一緒に動く？</h2>
+          <p className="section-sub">
+            同じ動きをするものばかり持っていると、分けて持っている意味が薄くなります。
+          </p>
         </div>
 
-        <div className="seg" role="group" aria-label="集計期間">
-          {WINDOWS.map((w) => (
+        <div className="seg-group">
+          <div className="seg" role="group" aria-label="表示のしかた">
             <button
-              key={w.key}
               type="button"
-              className={w.key === win ? "on" : ""}
-              aria-pressed={w.key === win}
-              onClick={() => {
-                setWin(w.key);
-                setPicked(null);
-              }}
+              className={mode === "word" ? "on" : ""}
+              aria-pressed={mode === "word"}
+              onClick={() => setMode("word")}
             >
-              {w.label}
+              ことば
             </button>
-          ))}
+            <button
+              type="button"
+              className={mode === "number" ? "on" : ""}
+              aria-pressed={mode === "number"}
+              onClick={() => setMode("number")}
+            >
+              数字
+            </button>
+          </div>
+
+          <div className="seg" role="group" aria-label="集計期間">
+            {WINDOWS.map((w) => (
+              <button
+                key={w.key}
+                type="button"
+                className={w.key === win ? "on" : ""}
+                aria-pressed={w.key === win}
+                onClick={() => {
+                  setWin(w.key);
+                  setPicked(null);
+                }}
+              >
+                {w.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -122,12 +156,13 @@ export default function CorrelationMatrix({
                     <td key={colId} className="cell-td">
                       <button
                         type="button"
-                        className={`cell ${band(r)}${isPicked ? " picked" : ""}`}
+                        className={`cell ${band(r)}${isPicked ? " picked" : ""}${mode === "word" ? " word" : ""}`}
                         onClick={() => setPicked({ a: rowId, b: colId, r })}
-                        aria-label={`${nameOf(rowId)} と ${nameOf(colId)} の相関 ${r.toFixed(2)}`}
+                        aria-label={`${nameOf(rowId)} と ${nameOf(colId)} は ${WORD[band(r)]}（${r.toFixed(2)}）`}
                       >
-                        {r > 0 ? "+" : r < 0 ? "−" : ""}
-                        {Math.abs(r).toFixed(2)}
+                        {mode === "word"
+                          ? WORD[band(r)]
+                          : `${r > 0 ? "+" : r < 0 ? "−" : ""}${Math.abs(r).toFixed(2)}`}
                       </button>
                     </td>
                   );
@@ -140,11 +175,11 @@ export default function CorrelationMatrix({
 
       <div className="legend" aria-hidden="true">
         <span className="legend-cap">逆に動く</span>
-        <span className="sw neg2">−1.0</span>
-        <span className="sw neg1">−0.5</span>
-        <span className="sw neu">0</span>
-        <span className="sw pos1">+0.5</span>
-        <span className="sw pos2">+1.0</span>
+        <span className="sw neg2">{mode === "word" ? "正反対" : "−1.0"}</span>
+        <span className="sw neg1">{mode === "word" ? "やや逆" : "−0.5"}</span>
+        <span className="sw neu">{mode === "word" ? "無関係" : "0"}</span>
+        <span className="sw pos1">{mode === "word" ? "似てる" : "+0.5"}</span>
+        <span className="sw pos2">{mode === "word" ? "そっくり" : "+1.0"}</span>
         <span className="legend-cap">一緒に動く</span>
       </div>
 
