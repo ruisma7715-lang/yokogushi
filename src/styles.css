@@ -1,0 +1,795 @@
+/* ヨコグシ — 配色とタイポの土台
+   色は必ずここのトークン経由で使う。直接hexを書かないこと（ダークモードが壊れる）。 */
+
+:root {
+  color-scheme: light;
+
+  --ground: #f6f8fa;
+  --surface: #ffffff;
+  --surface-2: #ecf0f5;
+  --ink: #0f1720;
+  --ink-2: #4a5563;
+  --ink-3: #7c8798;
+  --rule: #dde2e9;
+  --rule-strong: #c0c9d4;
+  --accent: #1c5cab;
+
+  /* 騰落。日本の慣習に合わせて 上昇=赤 / 下落=青。
+     色だけに意味を持たせないよう、必ず ▲▼ の記号と併記する。 */
+  --up: #c0392b;
+  --down: #1c5cab;
+  --flat: #7c8798;
+
+  /* 資産の識別色。CVD検証済みパレットの1〜6番 */
+  --a-nikkei: #2a78d6;
+  --a-sp500: #eb6834;
+  --a-usdjpy: #1baf7a;
+  --a-gold: #eda100;
+  --a-btc: #e87ba4;
+  --a-us10y: #008300;
+
+  --ff-body: "IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --ff-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --shadow: 0 1px 2px rgba(15, 23, 32, 0.05), 0 10px 28px -20px rgba(15, 23, 32, 0.35);
+
+  /* 相関の発散配色。色覚特性シミュレーションで検証済み
+     （CVD ΔE 20.9 / 通常視 22.2、いずれも基準超え）。
+     コントラストの低い段があるため、セルには必ず数値を併記すること。 */
+  --d-pos2: #184f95;
+  --d-pos2-ink: #ffffff;
+  --d-pos1: #6da7ec;
+  --d-pos1-ink: #0b0b0b;
+  --d-neu: #f0efec;
+  --d-neu-ink: #4a5563;
+  --d-neg1: #ef8a89;
+  --d-neg1-ink: #0b0b0b;
+  --d-neg2: #b93230;
+  --d-neg2-ink: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --ground: #0e1116;
+    --surface: #161b22;
+    --surface-2: #1e242d;
+    --ink: #e9edf2;
+    --ink-2: #a3aebd;
+    --ink-3: #78838f;
+    --rule: #262d37;
+    --rule-strong: #3a434f;
+    --accent: #5598e7;
+
+    --up: #e8756a;
+    --down: #5598e7;
+    --flat: #78838f;
+
+    --a-nikkei: #3987e5;
+    --a-sp500: #d95926;
+    --a-usdjpy: #199e70;
+    --a-gold: #c98500;
+    --a-btc: #d55181;
+    --a-us10y: #008300;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -20px rgba(0, 0, 0, 0.8);
+
+    /* 暗い面に載せるので明暗を反転させるのではなく、暗い面向けに選び直した段。
+       ダーク側も検証済み（CVD ΔE 15.3 / 通常視 18.0）。 */
+    --d-pos2: #86b6ef;
+    --d-pos2-ink: #0b0b0b;
+    --d-pos1: #256abf;
+    --d-pos1-ink: #ffffff;
+    --d-neu: #383835;
+    --d-neu-ink: #c3c2b7;
+    --d-neg1: #c4453f;
+    --d-neg1-ink: #ffffff;
+    --d-neg2: #ef8a89;
+    --d-neg2-ink: #0b0b0b;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --ground: #0e1116;
+  --surface: #161b22;
+  --surface-2: #1e242d;
+  --ink: #e9edf2;
+  --ink-2: #a3aebd;
+  --ink-3: #78838f;
+  --rule: #262d37;
+  --rule-strong: #3a434f;
+  --accent: #5598e7;
+
+  --up: #e8756a;
+  --down: #5598e7;
+  --flat: #78838f;
+
+  --a-nikkei: #3987e5;
+  --a-sp500: #d95926;
+  --a-usdjpy: #199e70;
+  --a-gold: #c98500;
+  --a-btc: #d55181;
+  --a-us10y: #008300;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 10px 28px -20px rgba(0, 0, 0, 0.8);
+
+  --d-pos2: #86b6ef;
+  --d-pos2-ink: #0b0b0b;
+  --d-pos1: #256abf;
+  --d-pos1-ink: #ffffff;
+  --d-neu: #383835;
+  --d-neu-ink: #c3c2b7;
+  --d-neg1: #c4453f;
+  --d-neg1-ink: #ffffff;
+  --d-neg2: #ef8a89;
+  --d-neg2-ink: #0b0b0b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--ff-body);
+  font-size: 16px;
+  line-height: 1.7;
+  font-feature-settings: "palt" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------- 画面の枠 */
+
+.app {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  font-family: var(--ff-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.brand span {
+  display: block;
+  font-family: var(--ff-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+  margin-top: 0.125rem;
+}
+
+.as-of {
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- カード */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1rem 1.125rem 1.125rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  flex: none;
+}
+
+.card-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.card-cls {
+  margin-left: auto;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.card-value {
+  font-family: var(--ff-mono);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-value small {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-left: 0.25rem;
+  letter-spacing: 0;
+}
+
+.deltas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.625rem;
+  margin: 0;
+}
+
+.delta dt {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+  margin: 0 0 0.125rem;
+}
+
+.delta dd {
+  margin: 0;
+  font-family: var(--ff-mono);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.delta dd.up {
+  color: var(--up);
+}
+.delta dd.down {
+  color: var(--down);
+}
+.delta dd.flat {
+  color: var(--flat);
+}
+
+/* ---------------------------------------------------------------- 状態表示 */
+
+.state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+
+.state code {
+  font-family: var(--ff-mono);
+  font-size: 0.8125rem;
+  background: var(--surface-2);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+}
+
+.footnote {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: var(--ink-3);
+}
+
+.footnote a {
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------- 相関マトリクス */
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.matrix-section {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.section-sub {
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  margin: 0.125rem 0 0;
+}
+
+.seg {
+  display: flex;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  overflow: hidden;
+  flex: none;
+}
+
+.seg button {
+  appearance: none;
+  border: none;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  padding: 0.4375rem 0.75rem;
+  cursor: pointer;
+  border-right: 1px solid var(--rule);
+}
+
+.seg button:last-child {
+  border-right: none;
+}
+
+.seg button:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.seg button.on {
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.matrix-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+table.matrix {
+  border-collapse: separate;
+  border-spacing: 2px;
+  width: 100%;
+  min-width: 22rem;
+}
+
+table.matrix th {
+  font-family: var(--ff-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+  padding: 0;
+}
+
+table.matrix thead th {
+  text-align: center;
+  padding-bottom: 0.25rem;
+}
+
+table.matrix tbody th {
+  text-align: right;
+  padding-right: 0.5rem;
+}
+
+table.matrix .corner {
+  width: 3rem;
+}
+
+.cell-td {
+  padding: 0;
+}
+
+.cell {
+  display: block;
+  width: 100%;
+  appearance: none;
+  border: none;
+  border-radius: 3px;
+  padding: 0.5rem 0.125rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  cursor: pointer;
+  transition: outline-color 0.1s ease;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+}
+
+.cell.picked {
+  outline-color: var(--ink);
+}
+
+.cell:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+td.cell.self,
+.cell.self {
+  background: transparent;
+  color: var(--ink-3);
+  cursor: default;
+  text-align: center;
+  padding: 0.5rem 0.125rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+}
+
+.pos2 {
+  background: var(--d-pos2);
+  color: var(--d-pos2-ink);
+}
+.pos1 {
+  background: var(--d-pos1);
+  color: var(--d-pos1-ink);
+}
+.neu {
+  background: var(--d-neu);
+  color: var(--d-neu-ink);
+}
+.neg1 {
+  background: var(--d-neg1);
+  color: var(--d-neg1-ink);
+}
+.neg2 {
+  background: var(--d-neg2);
+  color: var(--d-neg2-ink);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.875rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+}
+
+.legend-cap {
+  color: var(--ink-3);
+  padding: 0 0.375rem;
+}
+
+.legend .sw {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 1.375rem;
+  border-radius: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.readout {
+  margin-top: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.875rem 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  min-height: 3.5rem;
+}
+
+.readout-idle {
+  color: var(--ink-3);
+}
+
+.howto {
+  margin-top: 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--surface);
+  font-size: 0.8125rem;
+  line-height: 1.85;
+}
+
+.howto summary {
+  cursor: pointer;
+  padding: 0.75rem 1.125rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.howto summary:hover {
+  color: var(--ink);
+}
+
+.howto > *:not(summary) {
+  margin: 0 1.125rem 0.875rem;
+}
+
+.howto ul {
+  padding-left: 1.125rem;
+  margin-left: 1.125rem;
+}
+
+.howto li {
+  margin-bottom: 0.5rem;
+}
+
+/* ---------------------------------------------------------------- 今日の3行 */
+
+.note-section {
+  margin-top: 2.5rem;
+  padding: 1.25rem 1.375rem 1.375rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+.note-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.note-date {
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.note-lines {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.9;
+}
+
+.note-lines li {
+  margin-bottom: 0.375rem;
+}
+
+.note-lines li::marker {
+  color: var(--ink-3);
+  font-family: var(--ff-mono);
+  font-size: 0.8125rem;
+}
+
+.note-more {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0.5rem 0 0;
+  margin-top: 0.5rem;
+  color: var(--accent);
+  font-family: var(--ff-body);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.note-past {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--rule);
+}
+
+.note-past h3 {
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  margin: 1rem 0 0.25rem;
+}
+
+.note-past ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+
+/* ---------------------------------------------------------------- チャート */
+
+.chart-section {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--ink);
+}
+
+.chart-wrap {
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.chart-wrap svg {
+  display: block;
+  touch-action: pan-y;
+}
+
+/* カード配置の .grid と衝突しないよう、SVG罫線は別名にしている */
+svg .gridline {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+svg .gridline.base {
+  stroke: var(--rule-strong);
+  stroke-dasharray: 3 3;
+}
+
+svg .axis {
+  fill: var(--ink-3);
+  font-family: var(--ff-mono);
+  font-size: 10px;
+}
+
+svg .line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+svg .crosshair {
+  stroke: var(--ink-3);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+svg .dot {
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.tip {
+  position: absolute;
+  top: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  padding: 0.5rem 0.625rem;
+  box-shadow: var(--shadow);
+  pointer-events: none;
+  min-width: 9.5rem;
+}
+
+.tip-date {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+  margin: 0 0 0.25rem;
+}
+
+.tip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+
+.tip-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex: none;
+}
+
+.tip-name {
+  color: var(--ink-2);
+}
+
+.tip-val {
+  margin-left: auto;
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.875rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  appearance: none;
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  padding: 0.3125rem 0.75rem;
+  font-family: var(--ff-body);
+  font-size: 0.75rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.chip:hover {
+  background: var(--surface-2);
+}
+
+.chip.off {
+  color: var(--ink-3);
+  border-style: dashed;
+}
+
+.chip.off .chip-dot {
+  opacity: 0.3;
+}
+
+.chip-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

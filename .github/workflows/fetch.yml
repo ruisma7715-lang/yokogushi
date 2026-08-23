@@ -1,0 +1,36 @@
+name: マーケットデータ取得
+
+on:
+  schedule:
+    # GitHub Actions の cron は UTC 指定。JST = UTC+9。
+    - cron: "0 21 * * 0-4" # 日本時間 平日 06:00（NY市場が引けた後）
+    - cron: "0 7 * * 1-5" # 日本時間 平日 16:00（東京市場が引けた後）
+  workflow_dispatch: # 手動実行用のボタンも出しておく
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # 取得したJSONをコミットするために必要
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: データ取得
+        run: node scripts/fetch.mjs
+        env:
+          # リポジトリの Settings > Secrets and variables > Actions で登録する。
+          # 未登録でもエラーにはならず、キーが要る資産だけスキップされる。
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+
+      - name: 変更があればコミット
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data
+          git diff --staged --quiet || git commit -m "data: $(date -u +%Y-%m-%d\ %H:%M) 時点のデータに更新"
+          git push

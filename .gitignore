@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.tsbuildinfo
+
+# APIキー。絶対にコミットしない（GitHub Actions では Secrets から渡す）
+.env
+.env.local
+
+.DS_Store
