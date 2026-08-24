@@ -5,9 +5,10 @@
 //
 // APIキーが無い資産は自動でスキップされるので、キーを取るたびに資産が増えていく。
 
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { renderDailyPage, renderIndex, renderSitemap, SITE_BASE } from "./daily-page.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(ROOT, "public", "data");
@@ -406,6 +407,35 @@ async function main() {
   await writeFile(join(OUT_DIR, "history.json"), JSON.stringify(history, null, 2));
   await writeFile(join(OUT_DIR, "highlights.json"), JSON.stringify(highlights, null, 2));
   await writeFile(join(OUT_DIR, "attribution.json"), JSON.stringify(attribution, null, 2));
+
+  // --- 日次の解説ページ。実行のたびに1本ずつ増え、検索の入口になる。
+  const DAILY_DIR = join(ROOT, "public", "daily");
+  await mkdir(DAILY_DIR, { recursive: true });
+
+  const existing = (await readdir(DAILY_DIR).catch(() => []))
+    .filter((f) => /^\d{4}-\d{2}-\d{2}\.html$/.test(f))
+    .map((f) => f.replace(".html", ""));
+
+  const allDays = [...new Set([...existing, asOf])].sort();
+  const at = allDays.indexOf(asOf);
+
+  const page = renderDailyPage({
+    asOf,
+    snapshot,
+    highlights,
+    prevDay: at > 0 ? allDays[at - 1] : null,
+    nextDay: at < allDays.length - 1 ? allDays[at + 1] : null,
+  });
+
+  await writeFile(join(DAILY_DIR, `${asOf}.html`), page.html);
+  await writeFile(join(DAILY_DIR, "index.html"), renderIndex([...allDays].reverse()));
+  await writeFile(join(ROOT, "public", "sitemap.xml"), renderSitemap(allDays));
+  await writeFile(
+    join(ROOT, "public", "robots.txt"),
+    `User-agent: *\nAllow: /\nSitemap: ${SITE_BASE}/sitemap.xml\n`
+  );
+
+  console.log(`\n  日次ページ: ${allDays.length} 本（最新 ${asOf}）`);
 
   console.log(`\n  今日のハイライト（自動生成）:`);
   if (highlights.regime) console.log(`    [${highlights.regime.label}] ${highlights.regime.detail}`);

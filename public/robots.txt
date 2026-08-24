@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ruisma7715-lang.github.io/yokogushi/sitemap.xml

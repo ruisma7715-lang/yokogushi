@@ -320,6 +320,19 @@ body {
   color: var(--ink-2);
 }
 
+.archive-link {
+  display: inline-block;
+  color: var(--accent) !important;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.5rem 0;
+}
+
+.archive-link:hover {
+  text-decoration: underline;
+}
+
 /* ---------------------------------------------------------------- 相関マトリクス */
 
 .sr {

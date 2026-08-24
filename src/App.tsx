@@ -117,6 +117,11 @@ export default function App() {
 
       <footer className="footnote">
         <p>
+          <a href={`${BASE}daily/`} className="archive-link">
+            📅 毎日のマーケットの記録を読む
+          </a>
+        </p>
+        <p>
           出典: FRED（米セントルイス連銀） / Frankfurter（ECB） / CoinGecko。
           金は PAXG（金地金を裏付けとするトークン）の価格を用いた暫定値です。
         </p>
