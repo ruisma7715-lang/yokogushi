@@ -1,77 +1,77 @@
 {
-  "asOf": "2026-08-26",
+  "asOf": "2026-08-27",
   "assets": [
     {
       "id": "nikkei",
       "name": "日経平均",
       "cls": "JP EQUITY",
       "unit": "円",
-      "value": 66262.16,
-      "changeDay": 0.62,
-      "changeWeek": 1.43,
-      "changeMonth": 2.05,
-      "vol": 32.2
+      "value": 66131.98,
+      "changeDay": -0.2,
+      "changeWeek": -0.13,
+      "changeMonth": 6.04,
+      "vol": 32.17
     },
     {
       "id": "sp500",
       "name": "S&P 500",
       "cls": "US EQUITY",
       "unit": "pt",
-      "value": 7675.7,
-      "changeDay": -0.02,
-      "changeWeek": -0.42,
-      "changeMonth": 3.54,
-      "vol": 12.87
+      "value": 7730.99,
+      "changeDay": 0.72,
+      "changeWeek": 1.18,
+      "changeMonth": 4.07,
+      "vol": 12.88
     },
     {
       "id": "usdjpy",
       "name": "ドル円",
       "cls": "FX",
       "unit": "円",
-      "value": 159.07,
-      "changeDay": -0.11,
-      "changeWeek": -0.01,
-      "changeMonth": -2.79,
-      "vol": 6.79
+      "value": 159.39,
+      "changeDay": 0.2,
+      "changeWeek": 0.4,
+      "changeMonth": -2.76,
+      "vol": 6.75
     },
     {
       "id": "gold",
       "name": "金",
       "cls": "COMMODITY",
       "unit": "USD",
-      "value": 4646.5,
-      "changeDay": -0.55,
-      "changeWeek": 7.22,
-      "changeMonth": 13.75,
-      "vol": 25.48
+      "value": 4615.09,
+      "changeDay": -0.68,
+      "changeWeek": 2.68,
+      "changeMonth": 13.6,
+      "vol": 25.15
     },
     {
       "id": "btc",
       "name": "ビットコイン",
       "cls": "CRYPTO",
       "unit": "USD",
-      "value": 78511.23,
-      "changeDay": -0.59,
-      "changeWeek": 21.37,
-      "changeMonth": 20.15,
-      "vol": 38.45
+      "value": 79018.03,
+      "changeDay": 0.65,
+      "changeWeek": 14.04,
+      "changeMonth": 24.04,
+      "vol": 38.38
     },
     {
       "id": "us10y",
       "name": "米10年債利回り",
       "cls": "RATES",
       "unit": "%",
-      "value": 4.66,
-      "changeDay": 0.43,
-      "changeWeek": 0.22,
-      "changeMonth": 0.22,
+      "value": 4.67,
+      "changeDay": 0.21,
+      "changeWeek": -0.43,
+      "changeMonth": 1.3,
       "vol": 15.08
     }
   ],
   "units": {
-    "usd_jpy": 159.07,
-    "btc_jpy": 12488782,
-    "gold_jpy_per_g": 23763
+    "usd_jpy": 159.39,
+    "btc_jpy": 12594684,
+    "gold_jpy_per_g": 23650
   },
   "skipped": []
 }
