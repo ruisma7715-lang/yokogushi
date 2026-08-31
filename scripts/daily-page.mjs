@@ -31,6 +31,9 @@ body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sa
 h1{font-size:1.75rem;line-height:1.4;margin:1.25rem 0 .5rem;text-wrap:balance}
 .date{font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--ink3)}
 .lead{font-size:1.0625rem;line-height:1.95;margin:1rem 0 2rem;padding:1rem 1.25rem;background:var(--surface);border-left:3px solid var(--accent);border-radius:4px}
+.lead3{margin:0;padding-left:1.25rem}
+.lead3 li{margin-bottom:.5rem;font-size:.9375rem;line-height:1.85}
+.lead3 li:last-child{margin-bottom:0}
 h2{font-size:1.125rem;margin:2.25rem 0 .75rem;padding-top:1.25rem;border-top:1px solid var(--rule)}
 p{margin:0 0 1rem;font-size:.9375rem}
 table{width:100%;border-collapse:collapse;font-size:.875rem;margin:1rem 0 1.5rem;background:var(--surface);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
@@ -76,7 +79,9 @@ function shell({ title, description, canonical, body }) {
 }
 
 /** その日1本ぶんの解説ページ */
-export function renderDailyPage({ asOf, snapshot, highlights, prevDay, nextDay }) {
+export function renderDailyPage({ asOf, snapshot, highlights, topics, prevDay, nextDay }) {
+  const calendar = topics?.calendar ?? [];
+  const headlines = topics?.headlines ?? [];
   const title = `${jpDate(asOf)}のマーケット｜日経平均・S&P500・金・ビットコインはどう動いたか`;
 
   const moved = [...snapshot]
@@ -111,9 +116,35 @@ export function renderDailyPage({ asOf, snapshot, highlights, prevDay, nextDay }
     return `<p><strong>${esc(a.name)}</strong>は前日比 ${signed(a.changeDay)}%${dir}し、${a.value.toLocaleString("ja-JP")}${esc(a.unit)}となりました。1ヶ月前と比べると ${a.changeMonth == null ? "—" : signed(a.changeMonth) + "%"} です。</p>`;
   });
 
-  const items = highlights.items
-    .filter((i) => i.kind !== "move")
-    .map((i) => `<li>${esc(i.text)}</li>`)
+  // 冒頭の3行。読み手がこのページで最初に読む場所なので、ここに一番良いものを置く。
+  const lead3 = (highlights.lead ?? [])
+    .map((l) => `<li>${esc(l.text)}</li>`)
+    .join("\n");
+
+  // これから発表される米指標。次にまた見にくる理由になる部分。
+  const seenRelease = new Set();
+  const upcoming = calendar
+    .filter((c) => c.date >= asOf)
+    // 毎週出る指標で埋まらないよう、同じ指標は直近の1回だけにする
+    .filter((c) => {
+      if (seenRelease.has(c.name)) return false;
+      seenRelease.add(c.name);
+      return true;
+    })
+    .slice(0, 4)
+    .map(
+      (c) =>
+        `<tr><td class="num">${esc(c.date)}</td><td>${esc(c.name)}</td><td style="color:var(--ink3)">${esc(c.why)}</td></tr>`
+    )
+    .join("\n");
+
+  // 見出しは公式の一次ソースのみ。本文は載せず、必ず発表元へ送る。
+  const news = headlines
+    .map(
+      (h) =>
+        `<li><a href="${esc(h.url)}" rel="noopener nofollow">${esc(h.title)}</a>` +
+        `<span style="color:var(--ink3);font-size:.8125em"> — ${esc(h.source)}${h.date ? " " + esc(h.date) : ""}</span></li>`
+    )
     .join("\n");
 
   const nav = `<div class="nav">
@@ -126,11 +157,12 @@ ${nextDay ? `<a href="./${nextDay}.html">${jpDate(nextDay)} →</a>` : "<span></
 <p class="date">${asOf}</p>
 <h1>${jpDate(asOf)}のマーケット</h1>
 
-<p class="lead">${esc(
-    regime
-      ? `${regime.label}。${regime.detail}`
-      : "この日の値動きをまとめました。"
-  )}</p>
+${
+  lead3
+    ? `<div class="lead"><strong style="display:block;font-size:.75rem;letter-spacing:.08em;color:var(--ink3);margin-bottom:.5rem">この日の3行</strong>\n<ol class="lead3">\n${lead3}\n</ol></div>` +
+      (regime ? `\n<p style="font-size:.875rem;color:var(--ink2)">${esc(regime.detail)}</p>` : "")
+    : `<p class="lead">${esc(regime ? `${regime.label}。${regime.detail}` : "この日の値動きをまとめました。")}</p>`
+}
 
 <h2>この日の値動き</h2>
 <table>
@@ -143,7 +175,9 @@ ${rows}
 <h2>何が起きたか</h2>
 ${paragraphs.join("\n")}
 
-${items ? `<h2>いつもと違ったこと</h2>\n<ul>\n${items}\n</ul>` : ""}
+${upcoming ? `<h2>これからの発表予定</h2>\n<table>\n<thead><tr><th>日付</th><th>指標</th><th>効くところ</th></tr></thead>\n<tbody>\n${upcoming}\n</tbody>\n</table>` : ""}
+
+${news ? `<h2>直近の公式発表</h2>\n<ul>\n${news}\n</ul>\n<p style="font-size:.8125rem;color:var(--ink3)">このページを作成した時点の一次ソースの見出しです。見出しと発表元へのリンクのみを掲載しています。内容は各発表元のページでご確認ください。</p>` : ""}
 
 <a class="cta" href="../">
 <strong>自分の資産だと、いくら増減したのか</strong>

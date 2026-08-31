@@ -39,9 +39,33 @@ export type History = {
 
 export type Shift = { a: string; b: string; now: number; base: number; diff: number };
 
+/** 自動生成の「今日の3行」。kind は切り口の種類（値動き・節目・予定 など） */
+export type LeadLine = { kind: string; text: string };
+
 export type Highlights = {
   asOf: string;
   regime: { label: string; detail: string } | null;
+  /** 古いJSONには無いことがあるので任意。無ければ items を使う */
+  lead?: LeadLine[];
   items: { kind: "move" | "unusual" | "shift"; text: string }[];
   shifts: Shift[];
+};
+
+export type CalendarEntry = { date: string; name: string; why: string };
+
+export type Headline = {
+  source: string;
+  title: string;
+  url: string;
+  date: string | null;
+  tag: string | null;
+};
+
+export type Topics = {
+  generatedAt: string;
+  /** 生成時点の日本時間の日付。カレンダーの「今夜／明日」はこれを基準にする */
+  today: string;
+  calendar: CalendarEntry[];
+  headlines: Headline[];
+  failed: string[];
 };

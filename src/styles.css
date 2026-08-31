@@ -842,28 +842,41 @@ td.cell.self,
   line-height: 1.75;
 }
 
-.hl-list {
+/* 今日の3行。ページで最初に読まれる場所なので、文章そのものを主役にする。 */
+.lead-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  counter-reset: lead;
 }
 
-.hl-item {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
+.lead-item {
+  display: grid;
+  grid-template-columns: 1.375rem 1fr auto;
+  gap: 0.25rem 0.75rem;
+  align-items: baseline;
   background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: 4px;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  line-height: 1.8;
+  padding: 0.875rem 1rem;
 }
 
-.hl-kind {
+.lead-num {
+  font-family: var(--ff-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.lead-text {
+  font-size: 0.9375rem;
+  line-height: 1.9;
+}
+
+.lead-kind {
   flex: none;
   font-family: var(--ff-mono);
   font-size: 0.625rem;
@@ -872,14 +885,26 @@ td.cell.self,
   border-radius: 3px;
   background: var(--surface-2);
   color: var(--ink-2);
-  margin-top: 0.25rem;
   white-space: nowrap;
 }
 
-.hl-item.unusual .hl-kind,
-.hl-item.shift .hl-kind {
+/* 数字を見ただけでは気づけない種類のものを目立たせる */
+.lead-item.unusual .lead-kind,
+.lead-item.shift .lead-kind,
+.lead-item.milestone .lead-kind,
+.lead-item.calendar .lead-kind {
   background: var(--accent);
   color: #ffffff;
+}
+
+@media (max-width: 34rem) {
+  .lead-item {
+    grid-template-columns: 1.375rem 1fr;
+  }
+  .lead-kind {
+    grid-column: 2;
+    justify-self: start;
+  }
 }
 
 .shifts {
@@ -2204,4 +2229,191 @@ svg .dot {
   * {
     transition: none !important;
   }
+}
+
+/* ------------------------------------------------------------------ 前回からの差分
+   ページを開いた瞬間、留守にしていた間の動きを1行で返す。
+   数字の大小より「自分が見ていない間に動いた」ことが分かればいい。 */
+.since {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.875rem;
+  margin-bottom: 1.5rem;
+  padding: 0.625rem 0.875rem;
+  background: var(--surface-2);
+  border-radius: 4px;
+  font-size: 0.8125rem;
+}
+
+.since-when {
+  color: var(--ink-2);
+}
+
+.since-sep {
+  font-size: 0.6875rem;
+  font-family: var(--ff-mono);
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.since-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 0.875rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.since-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+}
+
+.since-name {
+  color: var(--ink-2);
+}
+
+.since-num {
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.since-list li.up .since-num {
+  color: var(--up);
+}
+
+.since-list li.down .since-num {
+  color: var(--down);
+}
+
+/* ------------------------------------------------------------------ 今日のトピックス
+   一次ソースの見出しと、これから出る数字。転載はせず、必ず発表元へ送る。 */
+.topics-section {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.topics-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.875rem;
+}
+
+.topics-src {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.topics-sub {
+  font-size: 0.75rem;
+  font-family: var(--ff-mono);
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+}
+
+.cal {
+  margin-bottom: 1.25rem;
+}
+
+.cal-list,
+.news-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.cal-row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.125rem 0.75rem;
+  align-items: baseline;
+  padding: 0.625rem 0.875rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+/* 今夜・明日のものだけ線で示す。全部強調すると強調にならない */
+.cal-row.soon {
+  border-left: 3px solid var(--accent);
+}
+
+.cal-when {
+  font-family: var(--ff-mono);
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.cal-row.soon .cal-when {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.cal-name {
+  font-weight: 500;
+}
+
+.cal-why {
+  grid-column: 2;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+}
+
+.news-list li {
+  padding: 0.625rem 0.875rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.news-list a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+}
+
+.news-list a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.news-meta {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+}
+
+.news-tag {
+  display: inline-block;
+  margin-right: 0.5rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.news-note {
+  margin: 0.625rem 0 0;
+  font-size: 0.75rem;
+  color: var(--ink-3);
 }

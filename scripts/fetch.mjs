@@ -9,6 +9,7 @@ import { writeFile, mkdir, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderDailyPage, renderIndex, renderSitemap, SITE_BASE } from "./daily-page.mjs";
+import { fetchTopics } from "./topics.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(ROOT, "public", "data");
@@ -189,6 +190,223 @@ function judgeRegime(dayChange) {
   if (e > T && g > T)
     return { label: "全面高", detail: "株も金も上がりました。お金の量そのものが増えているときに出やすい形です。" };
   return { label: "方向感なし", detail: "株も金も大きくは動いていません。様子見の一日です。" };
+}
+
+// 何日続けて同じ方向に動いたか
+function streakOf(returns) {
+  const sign = Math.sign(returns[returns.length - 1] ?? 0);
+  if (!sign) return { n: 0, sign: 0 };
+
+  let n = 0;
+  for (let i = returns.length - 1; i >= 0; i--) {
+    if (Math.sign(returns[i]) !== sign) break;
+    n++;
+  }
+  return { n, sign };
+}
+
+// 直近の値が「何営業日ぶりの高値／安値か」。
+// 0 なら更新していない。252 を超えていれば 1年ぶり（52週高値・安値）。
+function daysSinceBeyond(prices, dir) {
+  const last = prices[prices.length - 1];
+  let back = 0;
+  for (let i = prices.length - 2; i >= 0; i--) {
+    const beyond = dir > 0 ? prices[i] >= last : prices[i] <= last;
+    if (beyond) break;
+    back++;
+  }
+  return back;
+}
+
+// 「何日ぶり」を人が使う言葉に直す。短すぎる更新は記事にならないので null を返す。
+function spanWord(days) {
+  if (days >= 250) return { word: "1年ぶり", score: 75 };
+  if (days >= 120) return { word: "半年ぶり", score: 60 };
+  if (days >= 60) return { word: "3か月ぶり", score: 50 };
+  if (days >= 20) return { word: "1か月ぶり", score: 35 };
+  return null;
+}
+
+// ---------------------------------------------------------------- 今日の3行
+//
+// このサイトを毎日ひらく理由になるのは、数字そのものではなく
+// 「今日は昨日と何が違うのか」が一言で分かることだと考えている。
+// 毎日手で書くのが理想だが、書けない日ができた時点で更新は止まる。
+// だから機械が毎日3行だけ書く。人が書いた日は、画面側でそちらを優先して見せる。
+//
+// 書き方の約束:
+//   ・起きたことと、その事実が何に効くかまで。売買の推奨は絶対に書かない
+//   ・「〜だろう」「〜すべき」を使わない。断定するのは観測できた事実だけ
+function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, calendar, jstToday }) {
+  const nameOf = (id) => live.find((a) => a.id === id)?.name ?? id;
+  const snapOf = (id) => snapshot.find((a) => a.id === id);
+
+  // 文章の中に置く価格。桁が大きいものの小数点以下は読む邪魔にしかならない。
+  const priceText = (s) => {
+    const digits = s.unit === "%" ? 2 : Math.abs(s.value) >= 1000 ? 0 : 2;
+    const num = s.value.toLocaleString("ja-JP", {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
+    });
+    if (s.unit === "USD") return `${num}ドル`;
+    return `${num}${s.unit}`;
+  };
+
+  const dayChange = {};
+  for (const id of ids) {
+    const r = returnsById[id];
+    dayChange[id] = r[r.length - 1] * 100;
+  }
+
+  const moves = ids
+    .map((id) => ({ id, chg: dayChange[id] }))
+    .sort((x, y) => Math.abs(y.chg) - Math.abs(x.chg));
+
+  const top = moves[0];
+  const quiet = moves[moves.length - 1];
+
+  // --- 1行目。その日の姿勢と、いちばん動いたもの。ここは必ず埋まる。
+  const lines = [];
+  if (top) {
+    const dir = top.chg >= 0 ? "上昇" : "下落";
+    // 姿勢の説明文（「株が買われ、金が売られました」）は画面側でバッジとして
+    // 別に出しているので、ここでは繰り返さずラベルだけを添える。
+    lines.push({
+      kind: "day",
+      text:
+        (regime ? `${regime.label}。` : "") +
+        `いちばん動いたのは${nameOf(top.id)}で、前日比 ${signed(top.chg)}% の${dir}でした。`,
+    });
+  }
+
+  // --- 2行目以降の候補を集めて、点数の高いものから選ぶ
+  const cand = [];
+
+  // 普段と比べて異常な値動きだったか
+  for (const m of moves) {
+    const sd = stdev(returnsById[m.id].slice(-90)) * 100;
+    if (!sd) continue;
+    const z = Math.abs(m.chg) / sd;
+    if (z < 1.8) continue;
+    cand.push({
+      kind: "unusual",
+      about: m.id,
+      score: 60 + z * 8,
+      text: `${nameOf(m.id)}のこの動きは、直近90日の平均的な振れ幅の ${z.toFixed(1)} 倍です。いつもの範囲を超えています。`,
+    });
+  }
+
+  // 高値・安値の更新。相場の話題になりやすく、日によって主役が変わる。
+  for (const id of ids) {
+    const p = values[id];
+    const s = snapOf(id);
+    if (!p || !s) continue;
+
+    for (const dir of [1, -1]) {
+      const span = spanWord(daysSinceBeyond(p, dir));
+      if (!span) continue;
+      const kindWord = dir > 0 ? "高値" : "安値";
+      cand.push({
+        kind: "milestone",
+        about: id,
+        score: span.score,
+        text: `${nameOf(id)}は ${priceText(s)} と、${span.word}の${kindWord}です。`,
+      });
+    }
+  }
+
+  // 連続記録。1日の値動きが小さくても、積み上がると効いてくる。
+  for (const id of ids) {
+    const { n, sign } = streakOf(returnsById[id]);
+    if (n < 4) continue;
+    const s = snapOf(id);
+    const word = sign > 0 ? "続伸" : "続落";
+    const total = s?.changeWeek;
+    cand.push({
+      kind: "streak",
+      about: id,
+      score: 30 + n * 5,
+      text:
+        `${nameOf(id)}は ${n}日${word}。` +
+        (typeof total === "number" ? `この1週間で ${signed(total)}% です。` : ""),
+    });
+  }
+
+  // 資産どうしの関係の変化。このサイトの核心なので、少し高めに評価する。
+  const big = shifts[0];
+  if (big && Math.abs(big.diff) >= 0.25) {
+    const flipped = relation(big.now) !== relation(big.base);
+    cand.push({
+      kind: "shift",
+      about: big.a,
+      score: 45 + Math.abs(big.diff) * 40,
+      text:
+        `${nameOf(big.a)}と${nameOf(big.b)}の関係が動いています。` +
+        `1年では ${signed(big.base)}（${relation(big.base)}）、直近30日は ${signed(big.now)}（${relation(big.now)}）。` +
+        (flipped ? "前提が入れ替わりました。" : "同じ方向への寄りが強まっています。"),
+    });
+  }
+
+  // 1週間・1ヶ月の大きな変化。1日では見えない流れを拾う。
+  for (const s of snapshot) {
+    if (typeof s.changeWeek === "number" && Math.abs(s.changeWeek) >= 4) {
+      cand.push({
+        kind: "span",
+        about: s.id,
+        score: 35 + Math.abs(s.changeWeek),
+        text: `${s.name}はこの1週間で ${signed(s.changeWeek)}%。1ヶ月では ${s.changeMonth == null ? "—" : signed(s.changeMonth) + "%"} です。`,
+      });
+    }
+  }
+
+  // これから発表される米指標。明日また見にくる理由になる唯一の材料。
+  const tomorrow = new Date(Date.parse(`${jstToday}T00:00:00Z`) + 864e5).toISOString().slice(0, 10);
+  for (const c of calendar) {
+    if (c.date === jstToday) {
+      cand.push({
+        kind: "calendar",
+        about: null,
+        score: 42,
+        text: `今夜は${c.name}の発表日です。${c.why}ため、明日の相場の前提が変わることがあります。`,
+      });
+    } else if (c.date === tomorrow) {
+      cand.push({
+        kind: "calendar",
+        about: null,
+        score: 38,
+        text: `明日は${c.name}の発表があります。${c.why}指標です。`,
+      });
+    }
+  }
+
+  // 静かな日ほど埋まらないので、最後に必ず使える札を用意しておく
+  if (quiet) {
+    cand.push({
+      kind: "calm",
+      about: quiet.id,
+      score: 10,
+      text: `いちばん静かだったのは${nameOf(quiet.id)}で、前日比 ${signed(quiet.chg)}% でした。`,
+    });
+  }
+
+  cand.sort((a, b) => b.score - a.score);
+
+  // 同じ切り口・同じ資産の話が続くと3行が痩せるので、種類と資産を散らす
+  const usedKind = new Set();
+  const usedAbout = new Set(top ? [top.id] : []);
+
+  for (const c of cand) {
+    if (lines.length >= 3) break;
+    if (usedKind.has(c.kind)) continue;
+    // 点数が高いものは、1行目と同じ資産の話でも通す
+    if (c.about && usedAbout.has(c.about) && c.score < 60) continue;
+
+    lines.push({ kind: c.kind, text: c.text });
+    usedKind.add(c.kind);
+    if (c.about) usedAbout.add(c.about);
+  }
+
+  return lines.slice(0, 3);
 }
 
 function buildHighlights({ live, ids, returnsById, corr30, corr365, asOf }) {
@@ -400,7 +618,32 @@ async function main() {
     asOf,
   });
 
+  // --- topics.json : 今日のトピックス（公式RSSの見出し＋米指標の発表予定）
+  //     外部サイト頼みなので、落ちてもデータ本体の更新は止めない。
+  const jstToday = new Date(Date.now() + 9 * 36e5).toISOString().slice(0, 10);
+  let topics = { generatedAt: new Date().toISOString(), today: jstToday, calendar: [], headlines: [], failed: [] };
+  try {
+    topics = await fetchTopics({ fredKey: FRED_KEY });
+    if (topics.failed.length) console.log(`\n  トピックス取得の失敗: ${topics.failed.join(" / ")}`);
+  } catch (err) {
+    console.log(`\n  !  トピックス取得に失敗: ${err.message}`);
+  }
+
+  // --- 今日の3行。highlights に同梱して、トップと日次ページの両方から使う。
+  highlights.lead = buildLead({
+    live,
+    ids,
+    values,
+    returnsById,
+    snapshot,
+    regime: highlights.regime,
+    shifts: highlights.shifts,
+    calendar: topics.calendar,
+    jstToday,
+  });
+
   await mkdir(OUT_DIR, { recursive: true });
+  await writeFile(join(OUT_DIR, "topics.json"), JSON.stringify(topics, null, 2));
   await writeFile(join(OUT_DIR, "latest.json"),
     JSON.stringify({ asOf, assets: snapshot, units, skipped: skipped.map((s) => s.id) }, null, 2));
   await writeFile(join(OUT_DIR, "correlation.json"), JSON.stringify(correlations, null, 2));
@@ -423,6 +666,7 @@ async function main() {
     asOf,
     snapshot,
     highlights,
+    topics,
     prevDay: at > 0 ? allDays[at - 1] : null,
     nextDay: at < allDays.length - 1 ? allDays[at + 1] : null,
   });
@@ -437,9 +681,12 @@ async function main() {
 
   console.log(`\n  日次ページ: ${allDays.length} 本（最新 ${asOf}）`);
 
-  console.log(`\n  今日のハイライト（自動生成）:`);
-  if (highlights.regime) console.log(`    [${highlights.regime.label}] ${highlights.regime.detail}`);
-  for (const it of highlights.items) console.log(`    ・${it.text}`);
+  console.log(`\n  今日の3行（自動生成）:`);
+  highlights.lead.forEach((l, i) => console.log(`    ${i + 1}. ${l.text}`));
+
+  console.log(`\n  トピックス: 発表予定 ${topics.calendar.length}件 / 見出し ${topics.headlines.length}件`);
+  for (const c of topics.calendar.slice(0, 3)) console.log(`    ${c.date}  ${c.name}`);
+  for (const h of topics.headlines.slice(0, 3)) console.log(`    ${h.source}  ${h.title}`);
 
   console.log(`\n  書き出し完了: public/data/ (${asOf} 時点)`);
   console.log(`  稼働中: ${live.map((a) => a.name).join(" / ")}`);

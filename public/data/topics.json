@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-08-31T12:31:28.387Z",
+  "today": "2026-08-31",
+  "calendar": [
+    {
+      "date": "2026-09-01",
+      "name": "米求人件数（JOLTS）",
+      "why": "労働需給のゆるみ"
+    },
+    {
+      "date": "2026-09-03",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-09-04",
+      "name": "米雇用統計",
+      "why": "利下げ観測が動き、ドル円に効く"
+    },
+    {
+      "date": "2026-09-10",
+      "name": "米PPI（生産者物価）",
+      "why": "CPIの先行指標"
+    },
+    {
+      "date": "2026-09-10",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-09-11",
+      "name": "米CPI（消費者物価）",
+      "why": "米金利と金の前提が動く"
+    }
+  ],
+  "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "長期国債買入れ（利回り・価格入札方式）の四半期予定（2026年7～9月）［日程更新］",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/mpr260831a.pdf",
+      "date": "2026-08-31",
+      "tag": "オペ"
+    },
+    {
+      "source": "日本銀行",
+      "title": "貸出約定平均金利（7月）",
+      "url": "https://www.boj.or.jp/statistics/dl/loan/yaku/yaku2607.pdf",
+      "date": "2026-08-30",
+      "tag": "統計"
+    },
+    {
+      "source": "日本銀行",
+      "title": "【記者会見】氷見野副総裁（埼玉、8月27日分）",
+      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk260828a.pdf",
+      "date": "2026-08-28",
+      "tag": "発言"
+    },
+    {
+      "source": "FRB",
+      "title": "Minutes of the Board's discount rate meetings on July 20 and July 29, 2026",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
+      "date": "2026-08-25",
+      "tag": "金利"
+    }
+  ],
+  "failed": []
+}

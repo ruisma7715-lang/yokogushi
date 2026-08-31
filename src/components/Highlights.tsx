@@ -9,10 +9,18 @@ const REGIME_CLASS: Record<string, string> = {
   方向感なし: "flat",
 };
 
+// 3行それぞれが「どの切り口の話か」を示す。毎日同じ並びにならないので、
+// 読む側が今日はどこが動いたのかを一目で掴めるようにする。
 const KIND_LABEL: Record<string, string> = {
+  day: "値動き",
   move: "値動き",
   unusual: "異常値",
+  milestone: "節目",
+  streak: "連続",
   shift: "関係の変化",
+  span: "この1週間",
+  calendar: "予定",
+  calm: "静けさ",
 };
 
 export default function Highlights({
@@ -24,11 +32,14 @@ export default function Highlights({
 }) {
   const nameOf = (id: string) => assets.find((a) => a.id === id)?.name ?? id;
 
+  // lead は fetch.mjs が毎回書き出す。古いデータを読んだときのために items も見る。
+  const lines = data.lead?.length ? data.lead : data.items;
+
   return (
     <section className="hl-section">
       <div className="hl-head">
-        <h2 className="section-title">今日わかったこと</h2>
-        <span className="hl-auto">データから自動生成</span>
+        <h2 className="section-title">今日の3行</h2>
+        <span className="hl-auto">データから自動生成 · {data.asOf}</span>
       </div>
 
       {data.regime && (
@@ -38,14 +49,15 @@ export default function Highlights({
         </div>
       )}
 
-      <ul className="hl-list">
-        {data.items.map((item, i) => (
-          <li key={i} className={`hl-item ${item.kind}`}>
-            <span className="hl-kind">{KIND_LABEL[item.kind] ?? item.kind}</span>
-            <span className="hl-text">{item.text}</span>
+      <ol className="lead-list">
+        {lines.map((line, i) => (
+          <li key={i} className={`lead-item ${line.kind}`}>
+            <span className="lead-num">{i + 1}</span>
+            <span className="lead-text">{line.text}</span>
+            <span className="lead-kind">{KIND_LABEL[line.kind] ?? line.kind}</span>
           </li>
         ))}
-      </ul>
+      </ol>
 
       {data.shifts.length > 0 && (
         <details className="shifts">

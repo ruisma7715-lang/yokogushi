@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Correlation, Highlights as HighlightsData, History, Latest } from "./types";
+import type { Correlation, Highlights as HighlightsData, History, Latest, Topics as TopicsData } from "./types";
 import type { AttributionData } from "./portfolio/attribution";
 import { hydrateHoldings } from "./portfolio/useHoldings";
 import AssetCard from "./components/AssetCard";
@@ -11,6 +11,8 @@ import Portfolio from "./components/Portfolio";
 import CorrelationMatrix from "./components/CorrelationMatrix";
 import OverlayChart from "./components/OverlayChart";
 import TodayNote from "./components/TodayNote";
+import Topics from "./components/Topics";
+import SinceLastVisit from "./components/SinceLastVisit";
 
 // public/ 配下は base 基準で配信される。ビルド後もそのまま解決される書き方。
 const BASE = import.meta.env.BASE_URL;
@@ -27,6 +29,7 @@ export default function App() {
   const [history, setHistory] = useState<History | null>(null);
   const [highlights, setHighlights] = useState<HighlightsData | null>(null);
   const [attribution, setAttribution] = useState<AttributionData | null>(null);
+  const [topics, setTopics] = useState<TopicsData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -49,6 +52,12 @@ export default function App() {
         setAttribution(at);
       })
       .catch((err: Error) => alive && setError(err.message));
+
+    // トピックスは外部の配信元頼みで、欠ける日がありうる。
+    // 相場データの表示まで道連れにしたくないので、別に読んで失敗は黙って諦める。
+    loadJSON<TopicsData>("topics.json")
+      .then((t) => alive && setTopics(t))
+      .catch(() => undefined);
 
     return () => {
       alive = false;
@@ -86,6 +95,13 @@ export default function App() {
       </header>
 
       <main>
+        {/* 開いた瞬間に「留守の間に何が動いたか」を出す。ここが再訪の理由になる */}
+        <SinceLastVisit latest={latest} />
+
+        <Highlights data={highlights} assets={latest.assets} />
+
+        {topics && <Topics data={topics} />}
+
         <StartHere />
 
         <div className="grid">
@@ -95,8 +111,6 @@ export default function App() {
         </div>
 
         <Attribution latest={latest} history={history} data={attribution} />
-
-        <Highlights data={highlights} assets={latest.assets} />
 
         <Portfolio
           assets={latest.assets}
