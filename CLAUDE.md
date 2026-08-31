@@ -1,0 +1,123 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## このリポジトリ
+
+ヨコグシ — 6資産（日経平均 / S&P 500 / ドル円 / 金 / ビットコイン / 米10年債利回り）を1画面に横断で並べ、
+資産どうしの**関係**を見せる静的サイト。公開先は https://ruisma7715-lang.github.io/yokogushi/
+
+売りは相関マトリクスと、その関係が「いつもと変わった」ことを自動で文章にする部分。
+個別の値動きを速く出すサイトではない（デイトレ向けではなく、日次〜数時間更新で足りる）。
+
+## コマンド
+
+```bash
+npm run dev      # Vite 開発サーバー
+npm run build    # tsc -b && vite build（型チェックを含む）
+npm run preview  # ビルド結果の確認
+npm run fetch    # データ取得。public/data/ と public/daily/ を書き換える
+```
+
+- **テストフレームワークもリンタ設定も無い。** 検証は `npm run build`（型チェック込み）と、
+  `npm run fetch` を実際に走らせて出力を目で見ることの2つで行う。
+- `tsconfig.json` の `include` は `src` のみ。**`scripts/*.mjs` は型チェックの対象外**で、
+  壊れていても `npm run build` は通る。取得スクリプトを触ったら必ず `npm run fetch` まで実行する。
+- コンポーネント単体の描画を確かめたいときは、`src/` に一時的な `.tsx` を置き、
+  同梱の esbuild でバンドルして `react-dom/server` で文字列に描画するのが速い（確認後に削除する）。
+
+## アーキテクチャ
+
+**サーバーを持たない。** データ取得は GitHub Actions の cron、サイトは出来上がった JSON を読むだけの静的SPA。
+
+```
+scripts/fetch.mjs ──> public/data/*.json （リポジトリにコミットされる）
+                 └──> public/daily/*.html, sitemap.xml, robots.txt
+                          │
+     .github/workflows/fetch.yml（cron 平日 06:00 / 16:00 JST）でコミット
+                          │  workflow_run で連鎖
+     .github/workflows/deploy.yml が dist をビルドして GitHub Pages へ
+```
+
+- APIキーは Actions の Secrets のみ。フロントには一切出さない（`.env` はローカル実行用、gitignore 済み）。
+- `GITHUB_TOKEN` による push は push イベントを発火しないため、公開は `workflow_run` で受けている。
+- `vite.config.ts` の `base` と `scripts/daily-page.mjs` の `SITE_BASE` に公開URLが埋まっている。
+  独自ドメインや Cloudflare Pages に移すときは両方を直す。
+
+### データファイルの分担
+
+| ファイル | 中身 | 基準日 |
+|---|---|---|
+| `latest.json` | カード用のスナップショット、暗号資産の単価（`units.coins`） | 資産ごとの最新日 |
+| `correlation.json` | 30日 / 90日 / 1年の相関行列 | `alignedAsOf` |
+| `history.json` | チャート用（起点=100に正規化） | `alignedAsOf` |
+| `attribution.json` | 寄与分解の素材。日次リターンと為替を分けて渡す | `alignedAsOf` |
+| `highlights.json` | 今日の3行（`lead`）・レジーム・相関の変化 | 混在（下記） |
+| `topics.json` | 公式RSSの見出しと米指標の発表予定 | 生成時のJST日付 |
+| `notes.txt` | 手書きの編集後記。日付＋本文、`---` 区切り | — |
+
+### 日付が2種類あること（いちばん重要）
+
+相関は**全資産の値が揃った日**でしか計算できない。一方、公表の早さはソースごとに違う
+（暗号資産は当日、FRED の米10年債利回りは2〜4営業日遅れ）。揃うのを待つと表示が常に数日前になるため、
+**表示用と分析用で基準日を分けている。**
+
+- `latest.asOf` … いちばん新しい資産の日付。ヘッダの「最終更新」に使う
+- `latest.alignedAsOf` … 全6資産が揃った直近の日。相関・チャート・寄与分解・レジーム判定はこちら
+- `AssetSnapshot.asOf` … その資産自身の日付。`latest.asOf` と違う資産にだけ画面に日付を出す
+- 日次ページ（`public/daily/`）は `alignedAsOf` のスナップショットで作る。
+  その日1本の記録に別の日の値を混ぜないため、トップとは別に `snapshotAligned` を組んで渡している
+
+新しい数値を画面に出すときは、**それが横断の比較なのか単体の現在値なのか**を先に決めること。
+横断なら `alignedAsOf`、単体なら各資産の最新日。混ざったまま出さない。
+
+### 今日の3行（`buildLead` in `scripts/fetch.mjs`）
+
+値動き / 異常値(σ) / 節目(高安更新) / 連続 / 関係の変化 / この1週間 / 発表予定 / 静けさ の切り口で
+候補文を作り、点数の高い順に、**種類と資産が重複しないように**3つ選ぶ。1行目はその日の姿勢と最大の値動きで固定。
+
+- 関係の変化（相関シフト）は2資産の話なので `about: null`。1行目と同じ資産が出ても外さない。
+- レジームの説明文は画面側でバッジとして別に出すので、3行の中で繰り返さない。
+- トップ用は各資産の最新値から、日次ページ用は共通日から、同じ関数に別のデータを渡して2回作る。
+
+### `scripts/topics.mjs` の制約
+
+- 集めるのは**公式RSSの見出し＋リンク**（日銀・FRB）と **FRED のリリースカレンダー**だけ。本文は載せない。
+- FRED の `release_id: 101`（FOMC）は将来日付が毎日返ってくる仕様なので**使わない**。
+- 全リリースを一度に取る `releases/dates` は1000行超で重く時間切れになる。
+  見たい9本を `release/dates` で個別に、`Promise.allSettled` で並列に取る。
+- 外部サイト頼みなので、失敗しても例外を投げずに取れたぶんだけ返す。相場データの更新を道連れにしない。
+
+### ポートフォリオ（`src/portfolio/`, `src/components/Portfolio.tsx`）
+
+- **保有内容は localStorage から出さない。** そのため円換算・寄与分解・リスク試算はすべてブラウザ側で計算する。
+  サーバー側で計算できないことが、`attribution.json` が「計算済みの答え」ではなく素材を配っている理由。
+- 個別株の価格は無料では取れないため、7つの資産クラスに束ねて相関と変動率を代用する（暗号資産は BTC 代表）。
+- 数量入力できるのは価格データがあるものだけ（暗号資産・金・ドル）。暗号資産の銘柄を増やすときは
+  `scripts/fetch.mjs` の `COINS` に1行足す。画面の選択肢は `units.coins` を読んで作られる。
+- 数値の入力欄は、打っている間の文字をそのまま state に持つ（`typing`）。
+  値を毎回 `Number()` に通して表示に戻すと「0.」が 0 になり、**小数点が打てなくなる**。
+
+## 守ること
+
+**法務**（`ヨコグシ_横断マーケットボード_構築計画.html` の判断に基づく）
+
+- 記事本文の転載と金融メディアのスクレイピングはしない。使うのは一次データと公式RSSの見出し＋リンクのみ。
+- 投資助言業の登録が無いため、個別銘柄の売買推奨を書かない。自動生成の文も「起きたこと」と
+  「その事実が何に効くか」までに留め、「〜だろう」「〜すべき」を使わない。
+
+**実装**
+
+- `fetch.mjs` は `public/data` 以外に `public/daily/*.html`・`sitemap.xml`・`robots.txt` も書き出す。
+  `fetch.yml` の `git add` から漏らすと、毎日作った記事が消える（実際に起きた）。
+- 色は `src/styles.css` のトークン経由で使う。直接 hex を書くとダークモードが壊れる。
+- 騰落は日本の慣習で 上昇=赤 / 下落=青。色だけに意味を持たせず ▲▼ を必ず添える。
+- `src/types.ts` は `fetch.mjs` の出力の形。スクリプト側の出力を変えたら必ず合わせる。
+- 相関は欠損日を埋めずに、揃っている日だけで計算する（前日値で埋めるとリターン0が混ざって相関がずれる）。
+
+## この環境について
+
+- 改行コードは CRLF。スクリプトでファイルに追記するときは合わせる。
+- Windows + Git Bash。ヒアドキュメントの中で `\\` が1つに潰れるため、
+  **正規表現を文字列から組み立てるコードは書かない**（`new RegExp("[\\s\\S]")` が静かに空振りする）。
+  正規表現リテラルを使う。
