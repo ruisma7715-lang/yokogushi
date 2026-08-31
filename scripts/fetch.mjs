@@ -237,9 +237,18 @@ function spanWord(days) {
 // 書き方の約束:
 //   ・起きたことと、その事実が何に効くかまで。売買の推奨は絶対に書かない
 //   ・「〜だろう」「〜すべき」を使わない。断定するのは観測できた事実だけ
-function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, calendar, jstToday }) {
+function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, calendar, jstToday, asOf }) {
   const nameOf = (id) => live.find((a) => a.id === id)?.name ?? id;
   const snapOf = (id) => snapshot.find((a) => a.id === id);
+
+  // 資産によって最新日が違う（米金利は数日遅れて公表される）。
+  // 基準日と違うものだけ「いつの話か」を添える。黙って混ぜるのがいちばん良くない。
+  const dateNote = (id) => {
+    const s = snapOf(id);
+    if (!s?.asOf || s.asOf === asOf) return "";
+    const [, m, d] = s.asOf.split("-");
+    return `（${Number(m)}/${Number(d)}時点）`;
+  };
 
   // 文章の中に置く価格。桁が大きいものの小数点以下は読む邪魔にしかならない。
   const priceText = (s) => {
@@ -275,7 +284,7 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
       kind: "day",
       text:
         (regime ? `${regime.label}。` : "") +
-        `いちばん動いたのは${nameOf(top.id)}で、前日比 ${signed(top.chg)}% の${dir}でした。`,
+        `いちばん動いたのは${nameOf(top.id)}${dateNote(top.id)}で、前日比 ${signed(top.chg)}% の${dir}でした。`,
     });
   }
 
@@ -292,7 +301,7 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
       kind: "unusual",
       about: m.id,
       score: 60 + z * 8,
-      text: `${nameOf(m.id)}のこの動きは、直近90日の平均的な振れ幅の ${z.toFixed(1)} 倍です。いつもの範囲を超えています。`,
+      text: `${nameOf(m.id)}${dateNote(m.id)}のこの動きは、直近90日の平均的な振れ幅の ${z.toFixed(1)} 倍です。いつもの範囲を超えています。`,
     });
   }
 
@@ -310,7 +319,7 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
         kind: "milestone",
         about: id,
         score: span.score,
-        text: `${nameOf(id)}は ${priceText(s)} と、${span.word}の${kindWord}です。`,
+        text: `${nameOf(id)}は ${priceText(s)} と、${span.word}の${kindWord}です${dateNote(id)}。`,
       });
     }
   }
@@ -327,7 +336,7 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
       about: id,
       score: 30 + n * 5,
       text:
-        `${nameOf(id)}は ${n}日${word}。` +
+        `${nameOf(id)}は ${n}日${word}${dateNote(id)}。` +
         (typeof total === "number" ? `この1週間で ${signed(total)}% です。` : ""),
     });
   }
@@ -338,7 +347,9 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
     const flipped = relation(big.now) !== relation(big.base);
     cand.push({
       kind: "shift",
-      about: big.a,
+      // 2資産の「関係」の話なので、1行目と同じ資産が出てきても外さない。
+      // このサイトで唯一よそに無い視点なので、落とすと3行が痩せる。
+      about: null,
       score: 45 + Math.abs(big.diff) * 40,
       text:
         `${nameOf(big.a)}と${nameOf(big.b)}の関係が動いています。` +
@@ -354,7 +365,7 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
         kind: "span",
         about: s.id,
         score: 35 + Math.abs(s.changeWeek),
-        text: `${s.name}はこの1週間で ${signed(s.changeWeek)}%。1ヶ月では ${s.changeMonth == null ? "—" : signed(s.changeMonth) + "%"} です。`,
+        text: `${s.name}${dateNote(s.id)}はこの1週間で ${signed(s.changeWeek)}%。1ヶ月では ${s.changeMonth == null ? "—" : signed(s.changeMonth) + "%"} です。`,
       });
     }
   }
@@ -385,7 +396,7 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
       kind: "calm",
       about: quiet.id,
       score: 10,
-      text: `いちばん静かだったのは${nameOf(quiet.id)}で、前日比 ${signed(quiet.chg)}% でした。`,
+      text: `いちばん静かだったのは${nameOf(quiet.id)}${dateNote(quiet.id)}で、前日比 ${signed(quiet.chg)}% でした。`,
     });
   }
 
@@ -527,31 +538,65 @@ async function main() {
   const returnsById = {};
   for (const id of ids) returnsById[id] = toReturns(values[id]);
 
-  // --- latest.json : トップのカード用スナップショット
-  const asOf = days[days.length - 1];
-  const snapshot = live.map((a) => {
-    const p = values[a.id];
-    const last = p[p.length - 1];
-    const pct = (back) => {
-      const i = p.length - 1 - back;
-      return i >= 0 && p[i] !== 0 ? Number(((last / p[i] - 1) * 100).toFixed(2)) : null;
-    };
-    // 年率換算の変動率。ポートフォリオのリスク試算に使う。
-    // 日次のばらつき × √252（年間の営業日数）が慣例。
-    const vol = stdev(returnsById[a.id].slice(-90)) * Math.sqrt(252) * 100;
+  // 相関は「全資産の値が揃った日」でしか計算できない。
+  // だがカードに出す現在値まで、いちばん遅いソースに合わせる必要はない。
+  // 揃うのを待つと表示が常に2〜4営業日前になり、開いても「今の相場」に見えなくなる。
+  // そこで、横断の分析は共通日（alignedAsOf）、現在値は資産ごとの最新日（ownAsOf）と分ける。
+  const ownDays = {};
+  const ownValues = {};
+  const ownReturns = {};
+  for (const id of ids) {
+    const d = Object.keys(seriesById[id]).sort();
+    ownDays[id] = d;
+    ownValues[id] = d.map((day) => seriesById[id][day]);
+    ownReturns[id] = toReturns(ownValues[id]);
+  }
 
-    return {
-      id: a.id, name: a.name, cls: a.cls, unit: a.unit,
-      value: Number(last.toFixed(a.unit === "%" ? 3 : 2)),
-      changeDay: pct(1), changeWeek: pct(5), changeMonth: pct(21),
-      vol: Number(vol.toFixed(2)),
-    };
-  });
+  const alignedAsOf = days[days.length - 1];
+  const latestAsOf = ids
+    .map((id) => ownDays[id][ownDays[id].length - 1])
+    .sort()
+    .pop();
+
+  console.log(`  最新の値が取れた日: ${latestAsOf}（相関の計算は ${alignedAsOf} まで）`);
+  for (const id of ids) {
+    const own = ownDays[id][ownDays[id].length - 1];
+    if (own !== latestAsOf) {
+      console.log(`    ${live.find((a) => a.id === id).name} は ${own} 時点`);
+    }
+  }
+
+  // --- スナップショット。同じ作り方で「資産ごとの最新」と「共通日」の2つを作る。
+  //     前者はトップのカード用、後者はその日1本ぶんの日次ページ用。
+  const makeSnapshot = (valuesById, retById, asOfOf) =>
+    live.map((a) => {
+      const p = valuesById[a.id];
+      const last = p[p.length - 1];
+      const pct = (back) => {
+        const i = p.length - 1 - back;
+        return i >= 0 && p[i] !== 0 ? Number(((last / p[i] - 1) * 100).toFixed(2)) : null;
+      };
+      // 年率換算の変動率。ポートフォリオのリスク試算に使う。
+      // 日次のばらつき × √252（年間の営業日数）が慣例。
+      const vol = stdev(retById[a.id].slice(-90)) * Math.sqrt(252) * 100;
+
+      return {
+        id: a.id, name: a.name, cls: a.cls, unit: a.unit,
+        asOf: asOfOf(a.id),
+        value: Number(last.toFixed(a.unit === "%" ? 3 : 2)),
+        changeDay: pct(1), changeWeek: pct(5), changeMonth: pct(21),
+        vol: Number(vol.toFixed(2)),
+      };
+    });
+
+  const snapshot = makeSnapshot(ownValues, ownReturns, (id) => ownDays[id][ownDays[id].length - 1]);
+  const snapshotAligned = makeSnapshot(values, returnsById, () => alignedAsOf);
 
   // --- 単価。数量だけ入れれば円建ての評価額が出せるようにするため。
   //     個別株の現在価格は無料で取れないが、この3つは取れるので数量入力に対応できる。
+  //     ここも各資産の最新値を使う（円換算はいまの値でないと意味がない）。
   const px = (id) => {
-    const p = values[id];
+    const p = ownValues[id];
     return p ? p[p.length - 1] : null;
   };
   const usdjpy = px("usdjpy");
@@ -568,7 +613,7 @@ async function main() {
 
   // --- correlation.json : 期間別の相関行列
   const correlations = {
-    asOf,
+    asOf: alignedAsOf,
     windows: {
       d30:  correlationMatrix(ids, returnsById, 30),
       d90:  correlationMatrix(ids, returnsById, 90),
@@ -578,7 +623,7 @@ async function main() {
 
   // --- history.json : チャート用（年初=100に正規化）
   const history = {
-    asOf,
+    asOf: alignedAsOf,
     days,
     series: Object.fromEntries(
       ids.map((id) => {
@@ -600,7 +645,7 @@ async function main() {
     (returnsById[id] ?? []).map((v) => Number((v * 100).toFixed(4)));
 
   const attribution = {
-    asOf,
+    asOf: alignedAsOf,
     days: days.slice(1), // リターンは前日比なので1日短い
     local: Object.fromEntries(ids.map((id) => [id, pctSeries(id)])),
     fx: pctSeries("usdjpy"),
@@ -615,7 +660,7 @@ async function main() {
     returnsById,
     corr30: correlations.windows.d30,
     corr365: correlations.windows.d365,
-    asOf,
+    asOf: alignedAsOf,
   });
 
   // --- topics.json : 今日のトピックス（公式RSSの見出し＋米指標の発表予定）
@@ -629,23 +674,52 @@ async function main() {
     console.log(`\n  !  トピックス取得に失敗: ${err.message}`);
   }
 
-  // --- 今日の3行。highlights に同梱して、トップと日次ページの両方から使う。
+  // 相場の姿勢（リスクオン・オフ）は、全資産が同じ日に動いた結果を比べないと出せない。
+  // 共通日の判定であることが分かるよう、日付を添えておく。
+  if (highlights.regime) highlights.regime.asOf = alignedAsOf;
+  highlights.asOf = latestAsOf;
+
+  // --- 今日の3行。トップ用は各資産の最新値から、日次ページ用は共通日から作る。
+  //     同じ関数に別のデータを渡すだけなので、書き方の癖は揃う。
   highlights.lead = buildLead({
     live,
     ids,
-    values,
-    returnsById,
+    values: ownValues,
+    returnsById: ownReturns,
     snapshot,
     regime: highlights.regime,
     shifts: highlights.shifts,
     calendar: topics.calendar,
     jstToday,
+    asOf: latestAsOf,
   });
+
+  // 日次ページはその日1本ぶんの記録なので、日付をまたいだ値を混ぜない
+  const highlightsAligned = {
+    ...highlights,
+    asOf: alignedAsOf,
+    lead: buildLead({
+      live,
+      ids,
+      values,
+      returnsById,
+      snapshot: snapshotAligned,
+      regime: highlights.regime,
+      shifts: highlights.shifts,
+      calendar: topics.calendar,
+      jstToday,
+      asOf: alignedAsOf,
+    }),
+  };
 
   await mkdir(OUT_DIR, { recursive: true });
   await writeFile(join(OUT_DIR, "topics.json"), JSON.stringify(topics, null, 2));
   await writeFile(join(OUT_DIR, "latest.json"),
-    JSON.stringify({ asOf, assets: snapshot, units, skipped: skipped.map((s) => s.id) }, null, 2));
+    JSON.stringify(
+      { asOf: latestAsOf, alignedAsOf, assets: snapshot, units, skipped: skipped.map((s) => s.id) },
+      null,
+      2
+    ));
   await writeFile(join(OUT_DIR, "correlation.json"), JSON.stringify(correlations, null, 2));
   await writeFile(join(OUT_DIR, "history.json"), JSON.stringify(history, null, 2));
   await writeFile(join(OUT_DIR, "highlights.json"), JSON.stringify(highlights, null, 2));
@@ -659,19 +733,19 @@ async function main() {
     .filter((f) => /^\d{4}-\d{2}-\d{2}\.html$/.test(f))
     .map((f) => f.replace(".html", ""));
 
-  const allDays = [...new Set([...existing, asOf])].sort();
-  const at = allDays.indexOf(asOf);
+  const allDays = [...new Set([...existing, alignedAsOf])].sort();
+  const at = allDays.indexOf(alignedAsOf);
 
   const page = renderDailyPage({
-    asOf,
-    snapshot,
-    highlights,
+    asOf: alignedAsOf,
+    snapshot: snapshotAligned,
+    highlights: highlightsAligned,
     topics,
     prevDay: at > 0 ? allDays[at - 1] : null,
     nextDay: at < allDays.length - 1 ? allDays[at + 1] : null,
   });
 
-  await writeFile(join(DAILY_DIR, `${asOf}.html`), page.html);
+  await writeFile(join(DAILY_DIR, `${alignedAsOf}.html`), page.html);
   await writeFile(join(DAILY_DIR, "index.html"), renderIndex([...allDays].reverse()));
   await writeFile(join(ROOT, "public", "sitemap.xml"), renderSitemap(allDays));
   await writeFile(
@@ -679,7 +753,7 @@ async function main() {
     `User-agent: *\nAllow: /\nSitemap: ${SITE_BASE}/sitemap.xml\n`
   );
 
-  console.log(`\n  日次ページ: ${allDays.length} 本（最新 ${asOf}）`);
+  console.log(`\n  日次ページ: ${allDays.length} 本（最新 ${alignedAsOf}）`);
 
   console.log(`\n  今日の3行（自動生成）:`);
   highlights.lead.forEach((l, i) => console.log(`    ${i + 1}. ${l.text}`));
@@ -688,7 +762,7 @@ async function main() {
   for (const c of topics.calendar.slice(0, 3)) console.log(`    ${c.date}  ${c.name}`);
   for (const h of topics.headlines.slice(0, 3)) console.log(`    ${h.source}  ${h.title}`);
 
-  console.log(`\n  書き出し完了: public/data/ (${asOf} 時点)`);
+  console.log(`\n  書き出し完了: public/data/ (現在値 ${latestAsOf} / 相関 ${alignedAsOf} 時点)`);
   console.log(`  稼働中: ${live.map((a) => a.name).join(" / ")}`);
   if (skipped.length) console.log(`  未稼働: ${skipped.map((s) => s.name).join(" / ")}`);
 

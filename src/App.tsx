@@ -91,7 +91,7 @@ export default function App() {
           ヨコグシ
           <span>株・金・ビットコインを1画面で</span>
         </h1>
-        <p className="as-of">{latest.asOf} 時点</p>
+        <p className="as-of">最終更新 {latest.asOf}</p>
       </header>
 
       <main>
@@ -106,7 +106,7 @@ export default function App() {
 
         <div className="grid">
           {latest.assets.map((asset) => (
-            <AssetCard key={asset.id} asset={asset} />
+            <AssetCard key={asset.id} asset={asset} latestAsOf={latest.asOf} />
           ))}
         </div>
 

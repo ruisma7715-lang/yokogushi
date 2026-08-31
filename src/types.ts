@@ -8,6 +8,8 @@ export type AssetSnapshot = {
   name: string;
   cls: string;
   unit: string;
+  /** この資産の値がいつ時点か。公表の早さがソースごとに違うため資産ごとに持つ */
+  asOf: string;
   value: number;
   changeDay: number | null;
   changeWeek: number | null;
@@ -17,7 +19,10 @@ export type AssetSnapshot = {
 };
 
 export type Latest = {
+  /** いちばん新しい資産の日付。ページの「最終更新」に使う */
   asOf: string;
+  /** 全6資産の値が揃った直近の日。相関などの横断の分析はこの日付が基準 */
+  alignedAsOf: string;
   assets: AssetSnapshot[];
   /** 数量入力から円建ての評価額を出すための単価 */
   units: { usd_jpy: number | null; btc_jpy: number | null; gold_jpy_per_g: number | null };
@@ -44,7 +49,7 @@ export type LeadLine = { kind: string; text: string };
 
 export type Highlights = {
   asOf: string;
-  regime: { label: string; detail: string } | null;
+  regime: { label: string; detail: string; asOf?: string } | null;
   /** 古いJSONには無いことがあるので任意。無ければ items を使う */
   lead?: LeadLine[];
   items: { kind: "move" | "unusual" | "shift"; text: string }[];

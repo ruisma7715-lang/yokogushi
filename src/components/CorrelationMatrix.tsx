@@ -76,6 +76,12 @@ export default function CorrelationMatrix({
           <h2 className="section-title">どれとどれが一緒に動く？</h2>
           <p className="section-sub">
             同じ動きをするものばかり持っていると、分けて持っている意味が薄くなります。
+            <br />
+            {/* 相関は全資産が同じ日に動いた結果どうしでしか計算できない。
+                カードの現在値より数日古くなることがあるので、基準日を明示する。 */}
+            <span className="section-note">
+              6資産すべての値が揃った {correlation.asOf} までのデータで計算しています。
+            </span>
           </p>
         </div>
 

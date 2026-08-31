@@ -2417,3 +2417,26 @@ svg .dot {
   font-size: 0.75rem;
   color: var(--ink-3);
 }
+
+/* ------------------------------------------------------------------ 時点の表示
+   ソースによって公表の早さが違う。遅れているものにだけ日付を出し、
+   揃っているものには何も出さない（全部に日付を出すと、どれが古いのか分からなくなる）。 */
+.card-asof {
+  margin: -0.25rem 0 0;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+}
+
+.regime-asof {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.section-note {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+}

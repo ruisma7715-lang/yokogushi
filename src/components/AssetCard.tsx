@@ -43,7 +43,23 @@ function Delta({ label, value }: { label: string; value: number | null }) {
   );
 }
 
-export default function AssetCard({ asset }: { asset: AssetSnapshot }) {
+// 公表の早さはソースによって違う。米金利は数日、暗号資産は当日。
+// いちばん新しい資産と同じ日付なら何も言わず、遅れているものにだけ日付を出す。
+function staleLabel(assetAsOf: string, latestAsOf: string) {
+  if (!assetAsOf || assetAsOf === latestAsOf) return null;
+  const [, m, d] = assetAsOf.split("-");
+  return `${Number(m)}/${Number(d)}時点`;
+}
+
+export default function AssetCard({
+  asset,
+  latestAsOf,
+}: {
+  asset: AssetSnapshot;
+  latestAsOf: string;
+}) {
+  const stale = staleLabel(asset.asOf, latestAsOf);
+
   return (
     <article className="card">
       <div className="card-head">
@@ -56,6 +72,8 @@ export default function AssetCard({ asset }: { asset: AssetSnapshot }) {
         {formatValue(asset.value, asset.unit)}
         <small>{asset.unit}</small>
       </p>
+
+      {stale && <p className="card-asof">{stale}</p>}
 
       <dl className="deltas">
         <Delta label="前日" value={asset.changeDay} />

@@ -46,6 +46,11 @@ export default function Highlights({
         <div className={`regime ${REGIME_CLASS[data.regime.label] ?? "flat"}`}>
           <span className="regime-label">{data.regime.label}</span>
           <span className="regime-detail">{data.regime.detail}</span>
+          {/* 株と金を比べる判定なので、全資産の値が揃った日でしか出せない。
+              いちばん新しい日付とずれているときは、そう書く。 */}
+          {data.regime.asOf && data.regime.asOf !== data.asOf && (
+            <span className="regime-asof">{data.regime.asOf} 時点</span>
+          )}
         </div>
       )}
 
