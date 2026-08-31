@@ -2440,3 +2440,21 @@ svg .dot {
   font-size: 0.6875rem;
   color: var(--ink-3);
 }
+
+/* 暗号資産の銘柄。数量の単位そのものを選ばせるので、
+   単位ラベル（g・ドル）と同じ位置・同じ大きさに置く。 */
+.hold-row select.h-coin {
+  width: auto;
+  flex: none;
+  border-left-width: 1px;
+  padding: 0.25rem 0.375rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-2);
+  background: var(--surface-2);
+}
+
+.hold-row select.h-coin:hover {
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}

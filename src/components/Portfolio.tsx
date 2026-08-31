@@ -6,7 +6,8 @@ import {
   ACCOUNT_BY_ID,
   CLASSES,
   CLASS_BY_ID,
-  QTY_UNIT,
+  qtyUnit,
+  coinOf,
   SCENARIOS,
   TAX_LABEL,
   applyScenario,
@@ -28,7 +29,20 @@ import {
 
 /** 円 ⇄ 万円。7桁を打たせないための変換 */
 const toMan = (v: number) => (v ? String(Math.round(v / 100) / 100) : "");
-const fromMan = (s: string) => Math.round((Number(s.replace(/[^0-9.]/g, "")) || 0) * 10000);
+const fromMan = (s: string) => Math.round((Number(numeric(s)) || 0) * 10000);
+
+/**
+ * 入力中の文字を数値の形に整える。
+ * 全角で打たれることが多いので先に半角へ直し、小数点は1つだけ残す。
+ * 「0.」のような打ちかけの状態をそのまま返すのが肝で、
+ * ここで数値に変換してしまうと小数点が消えて入力できなくなる。
+ */
+function numeric(s: string) {
+  const half = s.replace(/[０-９]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xfee0)).replace(/[．。]/g, ".");
+  const cleaned = half.replace(/[^0-9.]/g, "");
+  const [head, ...rest] = cleaned.split(".");
+  return rest.length ? `${head}.${rest.join("")}` : head;
+}
 
 /** 分散の効き具合を、数字ではなく言葉で伝える */
 function plainVerdict(benefit: number, topShare: number, topName: string) {
@@ -56,6 +70,9 @@ export default function Portfolio({
 }) {
   // 保有データは「値動きの通訳」とも共有するため、共通ストアから読む
   const holdings = useHoldings();
+  // 入力中の文字そのもの。「0.」「1.0」のように、数値に直すと消えてしまう状態を保つ。
+  // 確定した数値は holdings 側に入っているので、ここは打っている間だけの控え。
+  const [typing, setTyping] = useState<Record<string, string>>({});
   const [paste, setPaste] = useState("");
   const [pasteAccount, setPasteAccount] = useState<AccountId>("tokutei");
   const [pasteMsg, setPasteMsg] = useState<string | null>(null);
@@ -82,7 +99,7 @@ export default function Portfolio({
         if (!allowed.includes(next.account)) next.account = allowed[0];
 
         // 数量入力に対応していないクラスに変えたら、金額入力へ戻す
-        if (next.mode === "qty" && !QTY_UNIT[next.klass]) next.mode = "amount";
+        if (next.mode === "qty" && !qtyUnit(next, units)) next.mode = "amount";
 
         return next;
       })
@@ -97,6 +114,18 @@ export default function Portfolio({
       name: sym.name,
       klass: sym.klass,
       account: allowed.includes(h.account) ? h.account : allowed[0],
+      // ETH と打たれたらイーサリアムの単価に切り替える
+      coin: sym.coin ?? h.coin,
+    });
+  };
+
+  /** 暗号資産の銘柄を変える。名前欄が空か別の通貨名のままなら、そちらも合わせる */
+  const pickCoin = (h: Holding, coin: string) => {
+    const known = Object.values(units.coins ?? {}).map((c) => c.name);
+    const rename = !h.name.trim() || known.includes(h.name.trim());
+    patch(h.key, {
+      coin,
+      name: rename ? units.coins?.[coin]?.name ?? h.name : h.name,
     });
   };
 
@@ -108,6 +137,27 @@ export default function Portfolio({
       baseIndex: proxy ? indexNow[proxy] : undefined,
     });
   };
+
+  // 数値の入力欄。打っている間は文字をそのまま持ち、離れたら整形した値に戻す。
+  const typingKey = (h: Holding, field: "qty" | "amount") => `${h.key}:${field}`;
+
+  const shownText = (h: Holding, field: "qty" | "amount", formatted: string) =>
+    typing[typingKey(h, field)] ?? formatted;
+
+  const onNumberInput = (h: Holding, field: "qty" | "amount", raw: string) => {
+    const text = numeric(raw);
+    setTyping((t) => ({ ...t, [typingKey(h, field)]: text }));
+
+    if (field === "qty") patch(h.key, { qty: Number(text) || 0 });
+    else setAmount(h, text);
+  };
+
+  const onNumberBlur = (h: Holding, field: "qty" | "amount") =>
+    setTyping((t) => {
+      const next = { ...t };
+      delete next[typingKey(h, field)];
+      return next;
+    });
 
   const runImport = () => {
     const rows = parseHoldingsText(paste, pasteAccount);
@@ -265,8 +315,10 @@ export default function Portfolio({
         </div>
 
         {valued.map(({ h, value }) => {
-          const unit = QTY_UNIT[h.klass];
-          const price = unitPrice(h.klass, units);
+          const unit = qtyUnit(h, units);
+          const price = unitPrice(h.klass, units, coinOf(h));
+          // 暗号資産は銘柄ごとに価格が2桁も3桁も違う。どの通貨の枚数かを選ばせる。
+          const coins = h.klass === "crypto" ? Object.entries(units.coins ?? {}) : [];
           return (
             <div className="hold-row" key={h.key}>
               <input
@@ -314,13 +366,28 @@ export default function Portfolio({
                       inputMode="decimal"
                       className="h-amount"
                       placeholder="0"
-                      value={h.qty || ""}
-                      onChange={(e) =>
-                        patch(h.key, { qty: Number(e.target.value.replace(/[^0-9.]/g, "")) || 0 })
-                      }
+                      value={shownText(h, "qty", h.qty ? String(h.qty) : "")}
+                      onChange={(e) => onNumberInput(h, "qty", e.target.value)}
+                      onBlur={() => onNumberBlur(h, "qty")}
                       aria-label={`数量（${unit.label}）`}
                     />
-                    <span className="h-unit">{unit.label}</span>
+                    {coins.length > 0 ? (
+                      // 単位そのものを選べるようにする。0.5ETH を 0.5BTC で計算しないため。
+                      <select
+                        className="h-coin"
+                        value={coinOf(h)}
+                        onChange={(e) => pickCoin(h, e.target.value)}
+                        aria-label="暗号資産の銘柄"
+                      >
+                        {coins.map(([key, c]) => (
+                          <option key={key} value={key}>
+                            {c.ticker}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span className="h-unit">{unit.label}</span>
+                    )}
                   </>
                 ) : (
                   <>
@@ -329,8 +396,9 @@ export default function Portfolio({
                       inputMode="decimal"
                       className="h-amount"
                       placeholder="0"
-                      value={toMan(h.amount)}
-                      onChange={(e) => setAmount(h, e.target.value)}
+                      value={shownText(h, "amount", toMan(h.amount))}
+                      onChange={(e) => onNumberInput(h, "amount", e.target.value)}
+                      onBlur={() => onNumberBlur(h, "amount")}
                       aria-label="金額（万円）"
                     />
                     <span className="h-unit">万円</span>
@@ -383,7 +451,7 @@ export default function Portfolio({
 
         <p className="hold-hint">
           銘柄名の欄は<strong>証券コード（7203）やティッカー（VOO）</strong>でも入ります。
-          ビットコイン・金・ドルは<strong>数量を入れるだけ</strong>で、毎日の価格で自動計算します。
+          暗号資産（BTC・ETH・XRPなど）・金・ドルは<strong>数量を入れるだけ</strong>で、毎日の価格で自動計算します。0.05 のような小数もそのまま入ります。
           株や投資信託は金額を一度入れれば、その後は指数の値動きに合わせて概算を更新します。
         </p>
       </div>
@@ -658,7 +726,7 @@ export default function Portfolio({
           <p className="pf-caveat">
             すべて過去の値動きをもとにした目安で、将来を約束するものではありません。
             特定の売買を勧めるものでもありません。個別の銘柄は種類ごとにまとめて計算しているため、
-            同じ種類の中での違いは反映されません。税金の扱いは個別の事情で変わるため、
+            同じ種類の中での違いは反映されません。暗号資産の値動きの試算には、ビットコインの値動きを代表として使っています（評価額の計算は銘柄ごとの価格です）。税金の扱いは個別の事情で変わるため、
             実際の判断は国税庁の情報や税理士にご確認ください。
           </p>
         </>

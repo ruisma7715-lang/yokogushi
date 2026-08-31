@@ -99,6 +99,47 @@ async function fromCoinGecko(code) {
 
 const FETCHERS = { fred: fromFred, frankfurter: fromFrankfurter, coingecko: fromCoinGecko };
 
+// ---------------------------------------------------------------- 暗号資産の単価
+//
+// 相関を出す6資産にビットコインは入っているが、実際に持たれているのは
+// それだけではない。数量から評価額を出すために、主要な通貨の円建て価格を配る。
+// ここに1行足せば画面の選択肢が増える（画面側はこのデータを読むだけ）。
+//
+// step は入力欄の刻み。1枚が高いものほど細かく入れられる必要がある。
+const COINS = [
+  { key: "btc",  cg: "bitcoin",     ticker: "BTC",  name: "ビットコイン",   step: "0.00001" },
+  { key: "eth",  cg: "ethereum",    ticker: "ETH",  name: "イーサリアム",   step: "0.0001"  },
+  { key: "xrp",  cg: "ripple",      ticker: "XRP",  name: "リップル",       step: "1"       },
+  { key: "sol",  cg: "solana",      ticker: "SOL",  name: "ソラナ",         step: "0.01"    },
+  { key: "doge", cg: "dogecoin",    ticker: "DOGE", name: "ドージコイン",   step: "1"       },
+  { key: "ada",  cg: "cardano",     ticker: "ADA",  name: "カルダノ",       step: "1"       },
+  { key: "bnb",  cg: "binancecoin", ticker: "BNB",  name: "BNB",            step: "0.01"    },
+  { key: "ltc",  cg: "litecoin",    ticker: "LTC",  name: "ライトコイン",   step: "0.01"    },
+];
+
+// 円建てで直接もらう。ドル建て×為替だと、為替の取得日と価格の日がずれる。
+async function fetchCoinPrices() {
+  const ids = COINS.map((c) => c.cg).join(",");
+  const json = await getJSON(
+    `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=jpy`,
+    "CoinGecko 単価"
+  );
+
+  const out = {};
+  for (const c of COINS) {
+    const jpy = json[c.cg]?.jpy;
+    if (!Number.isFinite(jpy)) continue;
+    // 1円未満の通貨もあるので、丸め方を価格帯で変える
+    out[c.key] = {
+      ticker: c.ticker,
+      name: c.name,
+      step: c.step,
+      jpy: jpy >= 100 ? Math.round(jpy) : Number(jpy.toFixed(4)),
+    };
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------- 相関
 
 // 日次リターンの配列 a, b からピアソン相関係数を出す
@@ -604,11 +645,21 @@ async function main() {
   const btcUsd = px("btc");
   const TROY_OZ_G = 31.1035;
 
+  // ビットコイン以外の暗号資産の単価。取れなくても他の入力は成立するので止めない。
+  let coins = {};
+  try {
+    coins = await fetchCoinPrices();
+    console.log(`  暗号資産の単価: ${Object.keys(coins).length} 銘柄`);
+  } catch (err) {
+    console.log(`  !  暗号資産の単価を取得できませんでした: ${err.message}`);
+  }
+
   const units = {
     usd_jpy: usdjpy ? Number(usdjpy.toFixed(2)) : null,
     btc_jpy: btcUsd && usdjpy ? Math.round(btcUsd * usdjpy) : null,
     gold_jpy_per_g:
       goldUsdPerOz && usdjpy ? Math.round((goldUsdPerOz / TROY_OZ_G) * usdjpy) : null,
+    coins,
   };
 
   // --- correlation.json : 期間別の相関行列

@@ -148,8 +148,13 @@ export type Holding = {
   mode: "amount" | "qty";
   /** 円。mode="qty" のときは計算結果が入る */
   amount: number;
-  /** BTCの枚数 / 金のグラム / 外貨のドル */
+  /** 暗号資産の枚数 / 金のグラム / 外貨のドル */
   qty: number;
+  /**
+   * 暗号資産のとき、どの通貨の枚数か（units.coins のキー）。
+   * イーサリアムやリップルを1BTCの価格で計算しないために持つ。
+   */
+  coin?: string;
   /** 金額を入れた時点のクラス指数。以後の値動きに自動で追従させるために覚えておく */
   baseIndex?: number;
 };
@@ -164,22 +169,41 @@ export const newHolding = (account: AccountId = "tokutei"): Holding => ({
   qty: 0,
 });
 
-/** 数量で入力できるクラスと、その単位。個別株は現在価格が取れないため対象外 */
+/** 数量で入力できるクラスと、その単位。個別株は現在価格が取れないため対象外。
+ *  暗号資産は銘柄ごとに単位も価格も違うので、ここには置かず qtyUnit で解決する。 */
 export const QTY_UNIT: Partial<Record<ClassId, { label: string; step: string }>> = {
-  crypto: { label: "BTC", step: "0.0001" },
   gold: { label: "g", step: "1" },
   fx: { label: "ドル", step: "1" },
 };
+
+export type CoinPrice = { ticker: string; name: string; step: string; jpy: number };
 
 export type Units = {
   usd_jpy: number | null;
   btc_jpy: number | null;
   gold_jpy_per_g: number | null;
+  /** 暗号資産の円建て単価。fetch.mjs の COINS に足せばここに増える */
+  coins?: Record<string, CoinPrice>;
 };
 
+export const DEFAULT_COIN = "btc";
+
+/** 保有している暗号資産の銘柄。未指定はビットコインとみなす */
+export const coinOf = (h: Holding) => h.coin ?? DEFAULT_COIN;
+
+/** その行の数量の単位。暗号資産だけ、選んでいる銘柄で変わる */
+export function qtyUnit(h: Holding, units: Units): { label: string; step: string } | null {
+  if (h.klass !== "crypto") return QTY_UNIT[h.klass] ?? null;
+
+  const c = units.coins?.[coinOf(h)];
+  if (c) return { label: c.ticker, step: c.step };
+  // 単価データが無い日でも、ビットコインだけは6資産の値から計算できる
+  return units.btc_jpy ? { label: "BTC", step: "0.00001" } : null;
+}
+
 /** 1単位あたりの円価格 */
-export function unitPrice(klass: ClassId, units: Units): number | null {
-  if (klass === "crypto") return units.btc_jpy;
+export function unitPrice(klass: ClassId, units: Units, coin?: string): number | null {
+  if (klass === "crypto") return units.coins?.[coin ?? DEFAULT_COIN]?.jpy ?? units.btc_jpy;
   if (klass === "gold") return units.gold_jpy_per_g;
   if (klass === "fx") return units.usd_jpy;
   return null;
@@ -196,7 +220,7 @@ export function currentValue(
   indexNow: Record<string, number>
 ): number {
   if (h.mode === "qty") {
-    const p = unitPrice(h.klass, units);
+    const p = unitPrice(h.klass, units, coinOf(h));
     return p ? Math.round(h.qty * p) : 0;
   }
   const proxy = CLASS_BY_ID[h.klass]?.proxy;
@@ -208,7 +232,7 @@ export function currentValue(
 // ティッカーや証券コードから銘柄名と種類を補完する。
 // 全銘柄は載せられないので、よく持たれるものだけ。外れても手で直せる。
 
-const SYMBOLS: Record<string, { name: string; klass: ClassId }> = {
+const SYMBOLS: Record<string, { name: string; klass: ClassId; coin?: string }> = {
   // 日本株（証券コード）
   "7203": { name: "トヨタ自動車", klass: "jp_stock" },
   "6758": { name: "ソニーグループ", klass: "jp_stock" },
@@ -253,10 +277,18 @@ const SYMBOLS: Record<string, { name: string; klass: ClassId }> = {
   GLD: { name: "SPDR ゴールド・シェア", klass: "gold" },
   IAU: { name: "iShares ゴールド・トラスト", klass: "gold" },
 
-  // 暗号資産
-  BTC: { name: "ビットコイン", klass: "crypto" },
-  ETH: { name: "イーサリアム", klass: "crypto" },
-  XRP: { name: "リップル", klass: "crypto" },
+  // 暗号資産。coin は units.coins のキーで、数量入力の単価に使う
+  BTC: { name: "ビットコイン", klass: "crypto", coin: "btc" },
+  ETH: { name: "イーサリアム", klass: "crypto", coin: "eth" },
+  XRP: { name: "リップル", klass: "crypto", coin: "xrp" },
+  SOL: { name: "ソラナ", klass: "crypto", coin: "sol" },
+  DOGE: { name: "ドージコイン", klass: "crypto", coin: "doge" },
+  ADA: { name: "カルダノ", klass: "crypto", coin: "ada" },
+  BNB: { name: "BNB", klass: "crypto", coin: "bnb" },
+  LTC: { name: "ライトコイン", klass: "crypto", coin: "ltc" },
+  ビットコイン: { name: "ビットコイン", klass: "crypto", coin: "btc" },
+  イーサリアム: { name: "イーサリアム", klass: "crypto", coin: "eth" },
+  リップル: { name: "リップル", klass: "crypto", coin: "xrp" },
 
   // 投資信託の通称
   オルカン: { name: "eMAXIS Slim 全世界株式（オール・カントリー）", klass: "us_stock" },
@@ -264,7 +296,7 @@ const SYMBOLS: Record<string, { name: string; klass: ClassId }> = {
 };
 
 /** 入力された文字列がコード・ティッカーなら、銘柄名と種類を返す */
-export function lookupSymbol(input: string): { name: string; klass: ClassId } | null {
+export function lookupSymbol(input: string): { name: string; klass: ClassId; coin?: string } | null {
   const s = input.trim();
   if (!s) return null;
 
