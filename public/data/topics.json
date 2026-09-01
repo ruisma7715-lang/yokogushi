@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-01T00:30:32.843Z",
+  "generatedAt": "2026-09-01T12:28:45.468Z",
   "today": "2026-09-01",
   "calendar": [
     {
@@ -36,6 +36,13 @@
   "headlines": [
     {
       "source": "日本銀行",
+      "title": "金融安定理事会によるG20財務大臣・中央銀行総裁へのレターの公表について",
+      "url": "https://www.boj.or.jp/intl_finance/meeting/group/gro260901a.htm",
+      "date": "2026-09-01",
+      "tag": "発言"
+    },
+    {
+      "source": "日本銀行",
       "title": "長期国債買入れ（利回り・価格入札方式）の四半期予定（2026年7～9月）［日程更新］",
       "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/mpr260831a.pdf",
       "date": "2026-08-31",
@@ -47,13 +54,6 @@
       "url": "https://www.boj.or.jp/statistics/dl/loan/yaku/yaku2607.pdf",
       "date": "2026-08-30",
       "tag": "統計"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【記者会見】氷見野副総裁（埼玉、8月27日分）",
-      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk260828a.pdf",
-      "date": "2026-08-28",
-      "tag": "発言"
     },
     {
       "source": "FRB",
