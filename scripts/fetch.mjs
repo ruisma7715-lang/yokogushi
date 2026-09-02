@@ -10,6 +10,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderDailyPage, renderIndex, renderSitemap, SITE_BASE } from "./daily-page.mjs";
 import { fetchTopics } from "./topics.mjs";
+import { fetchMarketInternals } from "./market.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(ROOT, "public", "data");
@@ -725,6 +726,22 @@ async function main() {
     console.log(`\n  !  トピックス取得に失敗: ${err.message}`);
   }
 
+  // --- 今日の市場。カードに出す6資産とは別に、米株の内訳を集めて事実を文にする。
+  //     指数を1本見ても「大型ハイテクだけが買われた日」と「全部そろって上げた日」の
+  //     区別がつかないため。すでに取れている系列は渡して、二重に叩かない。
+  //     ここも落ちてよい。市場の内訳が無くてもトピックスと相場データは成立する。
+  try {
+    const market = await fetchMarketInternals({
+      fredKey: FRED_KEY,
+      known: { nikkei: seriesById.nikkei, sp500: seriesById.sp500, usdjpy: seriesById.usdjpy },
+    });
+    topics.market = market;
+    if (market.failed.length) console.log(`  今日の市場の取得失敗: ${market.failed.join(" / ")}`);
+  } catch (err) {
+    topics.market = null;
+    console.log(`  !  今日の市場の取得に失敗: ${err.message}`);
+  }
+
   // 相場の姿勢（リスクオン・オフ）は、全資産が同じ日に動いた結果を比べないと出せない。
   // 共通日の判定であることが分かるよう、日付を添えておく。
   if (highlights.regime) highlights.regime.asOf = alignedAsOf;
@@ -808,6 +825,24 @@ async function main() {
 
   console.log(`\n  今日の3行（自動生成）:`);
   highlights.lead.forEach((l, i) => console.log(`    ${i + 1}. ${l.text}`));
+
+  // 市場の内訳は型チェックが効かない（scripts は tsconfig の include の外）。
+  // 出力を目で見ることが唯一の検証なので、必ず標準出力に出す。
+  if (topics.market?.us) {
+    const m = topics.market;
+    // 全角は2桁ぶんの幅を取るので、padEnd では揃わない（見た目だけの話だが、
+    // この出力が唯一の検証手段なので読みにくいと確認にならない）
+    const width = (s) => [...s].reduce((n, c) => n + (/[\x20-\x7e]/.test(c) ? 1 : 2), 0);
+    const padName = (s) => s + " ".repeat(Math.max(0, 18 - width(s)));
+
+    console.log(`\n  今日の市場（米国 ${m.us.asOf}${m.jp ? ` / 日本 ${m.jp.asOf}` : ""}）:`);
+    for (const x of m.us.indices) {
+      const d = x.changeDay === null ? "—" : `${x.changeDay > 0 ? "+" : ""}${x.changeDay}%`;
+      console.log(`    ${padName(x.name)}${String(x.value).padStart(10)}  ${d}`);
+    }
+    if (m.us.vix) console.log(`    ${padName("VIX")}${String(m.us.vix.value).padStart(10)}  60日平均 ${m.us.vix.avg60}`);
+    for (const line of [...m.us.lines, ...(m.jp?.lines ?? [])]) console.log(`    ・${line}`);
+  }
 
   console.log(`\n  トピックス: 発表予定 ${topics.calendar.length}件 / 見出し ${topics.headlines.length}件`);
   for (const c of topics.calendar.slice(0, 3)) console.log(`    ${c.date}  ${c.name}`);

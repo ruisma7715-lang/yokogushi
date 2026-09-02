@@ -112,6 +112,55 @@ const FEEDS = [
       ["chair", "発言"],
     ],
   },
+  // 中央銀行だけだと「金融政策の話」しか出ない。実体経済の数字そのものを出す
+  // 官庁を足して、株の前提が動いた日に見出しが並ぶようにする。
+  //
+  // 下記は実際に叩いて動いたものだけを載せている。試して駄目だったもの:
+  //   JPX（東証）  … news.xml / news.rdf / index.rdf など5通り試して全て404。RSSが無い
+  //   総務省統計局  … 404。統計局はRSSを出していない
+  //   財務省        … 404
+  //   米BLS         … 通常のUAでは403。ブラウザのUAを騙ると1件だけ返るが、
+  //                    見出しが「Latest Numbers」1本きりで中身が無く、載せる意味がない
+  //   米財務省      … 503。安定しない
+  // 増やしたくなったら、まず curl で叩いてから足すこと。
+  {
+    source: "内閣府",
+    url: "https://www.cao.go.jp/rss/news.rdf",
+    keywords: [
+      ["国民経済計算", "GDP"],
+      ["四半期別GDP", "GDP"],
+      ["景気動向指数", "景況"],
+      ["月例経済報告", "景況"],
+      ["消費動向調査", "消費"],
+      ["機械受注", "設備投資"],
+      ["景気ウォッチャー", "景況"],
+      ["経済財政", "政策"],
+    ],
+  },
+  {
+    source: "米BEA",
+    url: "https://apps.bea.gov/rss/rss.xml",
+    keywords: [
+      ["gross domestic product", "GDP"],
+      ["gdp", "GDP"],
+      ["personal income", "消費"],
+      ["personal consumption", "消費"],
+      ["corporate profits", "企業収益"],
+      ["trade in goods", "貿易"],
+    ],
+  },
+  {
+    source: "米Census",
+    url: "https://www.census.gov/economic-indicators/indicator.xml",
+    keywords: [
+      ["retail", "消費"],
+      ["durable goods", "設備投資"],
+      ["construction spending", "住宅"],
+      ["new residential", "住宅"],
+      ["international trade", "貿易"],
+      ["business inventories", "在庫"],
+    ],
+  },
 ];
 
 const DAY = 864e5;
@@ -156,9 +205,11 @@ async function fetchHeadlines(now) {
   const picked = [];
   for (const h of all) {
     perSource[h.source] = (perSource[h.source] ?? 0) + 1;
-    if (perSource[h.source] > 3) continue;
+    // ソースが2本から5本に増えたので、1ソースあたりを2件に絞る。
+    // 日銀は公表物が多く、緩めると日銀だけで埋まってしまう。
+    if (perSource[h.source] > 2) continue;
     picked.push({ source: h.source, title: h.title, url: h.url, date: h.date, tag: h.tag });
-    if (picked.length >= 5) break;
+    if (picked.length >= 6) break;
   }
 
   return { headlines: picked, failed };

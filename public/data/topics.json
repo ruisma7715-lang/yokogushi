@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-01T23:12:54.682Z",
-  "today": "2026-09-01",
+  "generatedAt": "2026-09-02T06:33:56.561Z",
+  "today": "2026-09-02",
   "calendar": [
     {
       "date": "2026-09-01",
@@ -31,9 +31,28 @@
       "date": "2026-09-11",
       "name": "米CPI（消費者物価）",
       "why": "米金利と金の前提が動く"
+    },
+    {
+      "date": "2026-09-16",
+      "name": "米小売売上高",
+      "why": "個人消費の強さ"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "【挨拶】高田審議委員「わが国の経済・物価情勢と金融政策」（札幌）",
+      "url": "https://www.boj.or.jp/about/press/koen_2026/ko260902a.htm",
+      "date": "2026-09-02",
+      "tag": "見通し"
+    },
+    {
+      "source": "米Census",
+      "title": "Construction Spending",
+      "url": "https://www.census.gov/construction/c30/c30index.html",
+      "date": "2026-09-01",
+      "tag": "住宅"
+    },
     {
       "source": "日本銀行",
       "title": "金融安定理事会によるG20財務大臣・中央銀行総裁へのレターの公表について",
@@ -42,26 +61,93 @@
       "tag": "発言"
     },
     {
-      "source": "日本銀行",
-      "title": "長期国債買入れ（利回り・価格入札方式）の四半期予定（2026年7～9月）［日程更新］",
-      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/mpr260831a.pdf",
-      "date": "2026-08-31",
-      "tag": "オペ"
+      "source": "内閣府",
+      "title": "消費動向調査（令和8年8月実施分）",
+      "url": "https://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html",
+      "date": "2026-09-01",
+      "tag": "消費"
     },
     {
-      "source": "日本銀行",
-      "title": "貸出約定平均金利（7月）",
-      "url": "https://www.boj.or.jp/statistics/dl/loan/yaku/yaku2607.pdf",
-      "date": "2026-08-30",
-      "tag": "統計"
+      "source": "米Census",
+      "title": "Advance Retail Inventories",
+      "url": "https://www.census.gov/econ/indicators/index.html",
+      "date": "2026-08-27",
+      "tag": "消費"
     },
     {
-      "source": "FRB",
-      "title": "Minutes of the Board's discount rate meetings on July 20 and July 29, 2026",
-      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260825a.htm",
-      "date": "2026-08-25",
-      "tag": "金利"
+      "source": "内閣府",
+      "title": "月例経済報告（8月）",
+      "url": "https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html",
+      "date": "2026-08-27",
+      "tag": "景況"
     }
   ],
-  "failed": []
+  "failed": [],
+  "market": {
+    "us": {
+      "asOf": "2026-09-01",
+      "indices": [
+        {
+          "id": "sp500",
+          "name": "S&P 500",
+          "note": "大型500社",
+          "value": 7631.47,
+          "changeDay": -0.71,
+          "changeWeek": -0.6
+        },
+        {
+          "id": "ndx",
+          "name": "ナスダック100",
+          "note": "大型ハイテク",
+          "value": 29077.22,
+          "changeDay": -1.29,
+          "changeWeek": -0.45
+        },
+        {
+          "id": "dow",
+          "name": "ダウ工業株30種",
+          "note": "旧来型の大型",
+          "value": 52766.88,
+          "changeDay": -0.79,
+          "changeWeek": -1.51
+        },
+        {
+          "id": "comp",
+          "name": "ナスダック総合",
+          "note": "ハイテク全体",
+          "value": 26099.77,
+          "changeDay": -1.03,
+          "changeWeek": -0.2
+        }
+      ],
+      "vix": {
+        "asOf": "2026-08-31",
+        "value": 14.92,
+        "changeDay": 3.4,
+        "avg60": 16.72
+      },
+      "lines": [
+        "米国株は全体が下落しましたが、S&P 500の -0.71% に対しナスダック100は -1.29%。値動きの幅が 0.58 ポイント開いています。",
+        "8/31時点のVIXは 14.92。60日平均の 16.72 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
+      ]
+    },
+    "jp": {
+      "asOf": "2026-09-01",
+      "indices": [
+        {
+          "id": "nikkei",
+          "name": "日経平均",
+          "value": 66215.34,
+          "changeDay": -0.15,
+          "changeWeek": 0.54
+        }
+      ],
+      "range52": 79.8,
+      "usdChangeDay": -0.41,
+      "lines": [
+        "日経平均は -0.15%、この1週間では +0.54%。過去1年の値幅の中では下から 80% の位置です。"
+      ]
+    },
+    "failed": []
+  }
 }

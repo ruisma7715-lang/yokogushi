@@ -82,6 +82,9 @@ function shell({ title, description, canonical, body }) {
 export function renderDailyPage({ asOf, snapshot, highlights, topics, prevDay, nextDay }) {
   const calendar = topics?.calendar ?? [];
   const headlines = topics?.headlines ?? [];
+  // topics.market（今日の市場）はここでは意図的に使わない。
+  // 米国指数が揃った日は alignedAsOf より新しいことがあり、載せると
+  // 「その日1本の記録」に別の日の値が混ざる。トップだけで出す。
   const title = `${jpDate(asOf)}のマーケット｜日経平均・S&P500・金・ビットコインはどう動いたか`;
 
   const moved = [...snapshot]
