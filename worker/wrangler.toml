@@ -1,0 +1,15 @@
+# ヨコグシ — 購読情報の受け口
+#
+# デプロイ手順は worker/README.md にある。
+# 本体（静的サイト）とは独立していて、ここを止めても相場データの更新と表示は動く。
+
+name = "yokogushi-push"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+# 購読情報の保存先。id は `wrangler kv namespace create SUBS` の出力で置き換える。
+[[kv_namespaces]]
+binding = "SUBS"
+id = "ここに wrangler が出した id を貼る"
+
+# ADMIN_TOKEN は平文で置かない。`wrangler secret put ADMIN_TOKEN` で入れる。

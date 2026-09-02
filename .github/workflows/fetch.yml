@@ -41,6 +41,23 @@ jobs:
           # 未登録なら何もせず正常終了する。通知の失敗でデータ更新は止めない。
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
 
+      # 訪問者への Web Push。ここだけ web-push パッケージが要るので、
+      # 直前に依存を入れる。取得と ntfy 通知はここまで依存ゼロで動いており、
+      # インストールが失敗しても、その2つは既に終わっている。
+      - name: 依存の取得（Web Push 用）
+        run: npm ci
+        continue-on-error: true
+
+      - name: 購読者へ Web Push
+        run: node scripts/push.mjs
+        env:
+          # 受け口が未デプロイのあいだは、何もせず正常終了する。
+          PUSH_WORKER_URL: ${{ secrets.PUSH_WORKER_URL }}
+          PUSH_ADMIN_TOKEN: ${{ secrets.PUSH_ADMIN_TOKEN }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          VAPID_PUBLIC_KEY: ${{ secrets.VAPID_PUBLIC_KEY }}
+        continue-on-error: true
+
       - name: 変更があればコミット
         run: |
           git config user.name "github-actions[bot]"

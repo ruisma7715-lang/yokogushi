@@ -14,7 +14,7 @@
 // 古い値を見せる可能性があるのは data だけ。画面には各データの asOf が出るので、
 // 利用者は「いつ時点の値か」を必ず確認できる。
 
-const VERSION = "yokogushi-v1";
+const VERSION = "yokogushi-v2";
 const BASE = "/yokogushi/";
 const SHELL = [BASE, `${BASE}index.html`, `${BASE}manifest.webmanifest`, `${BASE}icon-192.png`];
 
@@ -97,4 +97,47 @@ self.addEventListener("fetch", (event) => {
 
   // それ以外（アイコン・manifest・feed など）はネット優先で十分。
   event.respondWith(networkFirst(request));
+});
+
+// ---------------------------------------------------------------- 通知
+//
+// 購読した人に相場を届ける。中身は送信側（scripts/push.mjs）が作った JSON。
+// ここでは受け取って出すだけにして、文面の組み立てを2箇所に持たない。
+
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    // JSON でない通知が来ても黙って捨てない。本文として出す。
+    data = { body: event.data ? event.data.text() : "" };
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(data.title || "ヨコグシ", {
+      body: data.body || "",
+      icon: `${BASE}icon-192.png`,
+      badge: `${BASE}icon-192.png`,
+      lang: "ja",
+      // 同じタグにして、古い通知を置き換える。毎日2件ずつ溜まると読まれなくなる。
+      tag: "yokogushi-daily",
+      renotify: true,
+      data: { url: data.url || BASE },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = event.notification.data?.url || BASE;
+
+  // すでに開いているタブがあればそれを前に出す。毎回新しいタブが増えるのを防ぐ。
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((list) => {
+      for (const client of list) {
+        if (client.url.includes(BASE) && "focus" in client) return client.focus();
+      }
+      return self.clients.openWindow(target);
+    })
+  );
 });

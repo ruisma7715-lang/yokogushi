@@ -13,6 +13,7 @@ import OverlayChart from "./components/OverlayChart";
 import TodayNote from "./components/TodayNote";
 import Topics from "./components/Topics";
 import SinceLastVisit from "./components/SinceLastVisit";
+import PushSubscribe from "./components/PushSubscribe";
 
 // public/ 配下は base 基準で配信される。ビルド後もそのまま解決される書き方。
 const BASE = import.meta.env.BASE_URL;
@@ -125,6 +126,9 @@ export default function App() {
         <OverlayChart assets={latest.assets} history={history} />
 
         <TodayNote base={BASE} />
+
+        {/* 受け口が未設定のあいだ、このコンポーネントは何も描かない */}
+        <PushSubscribe />
 
         <Glossary />
       </main>

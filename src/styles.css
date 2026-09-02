@@ -2515,6 +2515,61 @@ svg .dot {
   }
 }
 
+/* ------------------------------------------------------------------ 通知の購読 */
+.push {
+  margin-top: 2.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.push-note {
+  margin: 0.5rem 0 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.push-btn {
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.5rem 1.125rem;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+.push-btn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.push-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.push-btn.ghost {
+  background: transparent;
+  color: var(--accent);
+}
+
+.push-error {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: var(--up);
+}
+
+.push-fine {
+  margin: 0.875rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
 /* ------------------------------------------------------------------ 時点の表示
    ソースによって公表の早さが違う。遅れているものにだけ日付を出し、
    揃っているものには何も出さない（全部に日付を出すと、どれが古いのか分からなくなる）。 */
