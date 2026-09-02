@@ -46,8 +46,10 @@ scripts/fetch.mjs ──> public/data/*.json （リポジトリにコミット�
      .github/workflows/deploy.yml が dist をビルドして GitHub Pages へ
 ```
 
-- cron の分を `:00` にしない。共有ランナーは毎時ちょうどに集中するため、
-  `:00` 指定だと実測で2〜8時間遅れて動いていた。通知は届く時刻が意味を持つので `:37` にしてある。
+- **cron の時刻は当てにできない。** `:00` 指定で実測2〜8時間遅れだったため `:37` にずらしたが、
+  変更後の初回も 07:37 UTC 予定に対して 12:15 UTC 実行（4時間38分遅れ）だった。
+  GitHub Actions の schedule は無料枠だと大きく遅れる。**「16:37に届く」と約束しない。**
+  時刻を守る必要が出たら、schedule ではなく外部から `workflow_dispatch` を叩く方式に変えること。
 
 - APIキーは Actions の Secrets のみ。フロントには一切出さない（`.env` はローカル実行用、gitignore 済み）。
 - `GITHUB_TOKEN` による push は push イベントを発火しないため、公開は `workflow_run` で受けている。
@@ -139,16 +141,33 @@ scripts/fetch.mjs ──> public/data/*.json （リポジトリにコミット�
 - フィードの見出しと要約は**書き出し済みの日次HTMLから拾う**。別のJSONを持つと、
   ページとフィードで中身がずれたときにどちらが正しいか分からなくなる
 
-**まだ無いもの: 訪問者向けの Web Push。** これだけは外部アカウントが要る。理由は2つ。
+### 訪問者向けの Web Push
 
-1. ブラウザが作った購読情報を **POST する先が要る**。静的サイトには受け口が無い。
-   購読情報をリポジトリにコミットする案は、公開リポジトリに訪問者の識別子を並べることになるので取らない
-   （保有内容を localStorage から出さない方針と食い違う）
-2. iOS は**ホーム画面に追加した web app でしか Push API が使えない**。通常のSafariタブに `PushManager` は無い。
-   PWA化を先に済ませてあるので、この前提条件はすでに満たしている
+コードは全部そろっている。**動いていないのは受け口が未デプロイだから**で、それだけ。
+手順は `worker/README.md` にある。
 
-やるなら Cloudflare Workers + KV あたりに購読の受け口を1つ立て、送信は既存の Actions から
-`web-push` で行う。VAPID の秘密鍵は Secrets に置く。
+```
+訪問者のブラウザ ──subscribe──> worker/（Cloudflare Workers + KV）
+                                        │
+GitHub Actions ──scripts/push.mjs──> 一覧を読んで web-push で送信
+```
+
+| ファイル | 役割 |
+|---|---|
+| `worker/src/index.js` | 購読を預かるだけ。送信はしない |
+| `worker/test.mjs` | KV を Map に置き換えて fetch を直接呼ぶ。デプロイ不要で確かめられる |
+| `scripts/vapid.mjs` | VAPID 鍵の生成。**一度きり**（作り直すと既存の購読が全部無効になる） |
+| `scripts/push.mjs` | 送信。404/410 の購読は prune で消す |
+| `src/pushConfig.ts` | `workerUrl` が空のあいだ購読UIを描かない |
+
+- 購読情報をリポジトリにコミットする案は取らない。公開リポジトリに訪問者の識別子を
+  並べることになり、保有内容を localStorage から出さない方針と食い違う
+- iOS は**ホーム画面に追加した web app でしか Push API が使えない**。通常のSafariタブに
+  `PushManager` は無い。PWA化で前提条件は満たしてあり、購読UIも iOS では追加手順を出す
+- 暗号化と VAPID 署名は `web-push` に任せる。RFC 8291 を自前で書くと、間違っていても
+  「届かない」としか分からず原因を追えない
+- `/subscribe` は誰でも叩ける。endpoint のホストを各プッシュサービスに限り、KV が
+  でたらめな値で埋まるのを防いでいる
 
 ### 今日の3行（`buildLead` in `scripts/fetch.mjs`）
 
