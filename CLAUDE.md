@@ -17,6 +17,8 @@ npm run dev      # Vite 開発サーバー
 npm run build    # tsc -b && vite build（型チェックを含む）
 npm run preview  # ビルド結果の確認
 npm run fetch    # データ取得。public/data/ と public/daily/ を書き換える
+
+node scripts/notify.mjs --dry   # 通知の文面だけを見る（送信しない）
 ```
 
 - **テストフレームワークもリンタ設定も無い。** 検証は `npm run build`（型チェック込み）と、
@@ -32,12 +34,19 @@ npm run fetch    # データ取得。public/data/ と public/daily/ を書き換
 
 ```
 scripts/fetch.mjs ──> public/data/*.json （リポジトリにコミットされる）
-                 └──> public/daily/*.html, sitemap.xml, robots.txt
+                 ├──> public/daily/*.html, sitemap.xml, robots.txt
+                 ├──  scripts/topics.mjs   公式RSSの見出しと米指標の発表予定
+                 └──  scripts/market.mjs   今日の市場（米株の内訳・VIX）
                           │
-     .github/workflows/fetch.yml（cron 平日 06:00 / 16:00 JST）でコミット
+     .github/workflows/fetch.yml（cron 平日 06:37 / 16:37 JST）
+                          │  ├─ scripts/notify.mjs が ntfy へ通知を送る
+                          │  └─ コミットして push
                           │  workflow_run で連鎖
      .github/workflows/deploy.yml が dist をビルドして GitHub Pages へ
 ```
+
+- cron の分を `:00` にしない。共有ランナーは毎時ちょうどに集中するため、
+  `:00` 指定だと実測で2〜8時間遅れて動いていた。通知は届く時刻が意味を持つので `:37` にしてある。
 
 - APIキーは Actions の Secrets のみ。フロントには一切出さない（`.env` はローカル実行用、gitignore 済み）。
 - `GITHUB_TOKEN` による push は push イベントを発火しないため、公開は `workflow_run` で受けている。
@@ -53,10 +62,11 @@ scripts/fetch.mjs ──> public/data/*.json （リポジトリにコミット�
 | `history.json` | チャート用（起点=100に正規化） | `alignedAsOf` |
 | `attribution.json` | 寄与分解の素材。日次リターンと為替を分けて渡す | `alignedAsOf` |
 | `highlights.json` | 今日の3行（`lead`）・レジーム・相関の変化 | 混在（下記） |
-| `topics.json` | 公式RSSの見出しと米指標の発表予定 | 生成時のJST日付 |
+| `topics.json` | 公式RSSの見出し、米指標の発表予定、今日の市場（`market`） | 生成時のJST日付。`market` は別（下記） |
 | `notes.txt` | 手書きの編集後記。日付＋本文、`---` 区切り | — |
+| `notified.json` | 最後に送った通知の指紋。同じ内容を二度送らないための状態 | — |
 
-### 日付が2種類あること（いちばん重要）
+### 日付が3種類あること（いちばん重要）
 
 相関は**全資産の値が揃った日**でしか計算できない。一方、公表の早さはソースごとに違う
 （暗号資産は当日、FRED の米10年債利回りは2〜4営業日遅れ）。揃うのを待つと表示が常に数日前になるため、
@@ -65,11 +75,46 @@ scripts/fetch.mjs ──> public/data/*.json （リポジトリにコミット�
 - `latest.asOf` … いちばん新しい資産の日付。ヘッダの「最終更新」に使う
 - `latest.alignedAsOf` … 全6資産が揃った直近の日。相関・チャート・寄与分解・レジーム判定はこちら
 - `AssetSnapshot.asOf` … その資産自身の日付。`latest.asOf` と違う資産にだけ画面に日付を出す
+- `topics.market.us.asOf` … **米国の指数どうしが揃った日**。上の2つのどちらでもない第3の軸。
+  ナスダックとダウを比べる話は同じ日の値でないと成立しないため、米国の中だけで揃える。
+  `market.jp.asOf` は日経平均の最新日、`market.us.vix.asOf` はさらに1日遅れることがあり自前で持つ
 - 日次ページ（`public/daily/`）は `alignedAsOf` のスナップショットで作る。
-  その日1本の記録に別の日の値を混ぜないため、トップとは別に `snapshotAligned` を組んで渡している
+  その日1本の記録に別の日の値を混ぜないため、トップとは別に `snapshotAligned` を組んで渡している。
+  **`topics.market` を日次ページに出さないのはこのため**（米国の基準日が `alignedAsOf` より新しいことがある）
 
-新しい数値を画面に出すときは、**それが横断の比較なのか単体の現在値なのか**を先に決めること。
-横断なら `alignedAsOf`、単体なら各資産の最新日。混ざったまま出さない。
+新しい数値を画面に出すときは、**それが横断の比較なのか、単体の現在値なのか、市場の内訳なのか**を
+先に決めること。横断なら `alignedAsOf`、単体なら各資産の最新日、内訳なら `market` の各 `asOf`。
+混ざったまま出さない。日付がずれているものにだけ画面と文面に日付を出す（全部に出すと、どれが古いか分からなくなる）。
+
+### 今日の市場（`scripts/market.mjs`）
+
+カードの6資産は「横断」のためのもので、増やすと1画面に収まらなくなり横断の価値が消える。
+だが「今日の米株がどう動いたか」は指数1本では分からない（大型ハイテクだけが買われた日と、
+全部そろって上げた日は、同じ +0.5% でも意味が違う）。そこで**カードには出さず**、
+トピックスの中だけで使う指数をここで集める。
+
+- 米国は FRED から NASDAQ100 / DJIA / NASDAQCOM / VIXCLS。S&P500・日経平均・ドル円は
+  `fetch.mjs` が取得済みのものを引数で受け取り、二重に叩かない
+- **日本株の内訳は無料で日次に取れない。** TOPIX は Stooq がブロック（HTMLを返す）、
+  FRED にあるのは月次のOECD指数のみ、JPX は RSS 自体が無い。
+  代わりにドル建て日経平均（円建て ÷ ドル円）を出し、為替を抜いた海外から見た日本株を添えている
+- 文章は「起きたこと」と「その事実が何に効くか」まで。「〜だろう」「〜すべき」は使わない
+
+### 通知（`scripts/notify.mjs`）
+
+サイトを開かなくても今日の相場が届くようにするためのもの。サーバーを持たないまま
+実現するため、送信は Actions のジョブが担い、購読情報の保存が要らない ntfy を使う
+（VAPID鍵も購読DBも増やさずに済む）。
+
+- ヘッダではなく **JSON の本文で送る**。ヘッダに日本語を入れると配信側で文字化けすることがある
+- 通知に色は使えないので、向きは `▲▼` だけで示す
+- 送った内容の指紋を `notified.json` に残し、前回と同じなら送らない。
+  休場日に同じ通知が繰り返し届くと読まれなくなる
+- **ワークフローでは通知をコミットより前に置く。** `notified.json` を次のステップで
+  コミットさせる必要があるため
+- `NTFY_TOPIC` 未設定なら何もせず正常終了する。通知の失敗でデータ更新を道連れにしない
+- 訪問者にも配るなら PWA + Web Push が要る。ただし購読情報の保存先（＝サーバー）が必要になり、
+  iOS はホーム画面に追加した web app でしか Push API が使えない（通常のSafariタブには `PushManager` が無い）
 
 ### 今日の3行（`buildLead` in `scripts/fetch.mjs`）
 
@@ -82,7 +127,13 @@ scripts/fetch.mjs ──> public/data/*.json （リポジトリにコミット�
 
 ### `scripts/topics.mjs` の制約
 
-- 集めるのは**公式RSSの見出し＋リンク**（日銀・FRB）と **FRED のリリースカレンダー**だけ。本文は載せない。
+- 集めるのは**公式RSSの見出し＋リンク**（日銀・FRB・内閣府・米BEA・米Census）と
+  **FRED のリリースカレンダー**だけ。本文は載せない。
+- **フィードを増やす前に必ず curl で叩く。** 官庁のRSSは存在しないものが多い。
+  試して駄目だったもの（理由は `topics.mjs` のコメントに残してある）:
+  JPX（5URL試して全て404、RSSが無い）/ 総務省統計局（404）/ 財務省（404）/
+  米BLS（403。ブラウザUAでも中身が「Latest Numbers」1本きり）/ 米財務省（503）
+- 1ソース2件・計6件に絞っている。緩めると公表物の多い日銀だけで埋まる。
 - FRED の `release_id: 101`（FOMC）は将来日付が毎日返ってくる仕様なので**使わない**。
 - 全リリースを一度に取る `releases/dates` は1000行超で重く時間切れになる。
   見たい9本を `release/dates` で個別に、`Promise.allSettled` で並列に取る。
