@@ -69,6 +69,16 @@ function shell({ title, description, canonical, body }) {
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="article">
+<meta property="og:url" content="${esc(canonical)}">
+<meta property="og:site_name" content="ヨコグシ">
+<meta property="og:image" content="${esc(`${SITE_BASE}/ogp.png`)}">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="${esc(`${SITE_BASE}/favicon-32.png`)}">
+<link rel="apple-touch-icon" href="${esc(`${SITE_BASE}/apple-touch-icon.png`)}">
+<meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1116" media="(prefers-color-scheme: dark)">
+<link rel="alternate" type="application/atom+xml" title="ヨコグシ 日次の記録" href="${esc(`${SITE_BASE}/feed.xml`)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -230,6 +240,40 @@ ${days
     canonical: `${SITE_BASE}/daily/`,
     body,
   });
+}
+
+/**
+ * 更新を追うための Atom フィード。
+ *
+ * 通知を受け取る手段を、こちらが用意した経路に縛らないためのもの。
+ * 好きなリーダーで購読でき、多くのリーダーが新着で通知を出す。
+ * サーバーも購読者の登録も要らないので、公開しているだけで誰でも使える。
+ *
+ * entries は [{ day, title, summary }] の新しい順。
+ * 中身は書き出し済みの日次HTMLから拾うので、ここでは受け取るだけにしてある。
+ */
+export function renderFeed(entries, updatedAt) {
+  const items = entries.map(
+    ({ day, title, summary }) => `  <entry>
+    <title>${esc(title)}</title>
+    <link href="${esc(`${SITE_BASE}/daily/${day}.html`)}"/>
+    <id>${esc(`${SITE_BASE}/daily/${day}.html`)}</id>
+    <updated>${day}T09:00:00+09:00</updated>
+    <summary>${esc(summary)}</summary>
+  </entry>`
+  );
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>ヨコグシ 日次の記録</title>
+  <subtitle>株・金・ビットコインの毎日の値動きと、その日に何が起きたかの記録。</subtitle>
+  <link href="${esc(`${SITE_BASE}/feed.xml`)}" rel="self"/>
+  <link href="${esc(`${SITE_BASE}/`)}"/>
+  <id>${esc(`${SITE_BASE}/`)}</id>
+  <updated>${esc(updatedAt)}</updated>
+  <icon>${esc(`${SITE_BASE}/icon-192.png`)}</icon>
+${items.join("\n")}
+</feed>`;
 }
 
 /** 検索エンジンに場所を伝えるための一覧 */

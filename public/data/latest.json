@@ -44,11 +44,11 @@
       "cls": "COMMODITY",
       "unit": "USD",
       "asOf": "2026-09-02",
-      "value": 4332.86,
-      "changeDay": -2.64,
-      "changeWeek": -5.56,
-      "changeMonth": -0.74,
-      "vol": 22.48
+      "value": 4328.57,
+      "changeDay": -2.74,
+      "changeWeek": -5.65,
+      "changeMonth": -0.84,
+      "vol": 22.51
     },
     {
       "id": "btc",
@@ -56,11 +56,11 @@
       "cls": "CRYPTO",
       "unit": "USD",
       "asOf": "2026-09-02",
-      "value": 77495.51,
-      "changeDay": -1.35,
-      "changeWeek": -3.45,
-      "changeMonth": 21.97,
-      "vol": 31.17
+      "value": 77561.77,
+      "changeDay": -1.26,
+      "changeWeek": -3.37,
+      "changeMonth": 22.07,
+      "vol": 31.16
     },
     {
       "id": "us10y",
@@ -77,20 +77,20 @@
   ],
   "units": {
     "usd_jpy": 160.16,
-    "btc_jpy": 12411681,
-    "gold_jpy_per_g": 22311,
+    "btc_jpy": 12422293,
+    "gold_jpy_per_g": 22289,
     "coins": {
       "btc": {
         "ticker": "BTC",
         "name": "ビットコイン",
         "step": "0.00001",
-        "jpy": 12375935
+        "jpy": 12373233
       },
       "eth": {
         "ticker": "ETH",
         "name": "イーサリアム",
         "step": "0.0001",
-        "jpy": 386240
+        "jpy": 385941
       },
       "xrp": {
         "ticker": "XRP",
@@ -102,31 +102,31 @@
         "ticker": "SOL",
         "name": "ソラナ",
         "step": "0.01",
-        "jpy": 15951
+        "jpy": 15958
       },
       "doge": {
         "ticker": "DOGE",
         "name": "ドージコイン",
         "step": "1",
-        "jpy": 13.06
+        "jpy": 13.04
       },
       "ada": {
         "ticker": "ADA",
         "name": "カルダノ",
         "step": "1",
-        "jpy": 31.61
+        "jpy": 31.52
       },
       "bnb": {
         "ticker": "BNB",
         "name": "BNB",
         "step": "0.01",
-        "jpy": 109730
+        "jpy": 109726
       },
       "ltc": {
         "ticker": "LTC",
         "name": "ライトコイン",
         "step": "0.01",
-        "jpy": 7920
+        "jpy": 7891
       }
     }
   },

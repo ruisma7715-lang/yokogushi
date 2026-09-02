@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>ヨコグシ 日次の記録</title>
+  <subtitle>株・金・ビットコインの毎日の値動きと、その日に何が起きたかの記録。</subtitle>
+  <link href="https://ruisma7715-lang.github.io/yokogushi/feed.xml" rel="self"/>
+  <link href="https://ruisma7715-lang.github.io/yokogushi/"/>
+  <id>https://ruisma7715-lang.github.io/yokogushi/</id>
+  <updated>2026-09-02T07:01:57.828Z</updated>
+  <icon>https://ruisma7715-lang.github.io/yokogushi/icon-192.png</icon>
+  <entry>
+    <title>2026年8月31日のマーケット</title>
+    <link href="https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-31.html"/>
+    <id>https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-31.html</id>
+    <updated>2026-08-31T09:00:00+09:00</updated>
+    <summary>2026年8月31日の値動きをまとめました。最も大きく動いたのはビットコインで−3.25%。この日は「方向感なし」の一日でした。</summary>
+  </entry>
+  <entry>
+    <title>2026年8月28日のマーケット</title>
+    <link href="https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-28.html"/>
+    <id>https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-28.html</id>
+    <updated>2026-08-28T09:00:00+09:00</updated>
+    <summary>2026年8月28日の値動きをまとめました。最も大きく動いたのはビットコインで+1.58%。この日は「方向感なし」の一日でした。</summary>
+  </entry>
+  <entry>
+    <title>2026年8月27日のマーケット</title>
+    <link href="https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-27.html"/>
+    <id>https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-27.html</id>
+    <updated>2026-08-27T09:00:00+09:00</updated>
+    <summary>2026年8月27日の値動きをまとめました。最も大きく動いたのはS&amp;P 500で+0.72%。この日は「方向感なし」の一日でした。</summary>
+  </entry>
+  <entry>
+    <title>2026年8月20日のマーケット</title>
+    <link href="https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-20.html"/>
+    <id>https://ruisma7715-lang.github.io/yokogushi/daily/2026-08-20.html</id>
+    <updated>2026-08-20T09:00:00+09:00</updated>
+    <summary>2026年8月20日の値動きをまとめました。最も大きく動いたのはビットコインで+7.35%。この日は「方向感なし」の一日でした。</summary>
+  </entry>
+</feed>

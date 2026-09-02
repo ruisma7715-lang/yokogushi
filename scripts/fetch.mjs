@@ -5,10 +5,10 @@
 //
 // APIキーが無い資産は自動でスキップされるので、キーを取るたびに資産が増えていく。
 
-import { writeFile, mkdir, readdir } from "node:fs/promises";
+import { writeFile, mkdir, readdir, readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { renderDailyPage, renderIndex, renderSitemap, SITE_BASE } from "./daily-page.mjs";
+import { renderDailyPage, renderIndex, renderSitemap, renderFeed, SITE_BASE } from "./daily-page.mjs";
 import { fetchTopics } from "./topics.mjs";
 import { fetchMarketInternals } from "./market.mjs";
 
@@ -821,7 +821,46 @@ async function main() {
     `User-agent: *\nAllow: /\nSitemap: ${SITE_BASE}/sitemap.xml\n`
   );
 
-  console.log(`\n  日次ページ: ${allDays.length} 本（最新 ${alignedAsOf}）`);
+  // --- feed.xml : 更新を追う手段を、こちらが用意した経路に縛らないために出す。
+  //     見出しと要約は書き出し済みの日次HTMLから拾う。そのために別のJSONを
+  //     持つと、ページとフィードで中身がずれたときにどちらが正しいか分からなくなる。
+  //     正規表現は文字列から組み立てない（この環境ではエスケープが潰れて静かに空振りする）。
+  const TITLE_RE = /<title>([\s\S]*?)<\/title>/i;
+  const OGDESC_RE = /<meta property="og:description" content="([^"]*)"/i;
+  const unesc = (s) =>
+    s
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, "&");
+
+  const feedDays = [...allDays].reverse().slice(0, 30);
+  const entries = [];
+  for (const day of feedDays) {
+    try {
+      const html = await readFile(join(DAILY_DIR, `${day}.html`), "utf8");
+      const rawTitle = unesc(html.match(TITLE_RE)?.[1] ?? "");
+      const summary = unesc(html.match(OGDESC_RE)?.[1] ?? "");
+      entries.push({
+        day,
+        // ページのtitleは検索向けに長い。フィードでは「｜」より前だけにする
+        title: (rawTitle.split("｜")[0] || `${day}のマーケット`).trim(),
+        summary,
+      });
+    } catch {
+      // 消えたページがあってもフィード全体は出す
+    }
+  }
+
+  if (entries.length) {
+    await writeFile(
+      join(ROOT, "public", "feed.xml"),
+      renderFeed(entries, new Date().toISOString())
+    );
+  }
+
+  console.log(`\n  日次ページ: ${allDays.length} 本（最新 ${alignedAsOf}）／ フィード ${entries.length} 件`);
 
   console.log(`\n  今日の3行（自動生成）:`);
   highlights.lead.forEach((l, i) => console.log(`    ${i + 1}. ${l.text}`));

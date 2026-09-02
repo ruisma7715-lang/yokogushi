@@ -13,6 +13,43 @@
       name="description"
       content="日経平均・S&P500・ドル円・金・ビットコイン・米10年債利回りを横断で表示し、資産どうしの相関を見せるマーケットボード。"
     />
+    <link rel="canonical" href="https://ruisma7715-lang.github.io/yokogushi/" />
+
+    <!-- 共有したときのカード。これが無いと、LINEやXに貼っても何も出ない。
+         画像は scripts/icons.mjs が生成する（絵柄を変えたら再実行してコミットする）。 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ヨコグシ" />
+    <meta property="og:title" content="ヨコグシ — 株・金・ビットコインを1画面で" />
+    <meta
+      property="og:description"
+      content="日経平均・S&P500・ドル円・金・ビットコイン・米10年債利回りを横断で表示し、資産どうしの相関を見せるマーケットボード。"
+    />
+    <meta property="og:url" content="https://ruisma7715-lang.github.io/yokogushi/" />
+    <meta property="og:image" content="https://ruisma7715-lang.github.io/yokogushi/ogp.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- ホーム画面に追加できるようにする。iOS で Web Push を使う前提条件でもある。 -->
+    <link rel="manifest" href="/yokogushi/manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/yokogushi/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/yokogushi/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="ヨコグシ" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- 端末の設定に合わせる。1つだけ書くと、片方のモードでヘッダが浮く。 -->
+    <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1116" media="(prefers-color-scheme: dark)" />
+
+    <!-- 更新を追いたい人がリーダーで購読できるようにする。通知を出すリーダーも多い。 -->
+    <link
+      rel="alternate"
+      type="application/atom+xml"
+      title="ヨコグシ 日次の記録"
+      href="/yokogushi/feed.xml"
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
