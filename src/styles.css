@@ -2570,6 +2570,212 @@ svg .dot {
   color: var(--ink-3);
 }
 
+/* ------------------------------------------------------------------ こういう日は、どうなるか
+   中央が0の発散棒。右=上昇=赤 / 左=下落=青（日本の慣習）で、色だけに頼らず ▲▼ と数値を必ず添える。
+   棒の長さは σ（普段の値動きの何倍か）。米10年債だけ単位が %pt なので、
+   生の値を同じ目盛りに並べると、比べられないものを比べたことになる。 */
+.cond {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.cond-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cond-window {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.cond-lead {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.cond-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.875rem;
+}
+
+.cond-tab {
+  font: inherit;
+  font-size: 0.75rem;
+  padding: 0.3125rem 0.625rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.375rem;
+}
+
+/* 選択中は色だけでなく枠と太さでも示す */
+.cond-tab.on {
+  border-color: var(--ink);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cond-tab-n {
+  font-family: var(--ff-mono);
+  font-size: 0.6875rem;
+  color: var(--ink-3);
+}
+
+.cond-tab.on .cond-tab-n {
+  color: var(--ink-2);
+}
+
+.cond-detail {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+
+.cond-note,
+.cond-thin {
+  margin: 0.5rem 0 0.875rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--rule-strong);
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  background: var(--surface-2);
+}
+
+.cond-list {
+  list-style: none;
+  margin: 0.875rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cond-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr 5rem 5rem 9rem;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.3125rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.8125rem;
+}
+
+.cond-name {
+  color: var(--ink);
+}
+
+.cond-track {
+  position: relative;
+  display: block;
+  height: 10px;
+  min-width: 4rem;
+}
+
+/* 0の位置。目盛りは1本だけ、地の色から1段ずらしたヘアライン */
+.cond-zero {
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  bottom: -2px;
+  width: 1px;
+  background: var(--rule-strong);
+}
+
+.cond-bar {
+  position: absolute;
+  top: 0;
+  height: 10px;
+  min-width: 2px;
+}
+
+/* 外側の端だけ丸める。0側は基準線に接したままにする */
+.cond-bar.up {
+  background: var(--up);
+  border-radius: 0 4px 4px 0;
+}
+
+.cond-bar.down {
+  background: var(--down);
+  border-radius: 4px 0 0 4px;
+}
+
+.cond-bar.flat {
+  background: var(--flat);
+}
+
+.cond-val,
+.cond-rate,
+.cond-base {
+  font-family: var(--ff-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.cond-val {
+  text-align: right;
+}
+
+.cond-val.up {
+  color: var(--up);
+}
+.cond-val.down {
+  color: var(--down);
+}
+.cond-val.flat {
+  color: var(--flat);
+}
+
+/* 数値以外の文字は色を持たない。identity は棒と ▲▼ が担う */
+.cond-rate {
+  text-align: right;
+  color: var(--ink-2);
+}
+
+.cond-base {
+  text-align: right;
+  color: var(--ink-3);
+}
+
+.cond-fine {
+  margin: 0.875rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+@media (max-width: 640px) {
+  .cond-row {
+    grid-template-columns: 5.5rem 1fr 4.5rem;
+    row-gap: 0.125rem;
+  }
+  /* 狭い画面では「普段」を資産名の下に回し、棒と当日の値を優先する */
+  .cond-rate {
+    grid-column: 2;
+    text-align: left;
+  }
+  .cond-base {
+    grid-column: 3;
+  }
+}
+
 /* ------------------------------------------------------------------ 時点の表示
    ソースによって公表の早さが違う。遅れているものにだけ日付を出し、
    揃っているものには何も出さない（全部に日付を出すと、どれが古いのか分からなくなる）。 */

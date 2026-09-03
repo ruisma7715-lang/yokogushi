@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import type { Correlation, Highlights as HighlightsData, History, Latest, Topics as TopicsData } from "./types";
+import type {
+  Conditional as ConditionalData,
+  Correlation,
+  Highlights as HighlightsData,
+  History,
+  Latest,
+  Topics as TopicsData,
+} from "./types";
 import type { AttributionData } from "./portfolio/attribution";
 import { hydrateHoldings } from "./portfolio/useHoldings";
 import AssetCard from "./components/AssetCard";
@@ -9,6 +16,7 @@ import Glossary from "./components/Glossary";
 import Highlights from "./components/Highlights";
 import Portfolio from "./components/Portfolio";
 import CorrelationMatrix from "./components/CorrelationMatrix";
+import Conditional from "./components/Conditional";
 import OverlayChart from "./components/OverlayChart";
 import TodayNote from "./components/TodayNote";
 import Topics from "./components/Topics";
@@ -31,6 +39,7 @@ export default function App() {
   const [highlights, setHighlights] = useState<HighlightsData | null>(null);
   const [attribution, setAttribution] = useState<AttributionData | null>(null);
   const [topics, setTopics] = useState<TopicsData | null>(null);
+  const [conditional, setConditional] = useState<ConditionalData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,6 +67,12 @@ export default function App() {
     // 相場データの表示まで道連れにしたくないので、別に読んで失敗は黙って諦める。
     loadJSON<TopicsData>("topics.json")
       .then((t) => alive && setTopics(t))
+      .catch(() => undefined);
+
+    // 条件付きの見え方は、母数が足りない日は書き出されない。
+    // 無くても他が成立するので、こちらも別に読む。
+    loadJSON<ConditionalData>("conditional.json")
+      .then((c) => alive && setConditional(c))
       .catch(() => undefined);
 
     return () => {
@@ -122,6 +137,9 @@ export default function App() {
         />
 
         <CorrelationMatrix assets={latest.assets} correlation={correlation} />
+
+        {/* 相関の「ならした数字」に対して、条件を切ったときの見え方。すぐ下に置く */}
+        {conditional && <Conditional data={conditional} assets={latest.assets} />}
 
         <OverlayChart assets={latest.assets} history={history} />
 

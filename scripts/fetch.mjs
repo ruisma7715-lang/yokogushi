@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { renderDailyPage, renderIndex, renderSitemap, renderFeed, SITE_BASE } from "./daily-page.mjs";
 import { fetchTopics } from "./topics.mjs";
 import { fetchMarketInternals } from "./market.mjs";
+import { buildConditional, describeFlow } from "./conditional.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(ROOT, "public", "data");
@@ -214,7 +215,12 @@ const relation = (r) =>
   r >= 0.6 ? "強く一緒に動く" : r >= 0.25 ? "ゆるく一緒に動く" : r > -0.25 ? "ほぼ無関係" : r > -0.6 ? "ゆるく逆に動く" : "強く逆に動く";
 
 // 株と金がどちらに動いたかで、資金がリスクを取りに行ったか逃げたかが読める。
-function judgeRegime(dayChange) {
+//
+// ラベルは株と金の2つで決めるが、説明文は**その日に実際どこが動いたか**から書く。
+// 以前は「資金が安全な置き場所に逃げています」といった固定文を出していたが、
+// ビットコインもドル円も米10年債も見ずにそう書いていた。
+// 行き先を確かめずに「逃げた」と書くのは、検証していないことを書いたことになる。
+function judgeRegime(dayChange, live, us10yPt) {
   const eq = ["nikkei", "sp500"].map((id) => dayChange[id]).filter((v) => v !== undefined);
   const gold = dayChange.gold;
   if (eq.length === 0 || gold === undefined) return null;
@@ -223,15 +229,18 @@ function judgeRegime(dayChange) {
   const g = gold;
   const T = 0.3; // これ未満は「動いていない」とみなす（%）
 
+  // 金はラベル側で必ず触れるので、説明文では重ねない
+  const flow = (exclude) => describeFlow(dayChange, live, { exclude, us10yPt });
+
   if (e > T && g < -T)
-    return { label: "リスクオン", detail: "株が買われ、金が売られました。資金がリスクを取りにいった一日です。" };
+    return { label: "リスクオン", detail: `株が買われ、金が売られました。同じ日に${flow(["gold"])}` };
   if (e < -T && g > T)
-    return { label: "リスクオフ", detail: "株が売られ、金が買われました。資金が安全な置き場所に逃げています。" };
+    return { label: "リスクオフ", detail: `株が売られ、金が買われました。同じ日に${flow(["gold"])}` };
   if (e < -T && g < -T)
-    return { label: "全面安", detail: "株も金も下がりました。逃げ場を探すというより、現金化が進んだ形です。" };
+    return { label: "全面安", detail: `株も金も下がりました。同じ日に${flow(["gold"])}` };
   if (e > T && g > T)
-    return { label: "全面高", detail: "株も金も上がりました。お金の量そのものが増えているときに出やすい形です。" };
-  return { label: "方向感なし", detail: "株も金も大きくは動いていません。様子見の一日です。" };
+    return { label: "全面高", detail: `株も金も上がりました。同じ日に${flow(["gold"])}` };
+  return { label: "方向感なし", detail: `株も金も大きくは動いていません。${flow([])}` };
 }
 
 // 何日続けて同じ方向に動いたか
@@ -462,7 +471,7 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
   return lines.slice(0, 3);
 }
 
-function buildHighlights({ live, ids, returnsById, corr30, corr365, asOf }) {
+function buildHighlights({ live, ids, returnsById, levels, corr30, corr365, asOf }) {
   const nameOf = (id) => live.find((a) => a.id === id)?.name ?? id;
   const items = [];
 
@@ -472,6 +481,12 @@ function buildHighlights({ live, ids, returnsById, corr30, corr365, asOf }) {
     const r = returnsById[id];
     dayChange[id] = r[r.length - 1] * 100;
   }
+
+  // 米10年債だけは「利回りが何%上がったか」ではなく「何ポイント動いたか」で読まれる。
+  // dayChange は他資産と揃えて変化率で持っているので、差は水準から別に出す。
+  let us10yPt;
+  const y = levels?.us10y;
+  if (y && y.length >= 2) us10yPt = y[y.length - 1] - y[y.length - 2];
 
   // 1) いちばん大きく動いたもの
   const moves = ids
@@ -528,7 +543,7 @@ function buildHighlights({ live, ids, returnsById, corr30, corr365, asOf }) {
 
   return {
     asOf,
-    regime: judgeRegime(dayChange),
+    regime: judgeRegime(dayChange, live, us10yPt),
     items,
     shifts: shifts.slice(0, 6),
   };
@@ -710,10 +725,17 @@ async function main() {
     live,
     ids,
     returnsById,
+    levels: values, // 利回りの「差」を出すために水準そのものが要る
     corr30: correlations.windows.d30,
     corr365: correlations.windows.d365,
     asOf: alignedAsOf,
   });
+
+  // --- conditional.json : こういう日は、どうなるか。
+  //     相関マトリクスは全部の日を平均した数字なので、「株が売られた日に
+  //     金はどうだったか」には答えられない。平均に埋もれる話をここで拾う。
+  //     横断の分析なので、基準日は当然 alignedAsOf。
+  const conditional = buildConditional({ live, ids, days, values, asOf: alignedAsOf });
 
   // --- topics.json : 今日のトピックス（公式RSSの見出し＋米指標の発表予定）
   //     外部サイト頼みなので、落ちてもデータ本体の更新は止めない。
@@ -792,6 +814,9 @@ async function main() {
   await writeFile(join(OUT_DIR, "history.json"), JSON.stringify(history, null, 2));
   await writeFile(join(OUT_DIR, "highlights.json"), JSON.stringify(highlights, null, 2));
   await writeFile(join(OUT_DIR, "attribution.json"), JSON.stringify(attribution, null, 2));
+  if (conditional) {
+    await writeFile(join(OUT_DIR, "conditional.json"), JSON.stringify(conditional, null, 2));
+  }
 
   // --- 日次の解説ページ。実行のたびに1本ずつ増え、検索の入口になる。
   const DAILY_DIR = join(ROOT, "public", "daily");
@@ -881,6 +906,27 @@ async function main() {
     }
     if (m.us.vix) console.log(`    ${padName("VIX")}${String(m.us.vix.value).padStart(10)}  60日平均 ${m.us.vix.avg60}`);
     for (const line of [...m.us.lines, ...(m.jp?.lines ?? [])]) console.log(`    ・${line}`);
+  }
+
+  // こういう日はどうなるか。scripts は型チェックの対象外なので、
+  // 出力を目で見ることが唯一の検証になる。全条件ぶん出す。
+  if (conditional) {
+    console.log(`\n  こういう日は、どうなるか（母数 ${conditional.window.days} 日）:`);
+    for (const c of conditional.conditions) {
+      if (!c.enough) {
+        console.log(`    ${c.label}  該当 ${c.n} 日 → 少なすぎるので数字を出さない`);
+        continue;
+      }
+      const line = ids
+        .map((id) => {
+          const a = c.assets[id];
+          const nm = live.find((x) => x.id === id).name;
+          return `${nm} ${a.mean > 0 ? "+" : ""}${a.mean}${a.unit}(${a.upRate}%)`;
+        })
+        .join(" / ");
+      console.log(`    ${c.label}  該当 ${c.n} 日`);
+      console.log(`      ${line}`);
+    }
   }
 
   console.log(`\n  トピックス: 発表予定 ${topics.calendar.length}件 / 見出し ${topics.headlines.length}件`);

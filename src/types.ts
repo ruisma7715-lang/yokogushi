@@ -56,6 +56,42 @@ export type Highlights = {
   shifts: Shift[];
 };
 
+/** ある条件に当てはまる日の、その資産の平均的な動き */
+export type ConditionalStat = {
+  /** 平均の変化。単位は unit（米10年債だけ %pt、他は %） */
+  mean: number;
+  /** 上がった日の割合(%) */
+  upRate: number;
+  /**
+   * その資産の普段の1日の値動き(σ)の何倍か。
+   * 米10年債は %pt、他は % で単位が違うため、棒の長さにはこちらを使う。
+   * 生の値を同じ目盛りに並べると、比べられないものを比べたことになる。
+   */
+  z: number;
+  unit: string;
+};
+
+export type ConditionalCase = {
+  id: string;
+  label: string;
+  detail: string;
+  /** 読み違えを防ぐ注意書き。無い条件のほうが多い */
+  note: string | null;
+  n: number;
+  /** 該当日数が足りているか。false のときは数字を出さない */
+  enough: boolean;
+  assets: Record<string, ConditionalStat>;
+};
+
+export type Conditional = {
+  asOf: string;
+  window: { from: string; to: string; days: number };
+  minDays: number;
+  /** 全期間の姿。条件付きの数字は、これと比べて初めて意味が出る */
+  baseline: Record<string, { mean: number; upRate: number }>;
+  conditions: ConditionalCase[];
+};
+
 export type CalendarEntry = { date: string; name: string; why: string };
 
 export type Headline = {

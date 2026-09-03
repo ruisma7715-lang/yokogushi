@@ -1,0 +1,313 @@
+{
+  "asOf": "2026-09-01",
+  "window": {
+    "from": "2025-09-05",
+    "to": "2026-09-01",
+    "days": 228
+  },
+  "minDays": 20,
+  "baseline": {
+    "nikkei": {
+      "mean": 0.211,
+      "upRate": 55
+    },
+    "sp500": {
+      "mean": 0.074,
+      "upRate": 56
+    },
+    "usdjpy": {
+      "mean": 0.035,
+      "upRate": 59
+    },
+    "gold": {
+      "mean": 0.119,
+      "upRate": 54
+    },
+    "btc": {
+      "mean": -0.112,
+      "upRate": 46
+    },
+    "us10y": {
+      "mean": 0.003,
+      "upRate": 51
+    }
+  },
+  "conditions": [
+    {
+      "id": "equity-down",
+      "label": "株が売られた日",
+      "detail": "日経平均とS&P 500の平均が −0.3% を下回った日",
+      "note": null,
+      "n": 68,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": -1.706,
+          "upRate": 7,
+          "z": -0.913,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": -0.482,
+          "upRate": 32,
+          "z": -0.58,
+          "unit": "%"
+        },
+        "usdjpy": {
+          "mean": 0.008,
+          "upRate": 59,
+          "z": 0.016,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": -0.373,
+          "upRate": 41,
+          "z": -0.176,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": -1.53,
+          "upRate": 25,
+          "z": -0.525,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": 0.01,
+          "upRate": 59,
+          "z": 0.247,
+          "unit": "pt"
+        }
+      }
+    },
+    {
+      "id": "risk-off",
+      "label": "リスクオフの日",
+      "detail": "株が売られ、同じ日に金が買われた日（サイトの判定と同じ条件）",
+      "note": "金が上がった日を選んでいるので、金の数字が大きいのは当たり前。見るべきは他の5つ。",
+      "n": 23,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": -1.386,
+          "upRate": 9,
+          "z": -0.742,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": -0.435,
+          "upRate": 35,
+          "z": -0.523,
+          "unit": "%"
+        },
+        "usdjpy": {
+          "mean": -0.194,
+          "upRate": 43,
+          "z": -0.389,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": 1.834,
+          "upRate": 100,
+          "z": 0.866,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": -1.353,
+          "upRate": 22,
+          "z": -0.464,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": 0.003,
+          "upRate": 48,
+          "z": 0.064,
+          "unit": "pt"
+        }
+      }
+    },
+    {
+      "id": "yield-up",
+      "label": "米金利が大きく上がった日",
+      "detail": "米10年債利回りが1日で +0.06pt 以上動いた日（上位10%）",
+      "note": null,
+      "n": 24,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": -0.207,
+          "upRate": 38,
+          "z": -0.111,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": -0.59,
+          "upRate": 21,
+          "z": -0.711,
+          "unit": "%"
+        },
+        "usdjpy": {
+          "mean": 0.036,
+          "upRate": 63,
+          "z": 0.073,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": 0.035,
+          "upRate": 46,
+          "z": 0.017,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": -0.244,
+          "upRate": 54,
+          "z": -0.084,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": 0.071,
+          "upRate": 100,
+          "z": 1.76,
+          "unit": "pt"
+        }
+      }
+    },
+    {
+      "id": "yield-down",
+      "label": "米金利が大きく下がった日",
+      "detail": "米10年債利回りが1日で -0.05pt 以下だった日（下位10%）",
+      "note": null,
+      "n": 27,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": -0.041,
+          "upRate": 48,
+          "z": -0.022,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": 0.337,
+          "upRate": 67,
+          "z": 0.406,
+          "unit": "%"
+        },
+        "usdjpy": {
+          "mean": -0.18,
+          "upRate": 44,
+          "z": -0.361,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": 0.015,
+          "upRate": 59,
+          "z": 0.007,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": -0.303,
+          "upRate": 37,
+          "z": -0.104,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": -0.064,
+          "upRate": 0,
+          "z": -1.592,
+          "unit": "pt"
+        }
+      }
+    },
+    {
+      "id": "yen-weak",
+      "label": "円が大きく安くなった日",
+      "detail": "ドル円が1日で +0.82円 以上動いた日（上位10%）",
+      "note": null,
+      "n": 23,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": 0.683,
+          "upRate": 70,
+          "z": 0.366,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": 0.09,
+          "upRate": 65,
+          "z": 0.108,
+          "unit": "%"
+        },
+        "usdjpy": {
+          "mean": 0.818,
+          "upRate": 100,
+          "z": 1.642,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": -0.065,
+          "upRate": 70,
+          "z": -0.031,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": -1.12,
+          "upRate": 35,
+          "z": -0.384,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": 0.011,
+          "upRate": 52,
+          "z": 0.269,
+          "unit": "pt"
+        }
+      }
+    },
+    {
+      "id": "yen-strong",
+      "label": "円が大きく高くなった日",
+      "detail": "ドル円が1日で -0.75円 以下だった日（下位10%）",
+      "note": null,
+      "n": 23,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": 0.348,
+          "upRate": 39,
+          "z": 0.186,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": 0.441,
+          "upRate": 83,
+          "z": 0.531,
+          "unit": "%"
+        },
+        "usdjpy": {
+          "mean": -0.93,
+          "upRate": 0,
+          "z": -1.867,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": 1.423,
+          "upRate": 83,
+          "z": 0.672,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": 0.367,
+          "upRate": 43,
+          "z": 0.126,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": -0.005,
+          "upRate": 48,
+          "z": -0.118,
+          "unit": "pt"
+        }
+      }
+    }
+  ]
+}
