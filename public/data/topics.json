@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-03T12:13:29.858Z",
+  "generatedAt": "2026-09-03T23:30:20.248Z",
   "today": "2026-09-03",
   "calendar": [
     {
@@ -11,11 +11,6 @@
       "date": "2026-09-04",
       "name": "米雇用統計",
       "why": "利下げ観測が動き、ドル円に効く"
-    },
-    {
-      "date": "2026-09-10",
-      "name": "米PPI（生産者物価）",
-      "why": "CPIの先行指標"
     },
     {
       "date": "2026-09-10",
@@ -39,6 +34,20 @@
     }
   ],
   "headlines": [
+    {
+      "source": "米BEA",
+      "title": "U.S. International Trade in Goods and Services, July 2026",
+      "url": "https://www.bea.gov/news/2026/us-international-trade-goods-and-services-july-2026",
+      "date": "2026-09-03",
+      "tag": "貿易"
+    },
+    {
+      "source": "米Census",
+      "title": "U.S. International Trade in Goods and Services",
+      "url": "https://www.census.gov/foreign-trade/index.html",
+      "date": "2026-09-03",
+      "tag": "貿易"
+    },
     {
       "source": "日本銀行",
       "title": "【挨拶】高田審議委員「わが国の経済・物価情勢と金融政策」（札幌）",
@@ -66,23 +75,11 @@
       "url": "https://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html",
       "date": "2026-09-01",
       "tag": "消費"
-    },
-    {
-      "source": "米Census",
-      "title": "Advance Retail Inventories",
-      "url": "https://www.census.gov/econ/indicators/index.html",
-      "date": "2026-08-27",
-      "tag": "消費"
-    },
-    {
-      "source": "米BEA",
-      "title": "GDP (Second Estimate) and Corporate Profits, 2nd Quarter 2026",
-      "url": "https://www.bea.gov/news/2026/gdp-second-estimate-and-corporate-profits-2nd-quarter-2026",
-      "date": "2026-08-26",
-      "tag": "GDP"
     }
   ],
-  "failed": [],
+  "failed": [
+    "FRED カレンダー: FRED 米PPI（生産者物価）: HTTP 502"
+  ],
   "market": {
     "us": {
       "asOf": "2026-09-02",
@@ -121,14 +118,14 @@
         }
       ],
       "vix": {
-        "asOf": "2026-09-01",
-        "value": 16.34,
-        "changeDay": 9.52,
-        "avg60": 16.66
+        "asOf": "2026-09-02",
+        "value": 15.2,
+        "changeDay": -6.98,
+        "avg60": 16.54
       },
       "lines": [
         "米国の主要指数はそろって上昇しました（+0.23%〜+0.56%）。買われた先が偏っていない一日です。",
-        "9/1時点のVIXは 16.34。60日平均の 16.66 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
+        "VIXは 15.20。60日平均の 16.54 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
       ]
     },
     "jp": {
@@ -143,10 +140,10 @@
         }
       ],
       "range52": 73.2,
-      "usdChangeDay": -2.51,
+      "usdChangeDay": 2.12,
       "lines": [
         "日経平均は -0.17%、この1週間では -2.90%。過去1年の値幅の中では下から 73% の位置です。",
-        "ドル建てでは -2.51%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
+        "ドル建てでは +2.12%。円高のぶん、海外から見た日本株の動きは円建てより大きくなっています。"
       ]
     },
     "failed": []
