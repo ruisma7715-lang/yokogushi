@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-03T23:30:20.248Z",
-  "today": "2026-09-03",
+  "generatedAt": "2026-09-04T08:57:43.447Z",
+  "today": "2026-09-04",
   "calendar": [
     {
       "date": "2026-09-03",
@@ -11,6 +11,11 @@
       "date": "2026-09-04",
       "name": "米雇用統計",
       "why": "利下げ観測が動き、ドル円に効く"
+    },
+    {
+      "date": "2026-09-10",
+      "name": "米PPI（生産者物価）",
+      "why": "CPIの先行指標"
     },
     {
       "date": "2026-09-10",
@@ -31,9 +36,21 @@
       "date": "2026-09-17",
       "name": "米新規失業保険申請",
       "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-09-18",
+      "name": "米鉱工業生産",
+      "why": "製造業の体温"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "【記者会見】植田総裁（G20、9月1日分）",
+      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk260904a.pdf",
+      "date": "2026-09-04",
+      "tag": "発言"
+    },
     {
       "source": "米BEA",
       "title": "U.S. International Trade in Goods and Services, July 2026",
@@ -63,13 +80,6 @@
       "tag": "住宅"
     },
     {
-      "source": "日本銀行",
-      "title": "金融安定理事会によるG20財務大臣・中央銀行総裁へのレターの公表について",
-      "url": "https://www.boj.or.jp/intl_finance/meeting/group/gro260901a.htm",
-      "date": "2026-09-01",
-      "tag": "発言"
-    },
-    {
       "source": "内閣府",
       "title": "消費動向調査（令和8年8月実施分）",
       "url": "https://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html",
@@ -77,44 +87,42 @@
       "tag": "消費"
     }
   ],
-  "failed": [
-    "FRED カレンダー: FRED 米PPI（生産者物価）: HTTP 502"
-  ],
+  "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-09-02",
+      "asOf": "2026-09-03",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7666.6,
-          "changeDay": 0.46,
-          "changeWeek": -0.12
+          "value": 7747.71,
+          "changeDay": 1.06,
+          "changeWeek": 0.22
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 29143.33,
-          "changeDay": 0.23,
-          "changeWeek": -0.28
+          "value": 29482.32,
+          "changeDay": 1.16,
+          "changeWeek": -0.54
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 53061.95,
-          "changeDay": 0.56,
-          "changeWeek": -0.75
+          "value": 53686.11,
+          "changeDay": 1.18,
+          "changeWeek": 0.22
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 26217.83,
-          "changeDay": 0.45,
-          "changeWeek": 0.34
+          "value": 26584.06,
+          "changeDay": 1.4,
+          "changeWeek": 0.16
         }
       ],
       "vix": {
@@ -124,8 +132,8 @@
         "avg60": 16.54
       },
       "lines": [
-        "米国の主要指数はそろって上昇しました（+0.23%〜+0.56%）。買われた先が偏っていない一日です。",
-        "VIXは 15.20。60日平均の 16.54 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
+        "米国の主要指数はそろって上昇しました（+1.06%〜+1.40%）。買われた先が偏っていない一日です。",
+        "9/2時点のVIXは 15.20。60日平均の 16.54 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
       ]
     },
     "jp": {

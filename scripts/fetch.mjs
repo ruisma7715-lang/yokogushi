@@ -329,12 +329,22 @@ function buildLead({ live, ids, values, returnsById, snapshot, regime, shifts, c
   const lines = [];
   if (top) {
     const dir = top.chg >= 0 ? "上昇" : "下落";
+
     // 姿勢の説明文（「株が買われ、金が売られました」）は画面側でバッジとして
     // 別に出しているので、ここでは繰り返さずラベルだけを添える。
+    //
+    // ただしラベルを添えるのは、姿勢の判定日とこの行の基準日が同じときだけ。
+    // 姿勢は全資産が揃った日でしか出せず、この行は各資産の最新日で作るため、
+    // 両者は1〜数日ずれることがある。ずれたまま繋ぐと
+    // 「全面安。いちばん動いたのはビットコインで +4.89% の上昇でした」のような
+    // 矛盾した文になる（実際に出た）。日付が違うなら値動きだけを書く。
+    // 姿勢はバッジ側が自分の日付を添えて出しているので、情報は失われない。
+    const sameDay = regime && (!regime.asOf || regime.asOf === asOf);
+
     lines.push({
       kind: "day",
       text:
-        (regime ? `${regime.label}。` : "") +
+        (sameDay ? `${regime.label}。` : "") +
         `いちばん動いたのは${nameOf(top.id)}${dateNote(top.id)}で、前日比 ${signed(top.chg)}% の${dir}でした。`,
     });
   }

@@ -2688,14 +2688,16 @@ svg .dot {
   min-width: 4rem;
 }
 
-/* 0の位置。目盛りは1本だけ、地の色から1段ずらしたヘアライン */
+/* 0の位置。発散棒はここが読めないと向きも大きさも意味を持たない。
+   棒の背面に置くと隠れて見えなくなるので、前面に出し、上下にはみ出させる。 */
 .cond-zero {
   position: absolute;
   left: 50%;
-  top: -2px;
-  bottom: -2px;
+  top: -5px;
+  bottom: -5px;
   width: 1px;
-  background: var(--rule-strong);
+  background: var(--ink-3);
+  z-index: 2;
 }
 
 .cond-bar {
@@ -2703,6 +2705,7 @@ svg .dot {
   top: 0;
   height: 10px;
   min-width: 2px;
+  z-index: 1;
 }
 
 /* 外側の端だけ丸める。0側は基準線に接したままにする */

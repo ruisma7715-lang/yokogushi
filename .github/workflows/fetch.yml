@@ -23,6 +23,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          # Web Push の web-push だけのために毎回全依存を落とすと遅い。
+          # 取得ステップ自体は依存ゼロで動くので、これはあくまで後段のため。
+          cache: npm
 
       - name: データ取得
         run: node scripts/fetch.mjs
