@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-06T23:04:34.421Z",
-  "today": "2026-09-06",
+  "generatedAt": "2026-09-07T13:38:42.256Z",
+  "today": "2026-09-07",
   "calendar": [
     {
       "date": "2026-09-10",
@@ -35,6 +35,13 @@
   ],
   "headlines": [
     {
+      "source": "内閣府",
+      "title": "景気動向指数（令和8年7月分速報）",
+      "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
+      "date": "2026-09-07",
+      "tag": "景況"
+    },
+    {
       "source": "日本銀行",
       "title": "【記者会見】植田総裁（G20、9月1日分）",
       "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk260904a.pdf",
@@ -68,13 +75,6 @@
       "url": "https://www.census.gov/construction/c30/c30index.html",
       "date": "2026-09-01",
       "tag": "住宅"
-    },
-    {
-      "source": "内閣府",
-      "title": "消費動向調査（令和8年8月実施分）",
-      "url": "https://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html",
-      "date": "2026-09-01",
-      "tag": "消費"
     }
   ],
   "failed": [],
@@ -127,20 +127,21 @@
       ]
     },
     "jp": {
-      "asOf": "2026-09-04",
+      "asOf": "2026-09-07",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 65020.94,
-          "changeDay": 1.26,
-          "changeWeek": -2.09
+          "value": 66399.84,
+          "changeDay": 2.12,
+          "changeWeek": 0.13
         }
       ],
-      "range52": 75.9,
+      "range52": 80.4,
       "usdChangeDay": 1.1,
       "lines": [
-        "日経平均は +1.26%、この1週間では -2.09%。過去1年の値幅の中では下から 76% の位置です。"
+        "日経平均は +2.12%、この1週間では +0.13%。過去1年の値幅の中では下から 80% の位置です。",
+        "ドル建てでは +1.10%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
       ]
     },
     "failed": []
