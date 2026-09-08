@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-07T23:43:13.471Z",
-  "today": "2026-09-07",
+  "generatedAt": "2026-09-08T12:15:52.285Z",
+  "today": "2026-09-08",
   "calendar": [
     {
       "date": "2026-09-10",
@@ -36,6 +36,20 @@
   "headlines": [
     {
       "source": "内閣府",
+      "title": "景気ウォッチャー調査（令和8年8月調査）",
+      "url": "https://www5.cao.go.jp/keizai3/watcher_index.html",
+      "date": "2026-09-08",
+      "tag": "景況"
+    },
+    {
+      "source": "日本銀行",
+      "title": "貸出・預金動向（8月）",
+      "url": "https://www.boj.or.jp/statistics/dl/depo/kashi/kasi2608.pdf",
+      "date": "2026-09-07",
+      "tag": "統計"
+    },
+    {
+      "source": "内閣府",
       "title": "景気動向指数（令和8年7月分速報）",
       "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
       "date": "2026-09-07",
@@ -61,20 +75,6 @@
       "url": "https://www.census.gov/foreign-trade/index.html",
       "date": "2026-09-03",
       "tag": "貿易"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【挨拶】高田審議委員「わが国の経済・物価情勢と金融政策」（札幌）",
-      "url": "https://www.boj.or.jp/about/press/koen_2026/ko260902a.htm",
-      "date": "2026-09-02",
-      "tag": "見通し"
-    },
-    {
-      "source": "米Census",
-      "title": "Construction Spending",
-      "url": "https://www.census.gov/construction/c30/c30index.html",
-      "date": "2026-09-01",
-      "tag": "住宅"
     }
   ],
   "failed": [],
@@ -127,20 +127,20 @@
       ]
     },
     "jp": {
-      "asOf": "2026-09-07",
+      "asOf": "2026-09-08",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 66399.84,
-          "changeDay": 2.12,
-          "changeWeek": 0.13
+          "value": 65269.33,
+          "changeDay": -1.7,
+          "changeWeek": -1.43
         }
       ],
-      "range52": 80.4,
+      "range52": 76.7,
       "usdChangeDay": 3.11,
       "lines": [
-        "日経平均は +2.12%、この1週間では +0.13%。過去1年の値幅の中では下から 80% の位置です。",
+        "日経平均は -1.70%、この1週間では -1.43%。過去1年の値幅の中では下から 77% の位置です。",
         "ドル建てでは +3.11%。円高のぶん、海外から見た日本株の動きは円建てより大きくなっています。"
       ]
     },
