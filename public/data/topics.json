@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-15T23:39:01.061Z",
-  "today": "2026-09-15",
+  "generatedAt": "2026-09-16T12:47:03.573Z",
+  "today": "2026-09-16",
   "calendar": [
     {
       "date": "2026-09-16",
@@ -26,9 +26,33 @@
       "date": "2026-09-29",
       "name": "米求人件数（JOLTS）",
       "why": "労働需給のゆるみ"
+    },
+    {
+      "date": "2026-09-30",
+      "name": "米GDP",
+      "why": "景気の全体像"
+    },
+    {
+      "date": "2026-09-30",
+      "name": "米PCE（個人消費・物価）",
+      "why": "FRBが最も重視する物価指標"
     }
   ],
   "headlines": [
+    {
+      "source": "米Census",
+      "title": "Advance Monthly Sales for Retail and Food Services",
+      "url": "https://www.census.gov/retail/index.html",
+      "date": "2026-09-16",
+      "tag": "消費"
+    },
+    {
+      "source": "内閣府",
+      "title": "機械受注統計調査報告（令和8年7月実績）",
+      "url": "https://www.esri.cao.go.jp/jp/stat/juchu/juchu.html",
+      "date": "2026-09-15",
+      "tag": "設備投資"
+    },
     {
       "source": "日本銀行",
       "title": "企業物価指数（8月）",
@@ -54,39 +78,39 @@
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-09-14",
+      "asOf": "2026-09-15",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7619.98,
-          "changeDay": -0.48,
-          "changeWeek": -1.28
+          "value": 7585.73,
+          "changeDay": -0.45,
+          "changeWeek": -1.14
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 29127.16,
-          "changeDay": -0.82,
-          "changeWeek": -1.41
+          "value": 28937.84,
+          "changeDay": -0.65,
+          "changeWeek": -1.93
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 52421.2,
-          "changeDay": -0.29,
-          "changeWeek": -1.86
+          "value": 52093.11,
+          "changeDay": -0.63,
+          "changeWeek": -1.31
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 26186.41,
-          "changeDay": -0.56,
-          "changeWeek": -1.21
+          "value": 25981.57,
+          "changeDay": -0.78,
+          "changeWeek": -1.66
         }
       ],
       "vix": {
@@ -96,26 +120,26 @@
         "avg60": 16.35
       },
       "lines": [
-        "米国株は全体が下落しましたが、ダウ工業株30種の -0.29% に対しナスダック100は -0.82%。値動きの幅が 0.53 ポイント開いています。",
-        "VIXは 17.10。60日平均の 16.35 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
+        "米国の主要指数はそろって下落しました（-0.78%〜-0.45%）。買われた先が偏っていない一日です。",
+        "9/14時点のVIXは 17.10。60日平均の 16.35 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
       ]
     },
     "jp": {
-      "asOf": "2026-09-14",
+      "asOf": "2026-09-16",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 63492.99,
-          "changeDay": -0.81,
-          "changeWeek": -4.38
+          "value": 63923,
+          "changeDay": 0.69,
+          "changeWeek": -1.87
         }
       ],
-      "range52": 70.2,
-      "usdChangeDay": -1.14,
+      "range52": 70.8,
+      "usdChangeDay": -0.3,
       "lines": [
-        "日経平均は -0.81%、この1週間では -4.38%。過去1年の値幅の中では下から 70% の位置です。",
-        "ドル建てでは -1.14%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
+        "日経平均は +0.69%、この1週間では -1.87%。過去1年の値幅の中では下から 71% の位置です。",
+        "ドル建てでは -0.30%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
       ]
     },
     "failed": []
