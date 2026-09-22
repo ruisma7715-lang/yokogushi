@@ -1,153 +1,153 @@
 {
-  "asOf": "2026-09-17",
+  "asOf": "2026-09-18",
   "windows": {
     "d30": {
       "nikkei": {
         "nikkei": null,
-        "sp500": -0.167,
-        "usdjpy": 0.109,
-        "gold": 0.306,
-        "btc": 0.098,
-        "us10y": 0.191
+        "sp500": -0.149,
+        "usdjpy": 0.179,
+        "gold": 0.357,
+        "btc": 0.092,
+        "us10y": 0.283
       },
       "sp500": {
-        "nikkei": -0.167,
+        "nikkei": -0.149,
         "sp500": null,
-        "usdjpy": -0.218,
-        "gold": -0.189,
+        "usdjpy": -0.165,
+        "gold": -0.176,
         "btc": -0.17,
-        "us10y": -0.515
+        "us10y": -0.488
       },
       "usdjpy": {
-        "nikkei": 0.109,
-        "sp500": -0.218,
+        "nikkei": 0.179,
+        "sp500": -0.165,
         "usdjpy": null,
-        "gold": 0.142,
-        "btc": 0.195,
-        "us10y": 0.098
+        "gold": 0.189,
+        "btc": 0.164,
+        "us10y": 0.188
       },
       "gold": {
-        "nikkei": 0.306,
-        "sp500": -0.189,
-        "usdjpy": 0.142,
+        "nikkei": 0.357,
+        "sp500": -0.176,
+        "usdjpy": 0.189,
         "gold": null,
-        "btc": 0.597,
-        "us10y": 0.123
+        "btc": 0.587,
+        "us10y": 0.153
       },
       "btc": {
-        "nikkei": 0.098,
+        "nikkei": 0.092,
         "sp500": -0.17,
-        "usdjpy": 0.195,
-        "gold": 0.597,
+        "usdjpy": 0.164,
+        "gold": 0.587,
         "btc": null,
-        "us10y": 0.04
+        "us10y": 0.035
       },
       "us10y": {
-        "nikkei": 0.191,
-        "sp500": -0.515,
-        "usdjpy": 0.098,
-        "gold": 0.123,
-        "btc": 0.04,
+        "nikkei": 0.283,
+        "sp500": -0.488,
+        "usdjpy": 0.188,
+        "gold": 0.153,
+        "btc": 0.035,
         "us10y": null
       }
     },
     "d90": {
       "nikkei": {
         "nikkei": null,
-        "sp500": 0.327,
-        "usdjpy": 0.002,
-        "gold": 0.341,
-        "btc": 0.24,
-        "us10y": 0.065
+        "sp500": 0.277,
+        "usdjpy": 0.032,
+        "gold": 0.306,
+        "btc": 0.157,
+        "us10y": 0.074
       },
       "sp500": {
-        "nikkei": 0.327,
+        "nikkei": 0.277,
         "sp500": null,
-        "usdjpy": -0.185,
-        "gold": 0.023,
-        "btc": 0.09,
-        "us10y": -0.493
+        "usdjpy": -0.171,
+        "gold": -0.021,
+        "btc": 0.02,
+        "us10y": -0.501
       },
       "usdjpy": {
-        "nikkei": 0.002,
-        "sp500": -0.185,
+        "nikkei": 0.032,
+        "sp500": -0.171,
         "usdjpy": null,
-        "gold": -0.016,
-        "btc": 0.047,
-        "us10y": 0.06
+        "gold": 0.023,
+        "btc": 0.059,
+        "us10y": 0.099
       },
       "gold": {
-        "nikkei": 0.341,
-        "sp500": 0.023,
-        "usdjpy": -0.016,
+        "nikkei": 0.306,
+        "sp500": -0.021,
+        "usdjpy": 0.023,
         "gold": null,
-        "btc": 0.622,
-        "us10y": 0.192
+        "btc": 0.6,
+        "us10y": 0.206
       },
       "btc": {
-        "nikkei": 0.24,
-        "sp500": 0.09,
-        "usdjpy": 0.047,
-        "gold": 0.622,
+        "nikkei": 0.157,
+        "sp500": 0.02,
+        "usdjpy": 0.059,
+        "gold": 0.6,
         "btc": null,
-        "us10y": 0.148
+        "us10y": 0.153
       },
       "us10y": {
-        "nikkei": 0.065,
-        "sp500": -0.493,
-        "usdjpy": 0.06,
-        "gold": 0.192,
-        "btc": 0.148,
+        "nikkei": 0.074,
+        "sp500": -0.501,
+        "usdjpy": 0.099,
+        "gold": 0.206,
+        "btc": 0.153,
         "us10y": null
       }
     },
     "d365": {
       "nikkei": {
         "nikkei": null,
-        "sp500": 0.189,
-        "usdjpy": 0.075,
-        "gold": 0.267,
-        "btc": 0.39,
-        "us10y": 0.059
+        "sp500": 0.19,
+        "usdjpy": 0.081,
+        "gold": 0.269,
+        "btc": 0.391,
+        "us10y": 0.063
       },
       "sp500": {
-        "nikkei": 0.189,
+        "nikkei": 0.19,
         "sp500": null,
-        "usdjpy": -0.152,
-        "gold": 0.017,
-        "btc": 0.075,
-        "us10y": -0.272
+        "usdjpy": -0.145,
+        "gold": 0.022,
+        "btc": 0.072,
+        "us10y": -0.27
       },
       "usdjpy": {
-        "nikkei": 0.075,
-        "sp500": -0.152,
+        "nikkei": 0.081,
+        "sp500": -0.145,
         "usdjpy": null,
-        "gold": -0.047,
-        "btc": -0.044,
-        "us10y": 0.126
+        "gold": -0.042,
+        "btc": -0.039,
+        "us10y": 0.14
       },
       "gold": {
-        "nikkei": 0.267,
-        "sp500": 0.017,
-        "usdjpy": -0.047,
+        "nikkei": 0.269,
+        "sp500": 0.022,
+        "usdjpy": -0.042,
         "gold": null,
-        "btc": 0.412,
-        "us10y": -0.048
+        "btc": 0.418,
+        "us10y": -0.044
       },
       "btc": {
-        "nikkei": 0.39,
-        "sp500": 0.075,
-        "usdjpy": -0.044,
-        "gold": 0.412,
+        "nikkei": 0.391,
+        "sp500": 0.072,
+        "usdjpy": -0.039,
+        "gold": 0.418,
         "btc": null,
-        "us10y": 0.054
+        "us10y": 0.056
       },
       "us10y": {
-        "nikkei": 0.059,
-        "sp500": -0.272,
-        "usdjpy": 0.126,
-        "gold": -0.048,
-        "btc": 0.054,
+        "nikkei": 0.063,
+        "sp500": -0.27,
+        "usdjpy": 0.14,
+        "gold": -0.044,
+        "btc": 0.056,
         "us10y": null
       }
     }
