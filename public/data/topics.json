@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-24T23:58:44.497Z",
-  "today": "2026-09-24",
+  "generatedAt": "2026-09-25T12:55:06.522Z",
+  "today": "2026-09-25",
   "calendar": [
     {
       "date": "2026-09-24",
@@ -41,16 +41,16 @@
   "headlines": [
     {
       "source": "日本銀行",
-      "title": "【記者会見】植田総裁（9月18日分）",
-      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk260924a.pdf",
-      "date": "2026-09-24",
-      "tag": "発言"
+      "title": "消費者物価のコア指標",
+      "url": "https://www.boj.or.jp/research/research_data/cpi/index.htm",
+      "date": "2026-09-25",
+      "tag": "物価"
     },
     {
       "source": "日本銀行",
-      "title": "総裁記者会見（9月18日）動画の配信開始",
-      "url": "https://www.boj.or.jp/about/release/sousaidouga.htm",
-      "date": "2026-09-18",
+      "title": "【記者会見】植田総裁（9月18日分）",
+      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk260924a.pdf",
+      "date": "2026-09-24",
       "tag": "発言"
     },
     {
@@ -85,39 +85,39 @@
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-09-23",
+      "asOf": "2026-09-24",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7706.03,
-          "changeDay": -0.75,
-          "changeWeek": 2.04
+          "value": 7704.13,
+          "changeDay": -0.02,
+          "changeWeek": 0.87
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 30470.29,
-          "changeDay": -0.85,
-          "changeWeek": 5.27
+          "value": 30478.86,
+          "changeDay": 0.03,
+          "changeWeek": 3.5
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 51511.59,
-          "changeDay": -0.68,
-          "changeWeek": 0.1
+          "value": 51349.98,
+          "changeDay": -0.31,
+          "changeWeek": -0.83
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 26936.04,
-          "changeDay": -1.13,
-          "changeWeek": 3.69
+          "value": 26939.37,
+          "changeDay": 0.01,
+          "changeWeek": 1.97
         }
       ],
       "vix": {
@@ -127,25 +127,25 @@
         "avg60": 16.1
       },
       "lines": [
-        "米国の主要指数はそろって下落しました（-1.13%〜-0.68%）。買われた先が偏っていない一日です。",
+        "ナスダック100が +0.03%、ダウ工業株30種が -0.31%。同じ米国株でも方向が分かれた一日です（大型ハイテクと旧来型の大型の違い）。",
         "9/22時点のVIXは 14.21。60日平均の 16.10 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
       ]
     },
     "jp": {
-      "asOf": "2026-09-24",
+      "asOf": "2026-09-25",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 65513.99,
-          "changeDay": 0.76,
-          "changeWeek": 3.18
+          "value": 66364.2,
+          "changeDay": 1.3,
+          "changeWeek": 4.54
         }
       ],
-      "range52": 75.5,
+      "range52": 78.4,
       "usdChangeDay": 0.15,
       "lines": [
-        "日経平均は +0.76%、この1週間では +3.18%。過去1年の値幅の中では下から 76% の位置です。",
+        "日経平均は +1.30%、この1週間では +4.54%。過去1年の値幅の中では下から 78% の位置です。",
         "ドル建てでは +0.15%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
       ]
     },
