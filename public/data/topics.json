@@ -1,12 +1,7 @@
 {
-  "generatedAt": "2026-09-25T12:55:06.522Z",
-  "today": "2026-09-25",
+  "generatedAt": "2026-09-27T23:55:12.778Z",
+  "today": "2026-09-27",
   "calendar": [
-    {
-      "date": "2026-09-24",
-      "name": "米新規失業保険申請",
-      "why": "毎週出る雇用の速報"
-    },
     {
       "date": "2026-09-29",
       "name": "米求人件数（JOLTS）",
@@ -41,83 +36,55 @@
   "headlines": [
     {
       "source": "日本銀行",
+      "title": "金融政策決定会合議事要旨（7月30、31日開催分）",
+      "url": "https://www.boj.or.jp/mopo/mpmsche_minu/minu_2026/g260731.pdf",
+      "date": "2026-09-27",
+      "tag": "金融政策"
+    },
+    {
+      "source": "日本銀行",
       "title": "消費者物価のコア指標",
       "url": "https://www.boj.or.jp/research/research_data/cpi/index.htm",
       "date": "2026-09-25",
       "tag": "物価"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【記者会見】植田総裁（9月18日分）",
-      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk260924a.pdf",
-      "date": "2026-09-24",
-      "tag": "発言"
-    },
-    {
-      "source": "米Census",
-      "title": "New Residential Construction",
-      "url": "https://www.census.gov/construction/nrc/index.html",
-      "date": "2026-09-17",
-      "tag": "住宅"
-    },
-    {
-      "source": "FRB",
-      "title": "Federal Reserve issues FOMC statement",
-      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916a.htm",
-      "date": "2026-09-16",
-      "tag": "金融政策"
-    },
-    {
-      "source": "FRB",
-      "title": "Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
-      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260916b.htm",
-      "date": "2026-09-16",
-      "tag": "金融政策"
-    },
-    {
-      "source": "米Census",
-      "title": "Advance Monthly Sales for Retail and Food Services",
-      "url": "https://www.census.gov/retail/index.html",
-      "date": "2026-09-16",
-      "tag": "消費"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-09-24",
+      "asOf": "2026-09-25",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7704.13,
-          "changeDay": -0.02,
-          "changeWeek": 0.87
+          "value": 7743.41,
+          "changeDay": 0.51,
+          "changeWeek": 1.21
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 30478.86,
-          "changeDay": 0.03,
-          "changeWeek": 3.5
+          "value": 30608.13,
+          "changeDay": 0.42,
+          "changeWeek": 3.25
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 51349.98,
-          "changeDay": -0.31,
-          "changeWeek": -0.83
+          "value": 51828.62,
+          "changeDay": 0.93,
+          "changeWeek": 0.28
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 26939.37,
-          "changeDay": 0.01,
-          "changeWeek": 1.97
+          "value": 27068.72,
+          "changeDay": 0.48,
+          "changeWeek": 2.06
         }
       ],
       "vix": {
@@ -127,7 +94,7 @@
         "avg60": 16.1
       },
       "lines": [
-        "ナスダック100が +0.03%、ダウ工業株30種が -0.31%。同じ米国株でも方向が分かれた一日です（大型ハイテクと旧来型の大型の違い）。",
+        "米国株は全体が上昇しましたが、ダウ工業株30種の +0.93% に対しナスダック100は +0.42%。値動きの幅が 0.51 ポイント開いています。",
         "9/22時点のVIXは 14.21。60日平均の 16.10 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
       ]
     },
@@ -143,10 +110,10 @@
         }
       ],
       "range52": 78.4,
-      "usdChangeDay": 0.15,
+      "usdChangeDay": 2.11,
       "lines": [
         "日経平均は +1.30%、この1週間では +4.54%。過去1年の値幅の中では下から 78% の位置です。",
-        "ドル建てでは +0.15%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
+        "ドル建てでは +2.11%。円高のぶん、海外から見た日本株の動きは円建てより大きくなっています。"
       ]
     },
     "failed": []
