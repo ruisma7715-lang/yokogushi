@@ -1,6 +1,6 @@
 {
-  "asOf": "2026-09-28",
-  "alignedAsOf": "2026-09-24",
+  "asOf": "2026-09-29",
+  "alignedAsOf": "2026-09-25",
   "assets": [
     {
       "id": "nikkei",
@@ -19,12 +19,12 @@
       "name": "S&P 500",
       "cls": "US EQUITY",
       "unit": "pt",
-      "asOf": "2026-09-25",
-      "value": 7743.41,
-      "changeDay": 0.51,
-      "changeWeek": 1.21,
-      "changeMonth": 0.88,
-      "vol": 12.48
+      "asOf": "2026-09-28",
+      "value": 7683.69,
+      "changeDay": -0.77,
+      "changeWeek": -1.04,
+      "changeMonth": -0.61,
+      "vol": 12.49
     },
     {
       "id": "usdjpy",
@@ -43,66 +43,66 @@
       "name": "金",
       "cls": "COMMODITY",
       "unit": "USD",
-      "asOf": "2026-09-28",
-      "value": 4128.29,
-      "changeDay": -3.54,
-      "changeWeek": -5.3,
-      "changeMonth": -6.61,
-      "vol": 20.13
+      "asOf": "2026-09-29",
+      "value": 4128.92,
+      "changeDay": -3.02,
+      "changeWeek": -3.69,
+      "changeMonth": -6.64,
+      "vol": 19.91
     },
     {
       "id": "btc",
       "name": "ビットコイン",
       "cls": "CRYPTO",
       "unit": "USD",
-      "asOf": "2026-09-28",
-      "value": 83234.28,
-      "changeDay": -1.4,
-      "changeWeek": -3.42,
-      "changeMonth": 3.62,
-      "vol": 32.93
+      "asOf": "2026-09-29",
+      "value": 83017.24,
+      "changeDay": -1.7,
+      "changeWeek": -1.62,
+      "changeMonth": 4.96,
+      "vol": 32.59
     },
     {
       "id": "us10y",
       "name": "米10年債利回り",
       "cls": "RATES",
       "unit": "%",
-      "asOf": "2026-09-24",
-      "value": 5.18,
-      "changeDay": 1.37,
-      "changeWeek": 4.86,
-      "changeMonth": 11.64,
+      "asOf": "2026-09-25",
+      "value": 5.17,
+      "changeDay": -0.19,
+      "changeWeek": 3.19,
+      "changeMonth": 10.94,
       "vol": 15.62
     }
   ],
   "units": {
     "usd_jpy": 156.88,
-    "btc_jpy": 13057795,
-    "gold_jpy_per_g": 20822,
+    "btc_jpy": 13023744,
+    "gold_jpy_per_g": 20825,
     "coins": {
       "btc": {
         "ticker": "BTC",
         "name": "ビットコイン",
         "step": "0.00001",
-        "jpy": 13104062
+        "jpy": 13057282
       },
       "eth": {
         "ticker": "ETH",
         "name": "イーサリアム",
         "step": "0.0001",
-        "jpy": 421157
+        "jpy": 419924
       },
       "xrp": {
         "ticker": "XRP",
         "name": "リップル",
         "step": "1",
-        "jpy": 235
+        "jpy": 233
       },
       "sol": {
         "ticker": "SOL",
         "name": "ソラナ",
         "step": "0.01",
-        "jpy": 18647
+        "jpy": 18493
       },
       "doge": {
         "ticker": "DOGE",
@@ -114,19 +114,19 @@
         "ticker": "ADA",
         "name": "カルダノ",
         "step": "1",
-        "jpy": 38.38
+        "jpy": 38.45
       },
       "bnb": {
         "ticker": "BNB",
         "name": "BNB",
         "step": "0.01",
-        "jpy": 119953
+        "jpy": 119381
       },
       "ltc": {
         "ticker": "LTC",
         "name": "ライトコイン",
         "step": "0.01",
-        "jpy": 11023
+        "jpy": 10734
       }
     }
   },

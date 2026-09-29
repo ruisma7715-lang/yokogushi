@@ -1,14 +1,14 @@
 {
-  "asOf": "2026-09-24",
+  "asOf": "2026-09-25",
   "window": {
-    "from": "2025-09-30",
-    "to": "2026-09-24",
+    "from": "2025-10-01",
+    "to": "2026-09-25",
     "days": 226
   },
   "minDays": 20,
   "baseline": {
     "nikkei": {
-      "mean": 0.184,
+      "mean": 0.19,
       "upRate": 54
     },
     "sp500": {
@@ -16,20 +16,20 @@
       "upRate": 54
     },
     "usdjpy": {
-      "mean": 0.03,
+      "mean": 0.029,
       "upRate": 60
     },
     "gold": {
-      "mean": 0.079,
-      "upRate": 53
+      "mean": 0.068,
+      "upRate": 52
     },
     "btc": {
-      "mean": -0.08,
+      "mean": -0.089,
       "upRate": 45
     },
     "us10y": {
-      "mean": 0.005,
-      "upRate": 52
+      "mean": 0.004,
+      "upRate": 51
     }
   },
   "conditions": [
@@ -102,13 +102,13 @@
         "usdjpy": {
           "mean": -0.172,
           "upRate": 46,
-          "z": -0.324,
+          "z": -0.323,
           "unit": "%"
         },
         "gold": {
           "mean": 1.775,
           "upRate": 100,
-          "z": 0.829,
+          "z": 0.83,
           "unit": "%"
         },
         "btc": {
@@ -166,7 +166,7 @@
         "us10y": {
           "mean": 0.077,
           "upRate": 100,
-          "z": 1.81,
+          "z": 1.809,
           "unit": "pt"
         }
       }
@@ -194,7 +194,7 @@
         "usdjpy": {
           "mean": -0.138,
           "upRate": 52,
-          "z": -0.26,
+          "z": -0.259,
           "unit": "%"
         },
         "gold": {
@@ -240,7 +240,7 @@
         "usdjpy": {
           "mean": 0.851,
           "upRate": 100,
-          "z": 1.603,
+          "z": 1.598,
           "unit": "%"
         },
         "gold": {
@@ -266,45 +266,45 @@
     {
       "id": "yen-strong",
       "label": "円が大きく高くなった日",
-      "detail": "ドル円が1日で -0.75円 以下だった日（下位10%）",
+      "detail": "ドル円が1日で -0.81円 以下だった日（下位10%）",
       "note": null,
       "n": 23,
       "enough": true,
       "assets": {
         "nikkei": {
-          "mean": 0.384,
-          "upRate": 39,
-          "z": 0.203,
+          "mean": 0.451,
+          "upRate": 43,
+          "z": 0.239,
           "unit": "%"
         },
         "sp500": {
-          "mean": 0.403,
+          "mean": 0.407,
           "upRate": 74,
-          "z": 0.479,
+          "z": 0.484,
           "unit": "%"
         },
         "usdjpy": {
-          "mean": -1.023,
+          "mean": -1.036,
           "upRate": 0,
-          "z": -1.928,
+          "z": -1.945,
           "unit": "%"
         },
         "gold": {
-          "mean": 1.224,
-          "upRate": 74,
-          "z": 0.572,
+          "mean": 1.112,
+          "upRate": 70,
+          "z": 0.52,
           "unit": "%"
         },
         "btc": {
-          "mean": 0.062,
-          "upRate": 35,
-          "z": 0.02,
+          "mean": -0.022,
+          "upRate": 30,
+          "z": -0.007,
           "unit": "%"
         },
         "us10y": {
-          "mean": -0.002,
-          "upRate": 52,
-          "z": -0.041,
+          "mean": -0.003,
+          "upRate": 48,
+          "z": -0.062,
           "unit": "pt"
         }
       }
