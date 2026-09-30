@@ -1,6 +1,6 @@
 {
-  "asOf": "2026-09-29",
-  "alignedAsOf": "2026-09-25",
+  "asOf": "2026-09-30",
+  "alignedAsOf": "2026-09-28",
   "assets": [
     {
       "id": "nikkei",
@@ -19,12 +19,12 @@
       "name": "S&P 500",
       "cls": "US EQUITY",
       "unit": "pt",
-      "asOf": "2026-09-28",
-      "value": 7683.69,
-      "changeDay": -0.77,
-      "changeWeek": -1.04,
-      "changeMonth": -0.61,
-      "vol": 12.49
+      "asOf": "2026-09-29",
+      "value": 7670.84,
+      "changeDay": -0.17,
+      "changeWeek": -1.21,
+      "changeMonth": -0.53,
+      "vol": 12.38
     },
     {
       "id": "usdjpy",
@@ -43,42 +43,42 @@
       "name": "金",
       "cls": "COMMODITY",
       "unit": "USD",
-      "asOf": "2026-09-29",
-      "value": 4173.36,
-      "changeDay": -1.97,
-      "changeWeek": -2.66,
-      "changeMonth": -5.64,
-      "vol": 19.53
+      "asOf": "2026-09-30",
+      "value": 4186.5,
+      "changeDay": 1.18,
+      "changeWeek": -1.7,
+      "changeMonth": -3.86,
+      "vol": 19.87
     },
     {
       "id": "btc",
       "name": "ビットコイン",
       "cls": "CRYPTO",
       "unit": "USD",
-      "asOf": "2026-09-29",
-      "value": 83918.42,
-      "changeDay": -0.63,
-      "changeWeek": -0.55,
-      "changeMonth": 6.1,
-      "vol": 32.44
+      "asOf": "2026-09-30",
+      "value": 83503.42,
+      "changeDay": 0.03,
+      "changeWeek": -1.04,
+      "changeMonth": 6.44,
+      "vol": 32.33
     },
     {
       "id": "us10y",
       "name": "米10年債利回り",
       "cls": "RATES",
       "unit": "%",
-      "asOf": "2026-09-25",
-      "value": 5.17,
-      "changeDay": -0.19,
-      "changeWeek": 3.19,
-      "changeMonth": 10.94,
-      "vol": 15.62
+      "asOf": "2026-09-28",
+      "value": 5.24,
+      "changeDay": 1.35,
+      "changeWeek": 5.65,
+      "changeMonth": 12.21,
+      "vol": 15.63
     }
   ],
   "units": {
     "usd_jpy": 157.12,
-    "btc_jpy": 13185263,
-    "gold_jpy_per_g": 21082,
+    "btc_jpy": 13120057,
+    "gold_jpy_per_g": 21148,
     "coins": {}
   },
   "skipped": []
