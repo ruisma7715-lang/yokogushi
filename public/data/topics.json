@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-30T00:43:59.885Z",
+  "generatedAt": "2026-09-30T14:09:03.599Z",
   "today": "2026-09-30",
   "calendar": [
     {
@@ -40,98 +40,112 @@
   ],
   "headlines": [
     {
+      "source": "米BEA",
+      "title": "Personal Income and Outlays, August 2026",
+      "url": "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026",
+      "date": "2026-09-30",
+      "tag": "消費"
+    },
+    {
+      "source": "米BEA",
+      "title": "GDP, (Third Estimate), Industries, Corporate Profits, State GDP, and State Personal Income, 2nd Quarter 2026; State PCE, 2025",
+      "url": "https://www.bea.gov/news/2026/gdp-third-estimate-industries-corporate-profits-state-gdp-and-state-personal-income-2nd",
+      "date": "2026-09-30",
+      "tag": "GDP"
+    },
+    {
+      "source": "米Census",
+      "title": "Advance Retail Inventories",
+      "url": "https://www.census.gov/econ/indicators/index.html",
+      "date": "2026-09-30",
+      "tag": "消費"
+    },
+    {
+      "source": "米Census",
+      "title": "Advance U.S. International Trade in Goods",
+      "url": "https://www.census.gov/econ/indicators/index.html",
+      "date": "2026-09-30",
+      "tag": "貿易"
+    },
+    {
+      "source": "日本銀行",
+      "title": "長期国債買入れ（利回り・価格入札方式）の四半期予定（2026年10～12月）",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/mpr260930a.pdf",
+      "date": "2026-09-30",
+      "tag": "オペ"
+    },
+    {
       "source": "内閣府",
       "title": "月例経済報告（9月）",
       "url": "https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html",
       "date": "2026-09-29",
       "tag": "景況"
-    },
-    {
-      "source": "内閣府",
-      "title": "景気動向指数（令和8年7月分速報からの改訂状況）",
-      "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
-      "date": "2026-09-29",
-      "tag": "景況"
-    },
-    {
-      "source": "日本銀行",
-      "title": "金融政策決定会合議事要旨（7月30、31日開催分）",
-      "url": "https://www.boj.or.jp/mopo/mpmsche_minu/minu_2026/g260731.pdf",
-      "date": "2026-09-27",
-      "tag": "金融政策"
-    },
-    {
-      "source": "日本銀行",
-      "title": "消費者物価のコア指標",
-      "url": "https://www.boj.or.jp/research/research_data/cpi/index.htm",
-      "date": "2026-09-25",
-      "tag": "物価"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-09-28",
+      "asOf": "2026-09-29",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7683.69,
-          "changeDay": -0.77,
-          "changeWeek": -1.04
+          "value": 7670.84,
+          "changeDay": -0.17,
+          "changeWeek": -1.21
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 30276.81,
-          "changeDay": -1.08,
-          "changeWeek": -0.67
+          "value": 30339.33,
+          "changeDay": 0.21,
+          "changeWeek": -1.28
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 51481.51,
-          "changeDay": -0.67,
-          "changeWeek": -1.09
+          "value": 51349.92,
+          "changeDay": -0.26,
+          "changeWeek": -0.99
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 26820.38,
-          "changeDay": -0.92,
-          "changeWeek": -1.11
+          "value": 26797.54,
+          "changeDay": -0.09,
+          "changeWeek": -1.64
         }
       ],
       "vix": {
-        "asOf": "2026-09-28",
-        "value": 16.07,
-        "changeDay": 8.07,
+        "asOf": "2026-09-29",
+        "value": 16.04,
+        "changeDay": -0.19,
         "avg60": 16.06
       },
       "lines": [
-        "米国の主要指数はそろって下落しました（-1.08%〜-0.67%）。買われた先が偏っていない一日です。",
-        "VIXは 16.07。60日平均の 16.06 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
+        "ナスダック100が +0.21%、ダウ工業株30種が -0.26%。同じ米国株でも方向が分かれた一日です（大型ハイテクと旧来型の大型の違い）。",
+        "VIXは 16.04。60日平均の 16.06 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
       ]
     },
     "jp": {
-      "asOf": "2026-09-29",
+      "asOf": "2026-09-30",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 65481.27,
-          "changeDay": -0.6,
-          "changeWeek": 2.1
+          "value": 66753.72,
+          "changeDay": 1.94,
+          "changeWeek": 2.67
         }
       ],
-      "range52": 75.2,
-      "usdChangeDay": -0.75,
+      "range52": 79.8,
+      "usdChangeDay": 2.02,
       "lines": [
-        "日経平均は -0.60%、この1週間では +2.10%。過去1年の値幅の中では下から 75% の位置です。"
+        "日経平均は +1.94%、この1週間では +2.67%。過去1年の値幅の中では下から 80% の位置です。"
       ]
     },
     "failed": []
