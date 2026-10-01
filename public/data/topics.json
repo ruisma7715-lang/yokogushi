@@ -1,12 +1,7 @@
 {
-  "generatedAt": "2026-09-30T14:09:03.599Z",
-  "today": "2026-09-30",
+  "generatedAt": "2026-10-01T00:47:29.301Z",
+  "today": "2026-10-01",
   "calendar": [
-    {
-      "date": "2026-09-29",
-      "name": "米求人件数（JOLTS）",
-      "why": "労働需給のゆるみ"
-    },
     {
       "date": "2026-09-30",
       "name": "米GDP",
@@ -36,9 +31,38 @@
       "date": "2026-10-14",
       "name": "米CPI（消費者物価）",
       "why": "米金利と金の前提が動く"
+    },
+    {
+      "date": "2026-10-15",
+      "name": "米PPI（生産者物価）",
+      "why": "CPIの先行指標"
+    },
+    {
+      "date": "2026-10-15",
+      "name": "米小売売上高",
+      "why": "個人消費の強さ"
+    },
+    {
+      "date": "2026-10-15",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "金融政策決定会合における主な意見（9月17、18日開催分）",
+      "url": "https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260918.pdf",
+      "date": "2026-09-30",
+      "tag": "金融政策"
+    },
+    {
+      "source": "日本銀行",
+      "title": "短観（9月）＜概要、要旨＞",
+      "url": "https://www.boj.or.jp/statistics/tk/tankan09a.htm",
+      "date": "2026-09-30",
+      "tag": "景況"
+    },
     {
       "source": "米BEA",
       "title": "Personal Income and Outlays, August 2026",
@@ -66,20 +90,6 @@
       "url": "https://www.census.gov/econ/indicators/index.html",
       "date": "2026-09-30",
       "tag": "貿易"
-    },
-    {
-      "source": "日本銀行",
-      "title": "長期国債買入れ（利回り・価格入札方式）の四半期予定（2026年10～12月）",
-      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/mpr260930a.pdf",
-      "date": "2026-09-30",
-      "tag": "オペ"
-    },
-    {
-      "source": "内閣府",
-      "title": "月例経済報告（9月）",
-      "url": "https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html",
-      "date": "2026-09-29",
-      "tag": "景況"
     }
   ],
   "failed": [],
