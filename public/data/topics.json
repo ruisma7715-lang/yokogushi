@@ -1,17 +1,7 @@
 {
-  "generatedAt": "2026-10-01T14:43:07.188Z",
-  "today": "2026-10-01",
+  "generatedAt": "2026-10-02T01:03:29.125Z",
+  "today": "2026-10-02",
   "calendar": [
-    {
-      "date": "2026-09-30",
-      "name": "米GDP",
-      "why": "景気の全体像"
-    },
-    {
-      "date": "2026-09-30",
-      "name": "米PCE（個人消費・物価）",
-      "why": "FRBが最も重視する物価指標"
-    },
     {
       "date": "2026-10-01",
       "name": "米新規失業保険申請",
@@ -46,29 +36,34 @@
       "date": "2026-10-15",
       "name": "米新規失業保険申請",
       "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-10-16",
+      "name": "米鉱工業生産",
+      "why": "製造業の体温"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "貸出約定平均金利（8月）",
+      "url": "https://www.boj.or.jp/statistics/dl/loan/yaku/yaku2608.pdf",
+      "date": "2026-10-01",
+      "tag": "統計"
+    },
+    {
+      "source": "日本銀行",
+      "title": "短観（9月）＜調査全容＞",
+      "url": "https://www.boj.or.jp/statistics/tk/tankan09b.htm",
+      "date": "2026-10-01",
+      "tag": "景況"
+    },
     {
       "source": "米Census",
       "title": "Construction Spending",
       "url": "https://www.census.gov/construction/c30/c30index.html",
       "date": "2026-10-01",
       "tag": "住宅"
-    },
-    {
-      "source": "日本銀行",
-      "title": "金融政策決定会合における主な意見（9月17、18日開催分）",
-      "url": "https://www.boj.or.jp/mopo/mpmsche_minu/opinion_2026/opi260918.pdf",
-      "date": "2026-09-30",
-      "tag": "金融政策"
-    },
-    {
-      "source": "日本銀行",
-      "title": "短観（9月）＜概要、要旨＞",
-      "url": "https://www.boj.or.jp/statistics/tk/tankan09a.htm",
-      "date": "2026-09-30",
-      "tag": "景況"
     },
     {
       "source": "米BEA",
