@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-07T00:59:09.799Z",
+  "generatedAt": "2026-10-07T14:41:55.792Z",
   "today": "2026-10-07",
   "calendar": [
     {
@@ -35,6 +35,13 @@
   ],
   "headlines": [
     {
+      "source": "内閣府",
+      "title": "景気動向指数（令和8年8月分速報）",
+      "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
+      "date": "2026-10-07",
+      "tag": "景況"
+    },
+    {
       "source": "米BEA",
       "title": "U.S. International Trade in Goods and Services, August 2026",
       "url": "https://www.bea.gov/news/2026/us-international-trade-goods-and-services-august-2026",
@@ -68,79 +75,72 @@
       "url": "https://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html",
       "date": "2026-10-05",
       "tag": "消費"
-    },
-    {
-      "source": "米Census",
-      "title": "Construction Spending",
-      "url": "https://www.census.gov/construction/c30/c30index.html",
-      "date": "2026-10-01",
-      "tag": "住宅"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-10-05",
+      "asOf": "2026-10-06",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7773.95,
-          "changeDay": 0.66,
-          "changeWeek": 1.17
+          "value": 7818.93,
+          "changeDay": 0.58,
+          "changeWeek": 1.93
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 31076.44,
-          "changeDay": 0.87,
-          "changeWeek": 2.64
+          "value": 31224.69,
+          "changeDay": 0.48,
+          "changeWeek": 2.92
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 51267.9,
-          "changeDay": 0.18,
-          "changeWeek": -0.41
+          "value": 51521.28,
+          "changeDay": 0.49,
+          "changeWeek": 0.33
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 27477.31,
-          "changeDay": 1.05,
-          "changeWeek": 2.45
+          "value": 27599.89,
+          "changeDay": 0.45,
+          "changeWeek": 2.99
         }
       ],
       "vix": {
-        "asOf": "2026-10-05",
-        "value": 15.52,
-        "changeDay": 1.37,
-        "avg60": 16.03
+        "asOf": "2026-10-06",
+        "value": 15.01,
+        "changeDay": -3.29,
+        "avg60": 16.01
       },
       "lines": [
-        "米国株は全体が上昇しましたが、ナスダック総合の +1.05% に対しダウ工業株30種は +0.18%。値動きの幅が 0.87 ポイント開いています。",
-        "VIXは 15.52。60日平均の 16.03 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
+        "米国の主要指数はそろって上昇しました（+0.45%〜+0.58%）。買われた先が偏っていない一日です。",
+        "VIXは 15.01。60日平均の 16.01 を下回っており、株式市場が見込む先行きの振れ幅は平常より小さめです。"
       ]
     },
     "jp": {
-      "asOf": "2026-10-06",
+      "asOf": "2026-10-07",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 70683.98,
-          "changeDay": 1.05,
-          "changeWeek": 7.95
+          "value": 70035.71,
+          "changeDay": -0.92,
+          "changeWeek": 4.92
         }
       ],
-      "range52": 94,
-      "usdChangeDay": 1.14,
+      "range52": 91.6,
+      "usdChangeDay": -1,
       "lines": [
-        "日経平均は +1.05%、この1週間では +7.95%。過去1年の値幅の中では下から 94% の位置です。"
+        "日経平均は -0.92%、この1週間では +4.92%。過去1年の値幅の中では下から 92% の位置です。"
       ]
     },
     "failed": []
