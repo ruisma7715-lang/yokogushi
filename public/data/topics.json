@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-07T14:41:55.792Z",
-  "today": "2026-10-07",
+  "generatedAt": "2026-10-08T01:14:29.823Z",
+  "today": "2026-10-08",
   "calendar": [
     {
       "date": "2026-10-08",
@@ -31,9 +31,21 @@
       "date": "2026-10-16",
       "name": "米鉱工業生産",
       "why": "製造業の体温"
+    },
+    {
+      "date": "2026-10-22",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
     }
   ],
   "headlines": [
+    {
+      "source": "FRB",
+      "title": "Minutes of the Federal Open Market Committee, September 15-16, 2026",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
+      "date": "2026-10-07",
+      "tag": "議事要旨"
+    },
     {
       "source": "内閣府",
       "title": "景気動向指数（令和8年8月分速報）",
@@ -68,13 +80,6 @@
       "url": "https://www.boj.or.jp/research/research_data/gap/index.htm",
       "date": "2026-10-05",
       "tag": "景況"
-    },
-    {
-      "source": "内閣府",
-      "title": "消費動向調査（令和8年9月実施分）",
-      "url": "https://www.esri.cao.go.jp/jp/stat/shouhi/shouhi.html",
-      "date": "2026-10-05",
-      "tag": "消費"
     }
   ],
   "failed": [],
