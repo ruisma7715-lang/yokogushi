@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-12T16:56:06.213Z",
-  "today": "2026-10-12",
+  "generatedAt": "2026-10-13T02:41:53.435Z",
+  "today": "2026-10-13",
   "calendar": [
     {
       "date": "2026-10-14",
@@ -35,6 +35,20 @@
   ],
   "headlines": [
     {
+      "source": "日本銀行",
+      "title": "貸出・預金動向（9月）",
+      "url": "https://www.boj.or.jp/statistics/dl/depo/kashi/kasi2609.pdf",
+      "date": "2026-10-12",
+      "tag": "統計"
+    },
+    {
+      "source": "日本銀行",
+      "title": "企業物価指数（9月）",
+      "url": "https://www.boj.or.jp/statistics/pi/cgpi_release/cgpi2609.pdf",
+      "date": "2026-10-12",
+      "tag": "物価"
+    },
+    {
       "source": "内閣府",
       "title": "景気ウォッチャー調査（令和8年9月調査）",
       "url": "https://www5.cao.go.jp/keizai3/watcher_index.html",
@@ -61,20 +75,6 @@
       "url": "https://www.bea.gov/news/2026/us-international-trade-goods-and-services-august-2026",
       "date": "2026-10-06",
       "tag": "貿易"
-    },
-    {
-      "source": "米Census",
-      "title": "U.S. International Trade in Goods and Services",
-      "url": "https://www.census.gov/foreign-trade/index.html",
-      "date": "2026-10-06",
-      "tag": "貿易"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【挨拶】植田総裁（全国証券大会）",
-      "url": "https://www.boj.or.jp/about/press/koen_2026/ko261006a.htm",
-      "date": "2026-10-06",
-      "tag": "発言"
     }
   ],
   "failed": [],
