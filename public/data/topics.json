@@ -1,12 +1,7 @@
 {
-  "generatedAt": "2026-10-15T23:47:37.146Z",
-  "today": "2026-10-15",
+  "generatedAt": "2026-10-16T12:39:53.212Z",
+  "today": "2026-10-16",
   "calendar": [
-    {
-      "date": "2026-10-14",
-      "name": "米CPI（消費者物価）",
-      "why": "米金利と金の前提が動く"
-    },
     {
       "date": "2026-10-15",
       "name": "米PPI（生産者物価）",
@@ -50,6 +45,13 @@
   ],
   "headlines": [
     {
+      "source": "日本銀行",
+      "title": "【挨拶】植田総裁（内田副総裁代読）（全国信用組合大会）",
+      "url": "https://www.boj.or.jp/about/press/koen_2026/ko261016a.htm",
+      "date": "2026-10-16",
+      "tag": "発言"
+    },
+    {
       "source": "米Census",
       "title": "Advance Monthly Sales for Retail and Food Services",
       "url": "https://www.census.gov/retail/index.html",
@@ -71,13 +73,6 @@
       "tag": "設備投資"
     },
     {
-      "source": "日本銀行",
-      "title": "第15回日中韓・中央銀行総裁会合の開催について",
-      "url": "https://www.boj.or.jp/intl_finance/cooperate/coop261014a.pdf",
-      "date": "2026-10-14",
-      "tag": "発言"
-    },
-    {
       "source": "FRB",
       "title": "Minutes of the Board's discount rate meetings on August 17, September 9, and September 16, 2026",
       "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
@@ -85,49 +80,49 @@
       "tag": "金利"
     },
     {
-      "source": "内閣府",
-      "title": "景気ウォッチャー調査（令和8年9月調査）",
-      "url": "https://www5.cao.go.jp/keizai3/watcher_index.html",
-      "date": "2026-10-08",
-      "tag": "景況"
+      "source": "FRB",
+      "title": "Minutes of the Federal Open Market Committee, September 15-16, 2026",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261007a.htm",
+      "date": "2026-10-07",
+      "tag": "議事要旨"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-10-14",
+      "asOf": "2026-10-15",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7718.94,
-          "changeDay": -1.11,
-          "changeWeek": -1.06
+          "value": 7744.06,
+          "changeDay": 0.33,
+          "changeWeek": -0.27
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 29950.82,
-          "changeDay": -2.02,
-          "changeWeek": -3.88
+          "value": 29935.59,
+          "changeDay": -0.05,
+          "changeWeek": -2.57
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 51621.48,
-          "changeDay": -0.09,
-          "changeWeek": 0.86
+          "value": 52177.69,
+          "changeDay": 1.08,
+          "changeWeek": 1.85
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 26692.87,
-          "changeDay": -1.88,
-          "changeWeek": -3.07
+          "value": 26713.03,
+          "changeDay": 0.08,
+          "changeWeek": -1.77
         }
       ],
       "vix": {
@@ -137,25 +132,26 @@
         "avg60": 15.83
       },
       "lines": [
-        "米国株は全体が下落しましたが、ダウ工業株30種の -0.09% に対しナスダック100は -2.02%。値動きの幅が 1.93 ポイント開いています。",
-        "VIXは前日から +10.48% 動いて 16.87。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
+        "ダウ工業株30種が +1.08%、ナスダック100が -0.05%。同じ米国株でも方向が分かれた一日です（旧来型の大型と大型ハイテクの違い）。",
+        "10/14時点のVIXは前日から +10.48% 動いて 16.87。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
       ]
     },
     "jp": {
-      "asOf": "2026-10-15",
+      "asOf": "2026-10-16",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 64425.95,
-          "changeDay": -4.9,
-          "changeWeek": -8.01
+          "value": 65324.29,
+          "changeDay": 1.39,
+          "changeWeek": -5.38
         }
       ],
-      "range52": 70.1,
+      "range52": 72.4,
       "usdChangeDay": -4.62,
       "lines": [
-        "日経平均は -4.90%、この1週間では -8.01%。過去1年の値幅の中では下から 70% の位置です。"
+        "日経平均は +1.39%、この1週間では -5.38%。過去1年の値幅の中では下から 72% の位置です。",
+        "ドル建てでは -4.62%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
       ]
     },
     "failed": []
