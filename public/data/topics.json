@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-19T14:54:50.904Z",
-  "today": "2026-10-19",
+  "generatedAt": "2026-10-20T00:35:14.625Z",
+  "today": "2026-10-20",
   "calendar": [
     {
       "date": "2026-10-22",
@@ -21,9 +21,21 @@
       "date": "2026-10-29",
       "name": "米新規失業保険申請",
       "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-11-03",
+      "name": "米求人件数（JOLTS）",
+      "why": "労働需給のゆるみ"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "基準外国為替相場及び裁定外国為替相場（11月分）",
+      "url": "https://www.boj.or.jp/about/services/tame/tame_rate/kijun/kiju2611.htm",
+      "date": "2026-10-20",
+      "tag": "為替"
+    },
     {
       "source": "日本銀行",
       "title": "【挨拶】植田総裁（内田副総裁代読）（全国信用組合大会）",
@@ -37,13 +49,6 @@
       "url": "https://www.census.gov/retail/index.html",
       "date": "2026-10-15",
       "tag": "消費"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【挨拶】小枝審議委員「わが国の経済・物価情勢と金融政策」（熊本）",
-      "url": "https://www.boj.or.jp/about/press/koen_2026/ko261015a.htm",
-      "date": "2026-10-15",
-      "tag": "見通し"
     },
     {
       "source": "内閣府",
