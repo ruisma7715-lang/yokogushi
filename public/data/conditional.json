@@ -1,79 +1,191 @@
 {
-  "asOf": "2026-10-21",
+  "asOf": "2026-10-20",
   "window": {
-    "from": "2025-10-23",
-    "to": "2026-10-21",
-    "days": 254
+    "from": "2025-10-24",
+    "to": "2026-10-20",
+    "days": 229
   },
   "minDays": 20,
   "baseline": {
-    "usdjpy": {
-      "mean": 0.017,
-      "upRate": 59
+    "nikkei": {
+      "mean": 0.138,
+      "upRate": 53
+    },
+    "sp500": {
+      "mean": 0.062,
+      "upRate": 53
     },
     "gold": {
-      "mean": 0.02,
-      "upRate": 50
+      "mean": 0.025,
+      "upRate": 51
     },
     "btc": {
-      "mean": -0.067,
-      "upRate": 46
+      "mean": -0.076,
+      "upRate": 45
+    },
+    "us10y": {
+      "mean": 0.005,
+      "upRate": 52
     }
   },
   "conditions": [
     {
-      "id": "yen-weak",
-      "label": "円が大きく安くなった日",
-      "detail": "ドル円が1日で +0.79円 以上動いた日（上位10%）",
+      "id": "equity-down",
+      "label": "株が売られた日",
+      "detail": "日経平均とS&P 500の平均が −0.3% を下回った日",
       "note": null,
-      "n": 26,
+      "n": 77,
       "enough": true,
       "assets": {
-        "usdjpy": {
-          "mean": 0.737,
-          "upRate": 100,
-          "z": 1.511,
+        "nikkei": {
+          "mean": -1.657,
+          "upRate": 6,
+          "z": -0.884,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": -0.451,
+          "upRate": 30,
+          "z": -0.554,
           "unit": "%"
         },
         "gold": {
-          "mean": 0.1,
-          "upRate": 65,
-          "z": 0.053,
+          "mean": -0.553,
+          "upRate": 39,
+          "z": -0.273,
           "unit": "%"
         },
         "btc": {
-          "mean": -0.913,
-          "upRate": 35,
-          "z": -0.334,
+          "mean": -1.323,
+          "upRate": 29,
+          "z": -0.449,
           "unit": "%"
+        },
+        "us10y": {
+          "mean": 0.008,
+          "upRate": 57,
+          "z": 0.19,
+          "unit": "pt"
         }
       }
     },
     {
-      "id": "yen-strong",
-      "label": "円が大きく高くなった日",
-      "detail": "ドル円が1日で -0.72円 以下だった日（下位10%）",
-      "note": null,
-      "n": 27,
+      "id": "risk-off",
+      "label": "リスクオフの日",
+      "detail": "株が売られ、同じ日に金が買われた日（サイトの判定と同じ条件）",
+      "note": "金が上がった日を選んでいるので、金の数字が大きいのは当たり前。見るべきは他の5つ。",
+      "n": 25,
       "enough": true,
       "assets": {
-        "usdjpy": {
-          "mean": -0.956,
-          "upRate": 0,
-          "z": -1.961,
+        "nikkei": {
+          "mean": -1.273,
+          "upRate": 8,
+          "z": -0.679,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": -0.522,
+          "upRate": 24,
+          "z": -0.641,
           "unit": "%"
         },
         "gold": {
-          "mean": 0.92,
-          "upRate": 67,
-          "z": 0.489,
+          "mean": 1.45,
+          "upRate": 100,
+          "z": 0.715,
           "unit": "%"
         },
         "btc": {
-          "mean": 0.253,
-          "upRate": 41,
-          "z": 0.093,
+          "mean": -0.895,
+          "upRate": 32,
+          "z": -0.304,
           "unit": "%"
+        },
+        "us10y": {
+          "mean": 0.001,
+          "upRate": 48,
+          "z": 0.019,
+          "unit": "pt"
+        }
+      }
+    },
+    {
+      "id": "yield-up",
+      "label": "米金利が大きく上がった日",
+      "detail": "米10年債利回りが1日で +0.06pt 以上動いた日（上位10%）",
+      "note": null,
+      "n": 23,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": -0.155,
+          "upRate": 43,
+          "z": -0.083,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": -0.306,
+          "upRate": 35,
+          "z": -0.376,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": 0.077,
+          "upRate": 48,
+          "z": 0.038,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": 0.291,
+          "upRate": 57,
+          "z": 0.099,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": 0.08,
+          "upRate": 100,
+          "z": 1.883,
+          "unit": "pt"
+        }
+      }
+    },
+    {
+      "id": "yield-down",
+      "label": "米金利が大きく下がった日",
+      "detail": "米10年債利回りが1日で -0.05pt 以下だった日（下位10%）",
+      "note": null,
+      "n": 26,
+      "enough": true,
+      "assets": {
+        "nikkei": {
+          "mean": -0.225,
+          "upRate": 46,
+          "z": -0.12,
+          "unit": "%"
+        },
+        "sp500": {
+          "mean": 0.519,
+          "upRate": 73,
+          "z": 0.637,
+          "unit": "%"
+        },
+        "gold": {
+          "mean": -0.178,
+          "upRate": 50,
+          "z": -0.088,
+          "unit": "%"
+        },
+        "btc": {
+          "mean": -0.417,
+          "upRate": 35,
+          "z": -0.142,
+          "unit": "%"
+        },
+        "us10y": {
+          "mean": -0.065,
+          "upRate": 0,
+          "z": -1.53,
+          "unit": "pt"
         }
       }
     }
