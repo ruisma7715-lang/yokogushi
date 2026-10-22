@@ -1,34 +1,15 @@
 {
-  "generatedAt": "2026-10-21T13:08:16.412Z",
-  "today": "2026-10-21",
-  "calendar": [
-    {
-      "date": "2026-10-22",
-      "name": "米新規失業保険申請",
-      "why": "毎週出る雇用の速報"
-    },
-    {
-      "date": "2026-10-29",
-      "name": "米GDP",
-      "why": "景気の全体像"
-    },
-    {
-      "date": "2026-10-29",
-      "name": "米PCE（個人消費・物価）",
-      "why": "FRBが最も重視する物価指標"
-    },
-    {
-      "date": "2026-10-29",
-      "name": "米新規失業保険申請",
-      "why": "毎週出る雇用の速報"
-    },
-    {
-      "date": "2026-11-03",
-      "name": "米求人件数（JOLTS）",
-      "why": "労働需給のゆるみ"
-    }
-  ],
+  "generatedAt": "2026-10-22T00:09:02.377Z",
+  "today": "2026-10-22",
+  "calendar": [],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "主要銀行貸出動向アンケート調査（10月）",
+      "url": "https://www.boj.or.jp/statistics/dl/loan/loos/release/loos2610.pdf",
+      "date": "2026-10-21",
+      "tag": "統計"
+    },
     {
       "source": "米Census",
       "title": "New Residential Construction",
@@ -42,13 +23,6 @@
       "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk261020a.pdf",
       "date": "2026-10-20",
       "tag": "発言"
-    },
-    {
-      "source": "日本銀行",
-      "title": "基準外国為替相場及び裁定外国為替相場（11月分）",
-      "url": "https://www.boj.or.jp/about/services/tame/tame_rate/kijun/kiju2611.htm",
-      "date": "2026-10-20",
-      "tag": "為替"
     },
     {
       "source": "米Census",
@@ -72,73 +46,26 @@
       "tag": "金利"
     }
   ],
-  "failed": [],
+  "failed": [
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON",
+    "FRED カレンダー: Unexpected token '<', \"<!doctype \"... is not valid JSON"
+  ],
   "market": {
-    "us": {
-      "asOf": "2026-10-20",
-      "indices": [
-        {
-          "id": "sp500",
-          "name": "S&P 500",
-          "note": "大型500社",
-          "value": 7712.57,
-          "changeDay": 0.28,
-          "changeWeek": -1.19
-        },
-        {
-          "id": "ndx",
-          "name": "ナスダック100",
-          "note": "大型ハイテク",
-          "value": 29490.28,
-          "changeDay": -0.13,
-          "changeWeek": -3.53
-        },
-        {
-          "id": "dow",
-          "name": "ダウ工業株30種",
-          "note": "旧来型の大型",
-          "value": 52495.88,
-          "changeDay": 1.02,
-          "changeWeek": 1.6
-        },
-        {
-          "id": "comp",
-          "name": "ナスダック総合",
-          "note": "ハイテク全体",
-          "value": 26424.82,
-          "changeDay": -0.02,
-          "changeWeek": -2.87
-        }
-      ],
-      "vix": {
-        "asOf": "2026-10-19",
-        "value": 18.44,
-        "changeDay": -7.75,
-        "avg60": 15.81
-      },
-      "lines": [
-        "ダウ工業株30種が +1.02%、ナスダック100が -0.13%。同じ米国株でも方向が分かれた一日です（旧来型の大型と大型ハイテクの違い）。",
-        "10/19時点のVIXは 18.44。60日平均の 15.81 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
-      ]
-    },
-    "jp": {
-      "asOf": "2026-10-21",
-      "indices": [
-        {
-          "id": "nikkei",
-          "name": "日経平均",
-          "value": 64621.24,
-          "changeDay": 0.85,
-          "changeWeek": -4.61
-        }
-      ],
-      "range52": 69.6,
-      "usdChangeDay": -1.23,
-      "lines": [
-        "日経平均は +0.85%、この1週間では -4.61%。過去1年の値幅の中では下から 70% の位置です。",
-        "ドル建てでは -1.23%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
-      ]
-    },
-    "failed": []
+    "us": null,
+    "jp": null,
+    "failed": [
+      "Unexpected token '<', \"<!doctype \"... is not valid JSON",
+      "Unexpected token '<', \"<!doctype \"... is not valid JSON",
+      "Unexpected token '<', \"<!doctype \"... is not valid JSON",
+      "Unexpected token '<', \"<!doctype \"... is not valid JSON",
+      "米国指数: 値が揃った日がありません"
+    ]
   }
 }
