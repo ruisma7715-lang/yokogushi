@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-23T00:07:00.587Z",
+  "generatedAt": "2026-10-23T12:48:42.382Z",
   "today": "2026-10-23",
   "calendar": [
     {
@@ -41,6 +41,13 @@
   "headlines": [
     {
       "source": "日本銀行",
+      "title": "金融システムレポート（2026年10月号）",
+      "url": "https://www.boj.or.jp/research/brp/fsr/fsr261023.htm",
+      "date": "2026-10-23",
+      "tag": "見通し"
+    },
+    {
+      "source": "日本銀行",
       "title": "主要銀行貸出動向アンケート調査（10月）",
       "url": "https://www.boj.or.jp/statistics/dl/loan/loos/release/loos2610.pdf",
       "date": "2026-10-21",
@@ -52,13 +59,6 @@
       "url": "https://www.census.gov/construction/nrc/index.html",
       "date": "2026-10-20",
       "tag": "住宅"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【記者会見】植田総裁（G20、10月16日分）",
-      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk261020a.pdf",
-      "date": "2026-10-20",
-      "tag": "発言"
     },
     {
       "source": "米Census",
@@ -132,21 +132,21 @@
       ]
     },
     "jp": {
-      "asOf": "2026-10-22",
+      "asOf": "2026-10-23",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 62907.84,
-          "changeDay": -2.65,
-          "changeWeek": -2.36
+          "value": 62693.16,
+          "changeDay": -0.34,
+          "changeWeek": -4.03
         }
       ],
-      "range52": 62.9,
+      "range52": 62.1,
       "usdChangeDay": -2.14,
       "lines": [
-        "日経平均は -2.65%、この1週間では -2.36%。過去1年の値幅の中では下から 63% の位置です。",
-        "ドル建てでは -2.14%。円高のぶん、海外から見た日本株の動きは円建てより大きくなっています。"
+        "日経平均は -0.34%、この1週間では -4.03%。過去1年の値幅の中では下から 62% の位置です。",
+        "ドル建てでは -2.14%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
       ]
     },
     "failed": []
