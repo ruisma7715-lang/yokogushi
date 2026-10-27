@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T00:44:27.710Z",
+  "generatedAt": "2026-10-27T13:30:58.212Z",
   "today": "2026-10-27",
   "calendar": [
     {
@@ -41,6 +41,20 @@
   "headlines": [
     {
       "source": "内閣府",
+      "title": "月例経済報告（10月）",
+      "url": "https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html",
+      "date": "2026-10-27",
+      "tag": "景況"
+    },
+    {
+      "source": "日本銀行",
+      "title": "消費者物価のコア指標",
+      "url": "https://www.boj.or.jp/research/research_data/cpi/index.htm",
+      "date": "2026-10-27",
+      "tag": "物価"
+    },
+    {
+      "source": "内閣府",
       "title": "景気動向指数（令和8年8月分速報からの改訂状況）",
       "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
       "date": "2026-10-26",
@@ -52,13 +66,6 @@
       "url": "https://www.boj.or.jp/research/brp/fsr/fsr261023.htm",
       "date": "2026-10-23",
       "tag": "見通し"
-    },
-    {
-      "source": "日本銀行",
-      "title": "主要銀行貸出動向アンケート調査（10月）",
-      "url": "https://www.boj.or.jp/statistics/dl/loan/loos/release/loos2610.pdf",
-      "date": "2026-10-21",
-      "tag": "統計"
     },
     {
       "source": "米Census",
@@ -118,21 +125,20 @@
       ]
     },
     "jp": {
-      "asOf": "2026-10-26",
+      "asOf": "2026-10-27",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 62189.65,
-          "changeDay": -0.8,
-          "changeWeek": -4.2
+          "value": 63268.37,
+          "changeDay": 1.73,
+          "changeWeek": -1.26
         }
       ],
-      "range52": 58.9,
-      "usdChangeDay": -1.21,
+      "range52": 63.3,
+      "usdChangeDay": null,
       "lines": [
-        "日経平均は -0.80%、この1週間では -4.20%。過去1年の値幅の中では下から 59% の位置です。",
-        "ドル建てでは -1.21%。円安のぶん、海外から見た日本株の上げは円建てほど大きくありません。"
+        "日経平均は +1.73%、この1週間では -1.26%。過去1年の値幅の中では下から 63% の位置です。"
       ]
     },
     "failed": []
