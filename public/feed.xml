@@ -5,8 +5,15 @@
   <link href="https://ruisma7715-lang.github.io/yokogushi/feed.xml" rel="self"/>
   <link href="https://ruisma7715-lang.github.io/yokogushi/"/>
   <id>https://ruisma7715-lang.github.io/yokogushi/</id>
-  <updated>2026-10-27T13:31:01.908Z</updated>
+  <updated>2026-10-28T00:41:29.840Z</updated>
   <icon>https://ruisma7715-lang.github.io/yokogushi/icon-192.png</icon>
+  <entry>
+    <title>2026年10月26日のマーケット</title>
+    <link href="https://ruisma7715-lang.github.io/yokogushi/daily/2026-10-26.html"/>
+    <id>https://ruisma7715-lang.github.io/yokogushi/daily/2026-10-26.html</id>
+    <updated>2026-10-26T09:00:00+09:00</updated>
+    <summary>2026年10月26日の値動きをまとめました。最も大きく動いたのはビットコインで−1.57%。この日は「方向感なし」の一日でした。</summary>
+  </entry>
   <entry>
     <title>2026年10月23日のマーケット</title>
     <link href="https://ruisma7715-lang.github.io/yokogushi/daily/2026-10-23.html"/>
@@ -209,12 +216,5 @@
     <id>https://ruisma7715-lang.github.io/yokogushi/daily/2026-09-08.html</id>
     <updated>2026-09-08T09:00:00+09:00</updated>
     <summary>2026年9月8日の値動きをまとめました。最も大きく動いたのはビットコインで−2.67%。この日は「方向感なし」の一日でした。</summary>
-  </entry>
-  <entry>
-    <title>2026年9月4日のマーケット</title>
-    <link href="https://ruisma7715-lang.github.io/yokogushi/daily/2026-09-04.html"/>
-    <id>https://ruisma7715-lang.github.io/yokogushi/daily/2026-09-04.html</id>
-    <updated>2026-09-04T09:00:00+09:00</updated>
-    <summary>2026年9月4日の値動きをまとめました。最も大きく動いたのはビットコインで+5.13%。この日は「全面高」の一日でした。</summary>
   </entry>
 </feed>
