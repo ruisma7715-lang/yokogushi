@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-28T14:22:19.748Z",
-  "today": "2026-10-28",
+  "generatedAt": "2026-10-29T01:12:56.265Z",
+  "today": "2026-10-29",
   "calendar": [
     {
       "date": "2026-10-29",
@@ -36,9 +36,21 @@
       "date": "2026-11-10",
       "name": "米CPI（消費者物価）",
       "why": "米金利と金の前提が動く"
+    },
+    {
+      "date": "2026-11-12",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
     }
   ],
   "headlines": [
+    {
+      "source": "FRB",
+      "title": "Federal Reserve issues FOMC statement",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+      "date": "2026-10-28",
+      "tag": "金融政策"
+    },
     {
       "source": "米Census",
       "title": "Advance U.S. International Trade in Goods",
@@ -73,13 +85,6 @@
       "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
       "date": "2026-10-26",
       "tag": "景況"
-    },
-    {
-      "source": "日本銀行",
-      "title": "金融システムレポート（2026年10月号）",
-      "url": "https://www.boj.or.jp/research/brp/fsr/fsr261023.htm",
-      "date": "2026-10-23",
-      "tag": "見通し"
     }
   ],
   "failed": [],
@@ -143,10 +148,9 @@
         }
       ],
       "range52": 66.1,
-      "usdChangeDay": 1.5,
+      "usdChangeDay": 0.99,
       "lines": [
-        "日経平均は +1.08%、この1週間では -1.03%。過去1年の値幅の中では下から 66% の位置です。",
-        "ドル建てでは +1.50%。円高のぶん、海外から見た日本株の動きは円建てより大きくなっています。"
+        "日経平均は +1.08%、この1週間では -1.03%。過去1年の値幅の中では下から 66% の位置です。"
       ]
     },
     "failed": []
