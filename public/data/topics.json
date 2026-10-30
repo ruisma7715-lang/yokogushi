@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T01:18:16.185Z",
+  "generatedAt": "2026-10-30T14:28:27.351Z",
   "today": "2026-10-30",
   "calendar": [
     {
@@ -51,8 +51,15 @@
   "headlines": [
     {
       "source": "日本銀行",
-      "title": "総裁記者会見ライブ配信（10月30日15時30分予定）",
-      "url": "https://www.boj.or.jp/about/release/sousailive.htm",
+      "title": "長期国債買入れ（利回り・価格入札方式）の四半期予定（2026年10～12月）［日程更新］",
+      "url": "https://www.boj.or.jp/mopo/mpmdeci/mpr_2026/mpr261030c.pdf",
+      "date": "2026-10-30",
+      "tag": "オペ"
+    },
+    {
+      "source": "日本銀行",
+      "title": "総裁記者会見（10月30日）動画の配信開始",
+      "url": "https://www.boj.or.jp/about/release/sousaidouga.htm",
       "date": "2026-10-30",
       "tag": "発言"
     },
@@ -83,13 +90,6 @@
       "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
       "date": "2026-10-28",
       "tag": "金融政策"
-    },
-    {
-      "source": "米Census",
-      "title": "Advance U.S. International Trade in Goods",
-      "url": "https://www.census.gov/econ/indicators/index.html",
-      "date": "2026-10-28",
-      "tag": "貿易"
     }
   ],
   "failed": [],
@@ -131,31 +131,32 @@
         }
       ],
       "vix": {
-        "asOf": "2026-10-28",
-        "value": 16.91,
-        "changeDay": -3.48,
-        "avg60": 15.9
+        "asOf": "2026-10-29",
+        "value": 17.2,
+        "changeDay": 1.71,
+        "avg60": 15.93
       },
       "lines": [
         "米国の主要指数はそろって上昇しました（+0.19%〜+0.55%）。買われた先が偏っていない一日です。",
-        "VIXは 16.91。60日平均の 15.90 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
+        "10/29時点のVIXは 17.20。60日平均の 15.93 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
       ]
     },
     "jp": {
-      "asOf": "2026-10-29",
+      "asOf": "2026-10-30",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 64659.47,
-          "changeDay": 1.1,
-          "changeWeek": 2.78
+          "value": 63290.11,
+          "changeDay": -2.12,
+          "changeWeek": 0.95
         }
       ],
-      "range52": 67.7,
+      "range52": 61.9,
       "usdChangeDay": 1.04,
       "lines": [
-        "日経平均は +1.10%、この1週間では +2.78%。過去1年の値幅の中では下から 68% の位置です。"
+        "日経平均は -2.12%、この1週間では +0.95%。過去1年の値幅の中では下から 62% の位置です。",
+        "ドル建てでは +1.04%。円高のぶん、海外から見た日本株の動きは円建てより大きくなっています。"
       ]
     },
     "failed": []
