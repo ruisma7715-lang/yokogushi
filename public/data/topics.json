@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-29T14:36:39.203Z",
-  "today": "2026-10-29",
+  "generatedAt": "2026-10-30T01:18:16.185Z",
+  "today": "2026-10-30",
   "calendar": [
     {
       "date": "2026-10-29",
@@ -41,9 +41,21 @@
       "date": "2026-11-12",
       "name": "米新規失業保険申請",
       "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-11-13",
+      "name": "米PPI（生産者物価）",
+      "why": "CPIの先行指標"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "総裁記者会見ライブ配信（10月30日15時30分予定）",
+      "url": "https://www.boj.or.jp/about/release/sousailive.htm",
+      "date": "2026-10-30",
+      "tag": "発言"
+    },
     {
       "source": "米BEA",
       "title": "GDP (Advance Estimate), 3rd Quarter 2026",
@@ -78,13 +90,6 @@
       "url": "https://www.census.gov/econ/indicators/index.html",
       "date": "2026-10-28",
       "tag": "貿易"
-    },
-    {
-      "source": "米Census",
-      "title": "Advance Retail Inventories",
-      "url": "https://www.census.gov/econ/indicators/index.html",
-      "date": "2026-10-28",
-      "tag": "消費"
     }
   ],
   "failed": [],
@@ -148,7 +153,7 @@
         }
       ],
       "range52": 67.7,
-      "usdChangeDay": 0.99,
+      "usdChangeDay": 1.04,
       "lines": [
         "日経平均は +1.10%、この1週間では +2.78%。過去1年の値幅の中では下から 68% の位置です。"
       ]
