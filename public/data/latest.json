@@ -44,11 +44,11 @@
       "cls": "COMMODITY",
       "unit": "USD",
       "asOf": "2026-11-03",
-      "value": 3947.17,
-      "changeDay": 0.99,
-      "changeWeek": -2.56,
-      "changeMonth": -5.31,
-      "vol": 19.2
+      "value": 3931.79,
+      "changeDay": 0.6,
+      "changeWeek": -2.94,
+      "changeMonth": -5.68,
+      "vol": 19.16
     },
     {
       "id": "btc",
@@ -56,11 +56,11 @@
       "cls": "CRYPTO",
       "unit": "USD",
       "asOf": "2026-11-03",
-      "value": 76636.18,
-      "changeDay": -2.12,
-      "changeWeek": -5.71,
-      "changeMonth": -6.31,
-      "vol": 32.47
+      "value": 77211.69,
+      "changeDay": -1.38,
+      "changeWeek": -5,
+      "changeMonth": -5.6,
+      "vol": 32.34
     },
     {
       "id": "us10y",
@@ -77,56 +77,56 @@
   ],
   "units": {
     "usd_jpy": 157.9,
-    "btc_jpy": 12100852,
-    "gold_jpy_per_g": 20038,
+    "btc_jpy": 12191726,
+    "gold_jpy_per_g": 19960,
     "coins": {
       "btc": {
         "ticker": "BTC",
         "name": "ビットコイン",
         "step": "0.00001",
-        "jpy": 12101212
+        "jpy": 12239278
       },
       "eth": {
         "ticker": "ETH",
         "name": "イーサリアム",
         "step": "0.0001",
-        "jpy": 355217
+        "jpy": 361802
       },
       "xrp": {
         "ticker": "XRP",
         "name": "リップル",
         "step": "1",
-        "jpy": 197
+        "jpy": 202
       },
       "sol": {
         "ticker": "SOL",
         "name": "ソラナ",
         "step": "0.01",
-        "jpy": 14480
+        "jpy": 14727
       },
       "doge": {
         "ticker": "DOGE",
         "name": "ドージコイン",
         "step": "1",
-        "jpy": 11.66
+        "jpy": 11.88
       },
       "ada": {
         "ticker": "ADA",
         "name": "カルダノ",
         "step": "1",
-        "jpy": 29.6
+        "jpy": 30.06
       },
       "bnb": {
         "ticker": "BNB",
         "name": "BNB",
         "step": "0.01",
-        "jpy": 109743
+        "jpy": 110574
       },
       "ltc": {
         "ticker": "LTC",
         "name": "ライトコイン",
         "step": "0.01",
-        "jpy": 8456
+        "jpy": 8566
       }
     }
   },
