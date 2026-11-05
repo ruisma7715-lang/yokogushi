@@ -1,12 +1,7 @@
 {
-  "generatedAt": "2026-11-04T15:42:10.896Z",
-  "today": "2026-11-04",
+  "generatedAt": "2026-11-05T01:44:36.904Z",
+  "today": "2026-11-05",
   "calendar": [
-    {
-      "date": "2026-11-03",
-      "name": "米求人件数（JOLTS）",
-      "why": "労働需給のゆるみ"
-    },
     {
       "date": "2026-11-05",
       "name": "米新規失業保険申請",
@@ -41,9 +36,21 @@
       "date": "2026-11-17",
       "name": "米鉱工業生産",
       "why": "製造業の体温"
+    },
+    {
+      "date": "2026-11-19",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "金融政策決定会合議事要旨（9月17、18日開催分）",
+      "url": "https://www.boj.or.jp/mopo/mpmsche_minu/minu_2026/g260918.pdf",
+      "date": "2026-11-04",
+      "tag": "金融政策"
+    },
     {
       "source": "米BEA",
       "title": "U.S. International Trade in Goods and Services, September 2026",
@@ -71,13 +78,6 @@
       "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk261102a.pdf",
       "date": "2026-11-02",
       "tag": "発言"
-    },
-    {
-      "source": "日本銀行",
-      "title": "経済・物価情勢の展望（10月、全文）",
-      "url": "https://www.boj.or.jp/mopo/outlook/gor2610b.pdf",
-      "date": "2026-11-02",
-      "tag": "見通し"
     },
     {
       "source": "米BEA",
