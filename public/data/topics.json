@@ -1,17 +1,7 @@
 {
-  "generatedAt": "2026-11-06T15:18:37.471Z",
-  "today": "2026-11-06",
+  "generatedAt": "2026-11-09T01:10:14.484Z",
+  "today": "2026-11-09",
   "calendar": [
-    {
-      "date": "2026-11-05",
-      "name": "米新規失業保険申請",
-      "why": "毎週出る雇用の速報"
-    },
-    {
-      "date": "2026-11-06",
-      "name": "米雇用統計",
-      "why": "利下げ観測が動き、ドル円に効く"
-    },
     {
       "date": "2026-11-10",
       "name": "米CPI（消費者物価）",
@@ -46,6 +36,13 @@
   "headlines": [
     {
       "source": "日本銀行",
+      "title": "【講演】植田総裁「日本の経常収支黒字と企業行動の変容」（IMF）",
+      "url": "https://www.boj.or.jp/about/press/koen_2026/ko261107a.htm",
+      "date": "2026-11-06",
+      "tag": "発言"
+    },
+    {
+      "source": "日本銀行",
       "title": "金融政策決定会合議事要旨（9月17、18日開催分）",
       "url": "https://www.boj.or.jp/mopo/mpmsche_minu/minu_2026/g260918.pdf",
       "date": "2026-11-04",
@@ -71,58 +68,44 @@
       "url": "https://www.census.gov/construction/c30/c30index.html",
       "date": "2026-11-02",
       "tag": "住宅"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【記者会見】植田総裁（10月30日分）",
-      "url": "https://www.boj.or.jp/about/press/kaiken_2026/kk261102a.pdf",
-      "date": "2026-11-02",
-      "tag": "発言"
-    },
-    {
-      "source": "米BEA",
-      "title": "GDP (Advance Estimate), 3rd Quarter 2026",
-      "url": "https://www.bea.gov/news/2026/gdp-advance-estimate-3rd-quarter-2026",
-      "date": "2026-10-29",
-      "tag": "GDP"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-11-04",
+      "asOf": "2026-11-05",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7688.62,
-          "changeDay": 1.58,
-          "changeWeek": -0.71
+          "value": 7353.73,
+          "changeDay": -4.36,
+          "changeWeek": -4.75
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 28437.17,
-          "changeDay": 0.91,
-          "changeWeek": -4.62
+          "value": 26629.81,
+          "changeDay": -6.36,
+          "changeWeek": -9.43
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 53356.12,
-          "changeDay": 3.03,
-          "changeWeek": 1.68
+          "value": 51523.06,
+          "changeDay": -3.44,
+          "changeWeek": -1.57
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 25736.51,
-          "changeDay": 1.44,
-          "changeWeek": -3.06
+          "value": 24315,
+          "changeDay": -5.52,
+          "changeWeek": -7.14
         }
       ],
       "vix": {
@@ -132,8 +115,8 @@
         "avg60": 16.45
       },
       "lines": [
-        "米国株は全体が上昇しましたが、ダウ工業株30種の +3.03% に対しナスダック100は +0.91%。値動きの幅が 2.12 ポイント開いています。",
-        "11/5時点のVIXは前日から +69.66% 動いて 28.18。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
+        "米国株は全体が下落しましたが、ダウ工業株30種の -3.44% に対しナスダック100は -6.36%。値動きの幅が 2.92 ポイント開いています。",
+        "VIXは前日から +69.66% 動いて 28.18。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
       ]
     },
     "jp": {
