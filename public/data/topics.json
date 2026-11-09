@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T01:10:14.484Z",
+  "generatedAt": "2026-11-09T17:45:44.739Z",
   "today": "2026-11-09",
   "calendar": [
     {
@@ -34,6 +34,13 @@
     }
   ],
   "headlines": [
+    {
+      "source": "内閣府",
+      "title": "景気動向指数（令和8年9月分速報）",
+      "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
+      "date": "2026-11-09",
+      "tag": "景況"
+    },
     {
       "source": "日本銀行",
       "title": "【講演】植田総裁「日本の経常収支黒字と企業行動の変容」（IMF）",
@@ -120,20 +127,20 @@
       ]
     },
     "jp": {
-      "asOf": "2026-11-06",
+      "asOf": "2026-11-09",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 57434.77,
-          "changeDay": -5.96,
-          "changeWeek": -11.17
+          "value": 58775.5,
+          "changeDay": 2.33,
+          "changeWeek": -7.13
         }
       ],
-      "range52": 37.3,
-      "usdChangeDay": -5.89,
+      "range52": 43,
+      "usdChangeDay": 2.58,
       "lines": [
-        "日経平均は -5.96%、この1週間では -11.17%。過去1年の値幅の中では下から 37% の位置です。"
+        "日経平均は +2.33%、この1週間では -7.13%。過去1年の値幅の中では下から 43% の位置です。"
       ]
     },
     "failed": []
