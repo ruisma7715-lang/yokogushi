@@ -1,12 +1,7 @@
 {
-  "generatedAt": "2026-11-11T15:33:15.108Z",
-  "today": "2026-11-11",
+  "generatedAt": "2026-11-12T02:27:54.443Z",
+  "today": "2026-11-12",
   "calendar": [
-    {
-      "date": "2026-11-10",
-      "name": "米CPI（消費者物価）",
-      "why": "米金利と金の前提が動く"
-    },
     {
       "date": "2026-11-12",
       "name": "米新規失業保険申請",
@@ -51,10 +46,17 @@
   "headlines": [
     {
       "source": "日本銀行",
-      "title": "マネーストック（10月）",
-      "url": "https://www.boj.or.jp/statistics/money/ms/ms2610.pdf",
-      "date": "2026-11-10",
-      "tag": "統計"
+      "title": "【挨拶】浅田審議委員「わが国の経済・物価情勢と金融政策」（長崎）",
+      "url": "https://www.boj.or.jp/about/press/koen_2026/ko261112a.htm",
+      "date": "2026-11-12",
+      "tag": "見通し"
+    },
+    {
+      "source": "日本銀行",
+      "title": "企業物価指数（10月）",
+      "url": "https://www.boj.or.jp/statistics/pi/cgpi_release/cgpi2610.pdf",
+      "date": "2026-11-11",
+      "tag": "物価"
     },
     {
       "source": "内閣府",
@@ -62,13 +64,6 @@
       "url": "https://www5.cao.go.jp/keizai3/watcher_index.html",
       "date": "2026-11-10",
       "tag": "景況"
-    },
-    {
-      "source": "日本銀行",
-      "title": "貸出・預金動向（10月）",
-      "url": "https://www.boj.or.jp/statistics/dl/depo/kashi/kasi2610.pdf",
-      "date": "2026-11-09",
-      "tag": "統計"
     },
     {
       "source": "内閣府",
