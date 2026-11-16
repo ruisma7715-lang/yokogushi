@@ -1,17 +1,7 @@
 {
-  "generatedAt": "2026-11-13T15:38:31.633Z",
-  "today": "2026-11-13",
+  "generatedAt": "2026-11-16T01:20:44.042Z",
+  "today": "2026-11-16",
   "calendar": [
-    {
-      "date": "2026-11-12",
-      "name": "米新規失業保険申請",
-      "why": "毎週出る雇用の速報"
-    },
-    {
-      "date": "2026-11-13",
-      "name": "米PPI（生産者物価）",
-      "why": "CPIの先行指標"
-    },
     {
       "date": "2026-11-17",
       "name": "米小売売上高",
@@ -71,58 +61,44 @@
       "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
       "date": "2026-11-09",
       "tag": "景況"
-    },
-    {
-      "source": "米BEA",
-      "title": "U.S. International Trade in Goods and Services, September 2026",
-      "url": "https://www.bea.gov/news/2026/us-international-trade-goods-and-services-september-2026",
-      "date": "2026-11-04",
-      "tag": "貿易"
-    },
-    {
-      "source": "米Census",
-      "title": "U.S. International Trade in Goods and Services",
-      "url": "https://www.census.gov/foreign-trade/index.html",
-      "date": "2026-11-04",
-      "tag": "貿易"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-11-12",
+      "asOf": "2026-11-13",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7592.4,
-          "changeDay": -0.35,
-          "changeWeek": 3.25
+          "value": 7561.67,
+          "changeDay": -0.4,
+          "changeWeek": 2.51
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 28289.19,
-          "changeDay": -0.3,
-          "changeWeek": 6.23
+          "value": 27943.74,
+          "changeDay": -1.22,
+          "changeWeek": 3.53
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 52297.09,
-          "changeDay": -0.36,
-          "changeWeek": 1.5
+          "value": 52347.55,
+          "changeDay": 0.1,
+          "changeWeek": 2.07
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 25366.09,
-          "changeDay": -0.39,
-          "changeWeek": 4.32
+          "value": 25136.27,
+          "changeDay": -0.91,
+          "changeWeek": 2.27
         }
       ],
       "vix": {
@@ -132,8 +108,8 @@
         "avg60": 16.87
       },
       "lines": [
-        "米国の主要指数はそろって下落しました（-0.39%〜-0.30%）。買われた先が偏っていない一日です。",
-        "VIXは 18.70。60日平均の 16.87 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
+        "ダウ工業株30種が +0.10%、ナスダック100が -1.22%。同じ米国株でも方向が分かれた一日です（旧来型の大型と大型ハイテクの違い）。",
+        "11/12時点のVIXは 18.70。60日平均の 16.87 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
       ]
     },
     "jp": {
