@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-16T17:19:58.746Z",
-  "today": "2026-11-16",
+  "generatedAt": "2026-11-17T04:08:20.359Z",
+  "today": "2026-11-17",
   "calendar": [
     {
       "date": "2026-11-17",
@@ -31,22 +31,27 @@
       "date": "2026-11-25",
       "name": "米新規失業保険申請",
       "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-12-01",
+      "name": "米求人件数（JOLTS）",
+      "why": "労働需給のゆるみ"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "「貸出先別貸出金」（2026年9月）等の公表について",
+      "url": "https://www.boj.or.jp/statistics/outline/notice_2026/not261117a.htm",
+      "date": "2026-11-16",
+      "tag": "統計"
+    },
     {
       "source": "日本銀行",
       "title": "展望レポートのハイライト （2026年10月）",
       "url": "https://www.boj.or.jp/mopo/outlook/highlight/ten202610.htm",
       "date": "2026-11-16",
       "tag": "金融政策"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【講演】高田審議委員「わが国の経済・物価情勢と金融政策：日本のマネー・資本市場転換、山は動くか」（徳島経済同友会）",
-      "url": "https://www.boj.or.jp/about/press/koen_2026/ko261116a.htm",
-      "date": "2026-11-16",
-      "tag": "見通し"
     },
     {
       "source": "内閣府",
