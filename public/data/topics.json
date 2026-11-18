@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-18T03:05:53.349Z",
+  "generatedAt": "2026-11-18T16:40:52.783Z",
   "today": "2026-11-18",
   "calendar": [
     {
@@ -44,6 +44,13 @@
     }
   ],
   "headlines": [
+    {
+      "source": "米Census",
+      "title": "New Residential Construction",
+      "url": "https://www.census.gov/construction/nrc/index.html",
+      "date": "2026-11-18",
+      "tag": "住宅"
+    },
     {
       "source": "米Census",
       "title": "Advance Monthly Sales for Retail and Food Services",
@@ -112,31 +119,31 @@
         }
       ],
       "vix": {
-        "asOf": "2026-11-16",
-        "value": 22.91,
-        "changeDay": 18.7,
-        "avg60": 17.06
+        "asOf": "2026-11-17",
+        "value": 25.46,
+        "changeDay": 11.13,
+        "avg60": 17.22
       },
       "lines": [
         "米国株は全体が下落しましたが、ダウ工業株30種の -1.41% に対しナスダック100は -2.67%。値動きの幅が 1.26 ポイント開いています。",
-        "VIXは前日から +18.70% 動いて 22.91。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
+        "11/17時点のVIXは前日から +11.13% 動いて 25.46。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
       ]
     },
     "jp": {
-      "asOf": "2026-11-17",
+      "asOf": "2026-11-18",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 58860.43,
-          "changeDay": -1.34,
-          "changeWeek": -2.64
+          "value": 59024.28,
+          "changeDay": 0.28,
+          "changeWeek": -3.63
         }
       ],
-      "range52": 43.3,
-      "usdChangeDay": -1.16,
+      "range52": 44,
+      "usdChangeDay": 0.2,
       "lines": [
-        "日経平均は -1.34%、この1週間では -2.64%。過去1年の値幅の中では下から 43% の位置です。"
+        "日経平均は +0.28%、この1週間では -3.63%。過去1年の値幅の中では下から 44% の位置です。"
       ]
     },
     "failed": []
