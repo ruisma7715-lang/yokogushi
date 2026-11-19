@@ -1,17 +1,7 @@
 {
-  "generatedAt": "2026-11-18T16:40:52.783Z",
-  "today": "2026-11-18",
+  "generatedAt": "2026-11-19T02:45:20.682Z",
+  "today": "2026-11-19",
   "calendar": [
-    {
-      "date": "2026-11-17",
-      "name": "米小売売上高",
-      "why": "個人消費の強さ"
-    },
-    {
-      "date": "2026-11-17",
-      "name": "米鉱工業生産",
-      "why": "製造業の体温"
-    },
     {
       "date": "2026-11-19",
       "name": "米新規失業保険申請",
@@ -41,9 +31,35 @@
       "date": "2026-12-01",
       "name": "米求人件数（JOLTS）",
       "why": "労働需給のゆるみ"
+    },
+    {
+      "date": "2026-12-03",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "【概要説明】植田総裁「通貨及び金融の調節に関する報告書」（参議院財政金融委員会）",
+      "url": "https://www.boj.or.jp/mopo/diet/d_state/dst261119a.htm",
+      "date": "2026-11-19",
+      "tag": "発言"
+    },
+    {
+      "source": "内閣府",
+      "title": "機械受注統計調査報告（令和8年9月実績および令和8年10～12月見通し）",
+      "url": "https://www.esri.cao.go.jp/jp/stat/juchu/juchu.html",
+      "date": "2026-11-18",
+      "tag": "設備投資"
+    },
+    {
+      "source": "FRB",
+      "title": "Minutes of the Federal Open Market Committee, October 27-28, 2026",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261118a.htm",
+      "date": "2026-11-18",
+      "tag": "議事要旨"
+    },
     {
       "source": "米Census",
       "title": "New Residential Construction",
@@ -64,57 +80,43 @@
       "url": "https://www.boj.or.jp/statistics/outline/notice_2026/not261117a.htm",
       "date": "2026-11-16",
       "tag": "統計"
-    },
-    {
-      "source": "日本銀行",
-      "title": "展望レポートのハイライト （2026年10月）",
-      "url": "https://www.boj.or.jp/mopo/outlook/highlight/ten202610.htm",
-      "date": "2026-11-16",
-      "tag": "金融政策"
-    },
-    {
-      "source": "内閣府",
-      "title": "景気ウォッチャー調査（令和8年10月調査）",
-      "url": "https://www5.cao.go.jp/keizai3/watcher_index.html",
-      "date": "2026-11-10",
-      "tag": "景況"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-11-16",
+      "asOf": "2026-11-17",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7416.59,
-          "changeDay": -1.92,
-          "changeWeek": -1.77
+          "value": 7340.53,
+          "changeDay": -1.03,
+          "changeWeek": -2.4
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 27197.15,
-          "changeDay": -2.67,
-          "changeWeek": -2.55
+          "value": 27001.78,
+          "changeDay": -0.72,
+          "changeWeek": -2.66
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 51608.17,
-          "changeDay": -1.41,
-          "changeWeek": -1.49
+          "value": 50759.42,
+          "changeDay": -1.64,
+          "changeWeek": -2.82
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 24509.76,
-          "changeDay": -2.49,
+          "value": 24328.38,
+          "changeDay": -0.74,
           "changeWeek": -2.94
         }
       ],
@@ -125,8 +127,8 @@
         "avg60": 17.22
       },
       "lines": [
-        "米国株は全体が下落しましたが、ダウ工業株30種の -1.41% に対しナスダック100は -2.67%。値動きの幅が 1.26 ポイント開いています。",
-        "11/17時点のVIXは前日から +11.13% 動いて 25.46。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
+        "米国株は全体が下落しましたが、ナスダック100の -0.72% に対しダウ工業株30種は -1.64%。値動きの幅が 0.92 ポイント開いています。",
+        "VIXは前日から +11.13% 動いて 25.46。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
       ]
     },
     "jp": {
