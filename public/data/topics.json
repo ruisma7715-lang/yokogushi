@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-19T16:44:00.010Z",
-  "today": "2026-11-19",
+  "generatedAt": "2026-11-20T02:31:52.936Z",
+  "today": "2026-11-20",
   "calendar": [
     {
       "date": "2026-11-19",
@@ -36,9 +36,21 @@
       "date": "2026-12-03",
       "name": "米新規失業保険申請",
       "why": "毎週出る雇用の速報"
+    },
+    {
+      "date": "2026-12-04",
+      "name": "米雇用統計",
+      "why": "利下げ観測が動き、ドル円に効く"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "基準外国為替相場及び裁定外国為替相場（12月分）",
+      "url": "https://www.boj.or.jp/about/services/tame/tame_rate/kijun/kiju2612.htm",
+      "date": "2026-11-20",
+      "tag": "為替"
+    },
     {
       "source": "日本銀行",
       "title": "【概要説明】植田総裁「通貨及び金融の調節に関する報告書」（参議院財政金融委員会）",
@@ -73,13 +85,6 @@
       "url": "https://www.census.gov/retail/index.html",
       "date": "2026-11-17",
       "tag": "消費"
-    },
-    {
-      "source": "日本銀行",
-      "title": "「貸出先別貸出金」（2026年9月）等の公表について",
-      "url": "https://www.boj.or.jp/statistics/outline/notice_2026/not261117a.htm",
-      "date": "2026-11-16",
-      "tag": "統計"
     }
   ],
   "failed": [],
