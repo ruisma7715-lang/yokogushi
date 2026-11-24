@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T05:28:43.917Z",
+  "generatedAt": "2026-11-24T19:01:48.903Z",
   "today": "2026-11-24",
   "calendar": [
     {
@@ -40,18 +40,25 @@
   ],
   "headlines": [
     {
+      "source": "FRB",
+      "title": "Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
+      "date": "2026-11-24",
+      "tag": "金利"
+    },
+    {
+      "source": "内閣府",
+      "title": "月例経済報告（11月）",
+      "url": "https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html",
+      "date": "2026-11-24",
+      "tag": "景況"
+    },
+    {
       "source": "日本銀行",
       "title": "基準外国為替相場及び裁定外国為替相場（12月分）",
       "url": "https://www.boj.or.jp/about/services/tame/tame_rate/kijun/kiju2612.htm",
       "date": "2026-11-20",
       "tag": "為替"
-    },
-    {
-      "source": "日本銀行",
-      "title": "【概要説明】植田総裁「通貨及び金融の調節に関する報告書」（参議院財政金融委員会）",
-      "url": "https://www.boj.or.jp/mopo/diet/d_state/dst261119a.htm",
-      "date": "2026-11-19",
-      "tag": "発言"
     },
     {
       "source": "内閣府",
@@ -73,13 +80,6 @@
       "url": "https://www.census.gov/construction/nrc/index.html",
       "date": "2026-11-18",
       "tag": "住宅"
-    },
-    {
-      "source": "米Census",
-      "title": "Advance Monthly Sales for Retail and Food Services",
-      "url": "https://www.census.gov/retail/index.html",
-      "date": "2026-11-17",
-      "tag": "消費"
     }
   ],
   "failed": [],
@@ -121,14 +121,14 @@
         }
       ],
       "vix": {
-        "asOf": "2026-11-20",
-        "value": 35.89,
-        "changeDay": 26.2,
-        "avg60": 17.97
+        "asOf": "2026-11-23",
+        "value": 26.62,
+        "changeDay": -25.83,
+        "avg60": 18.17
       },
       "lines": [
         "米国の主要指数はそろって下落しました（-2.25%〜-2.02%）。買われた先が偏っていない一日です。",
-        "11/20時点のVIXは前日から +26.20% 動いて 35.89。株式市場が見込む先行きの振れ幅の見積もりが広がりました。"
+        "11/23時点のVIXは前日から -25.83% 動いて 26.62。株式市場が見込む先行きの振れ幅の見積もりが縮みました。"
       ]
     },
     "jp": {
