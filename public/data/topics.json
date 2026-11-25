@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T04:31:47.908Z",
+  "generatedAt": "2026-11-25T18:08:16.051Z",
   "today": "2026-11-25",
   "calendar": [
     {
@@ -40,6 +40,27 @@
   ],
   "headlines": [
     {
+      "source": "米BEA",
+      "title": "GDP, (Second Estimate) and Corporate Profits, 3rd Quarter 2026",
+      "url": "https://www.bea.gov/news/2026/gdp-second-estimate-and-corporate-profits-3rd-quarter-2026",
+      "date": "2026-11-25",
+      "tag": "GDP"
+    },
+    {
+      "source": "米BEA",
+      "title": "Personal Income and Outlays, October 2026",
+      "url": "https://www.bea.gov/news/2026/personal-income-and-outlays-october-2026",
+      "date": "2026-11-25",
+      "tag": "消費"
+    },
+    {
+      "source": "日本銀行",
+      "title": "消費者物価のコア指標",
+      "url": "https://www.boj.or.jp/research/research_data/cpi/index.htm",
+      "date": "2026-11-25",
+      "tag": "物価"
+    },
+    {
       "source": "日本銀行",
       "title": "貸出約定平均金利（9月）",
       "url": "https://www.boj.or.jp/statistics/dl/loan/yaku/yaku2609.pdf",
@@ -59,94 +80,72 @@
       "url": "https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html",
       "date": "2026-11-24",
       "tag": "景況"
-    },
-    {
-      "source": "日本銀行",
-      "title": "基準外国為替相場及び裁定外国為替相場（12月分）",
-      "url": "https://www.boj.or.jp/about/services/tame/tame_rate/kijun/kiju2612.htm",
-      "date": "2026-11-20",
-      "tag": "為替"
-    },
-    {
-      "source": "内閣府",
-      "title": "機械受注統計調査報告（令和8年9月実績および令和8年10～12月見通し）",
-      "url": "https://www.esri.cao.go.jp/jp/stat/juchu/juchu.html",
-      "date": "2026-11-18",
-      "tag": "設備投資"
-    },
-    {
-      "source": "FRB",
-      "title": "Minutes of the Federal Open Market Committee, October 27-28, 2026",
-      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261118a.htm",
-      "date": "2026-11-18",
-      "tag": "議事要旨"
     }
   ],
   "failed": [],
   "market": {
     "us": {
-      "asOf": "2026-11-19",
+      "asOf": "2026-11-24",
       "indices": [
         {
           "id": "sp500",
           "name": "S&P 500",
           "note": "大型500社",
-          "value": 7175.83,
-          "changeDay": -2.02,
-          "changeWeek": -5.49
+          "value": 7201.09,
+          "changeDay": -0.5,
+          "changeWeek": -1.9
         },
         {
           "id": "ndx",
           "name": "ナスダック100",
           "note": "大型ハイテク",
-          "value": 26517.05,
-          "changeDay": -2.21,
-          "changeWeek": -6.26
+          "value": 26214.17,
+          "changeDay": -1.99,
+          "changeWeek": -2.92
         },
         {
           "id": "dow",
           "name": "ダウ工業株30種",
           "note": "旧来型の大型",
-          "value": 49097.06,
-          "changeDay": -2.19,
-          "changeWeek": -6.12
+          "value": 50018.7,
+          "changeDay": 0.85,
+          "changeWeek": -1.46
         },
         {
           "id": "comp",
           "name": "ナスダック総合",
           "note": "ハイテク全体",
-          "value": 23879.2,
-          "changeDay": -2.25,
-          "changeWeek": -5.86
+          "value": 23733.54,
+          "changeDay": -1.48,
+          "changeWeek": -2.45
         }
       ],
       "vix": {
-        "asOf": "2026-11-23",
-        "value": 26.62,
-        "changeDay": -25.83,
-        "avg60": 18.17
+        "asOf": "2026-11-24",
+        "value": 26.36,
+        "changeDay": -0.98,
+        "avg60": 18.33
       },
       "lines": [
-        "米国の主要指数はそろって下落しました（-2.25%〜-2.02%）。買われた先が偏っていない一日です。",
-        "11/23時点のVIXは前日から -25.83% 動いて 26.62。株式市場が見込む先行きの振れ幅の見積もりが縮みました。"
+        "ダウ工業株30種が +0.85%、ナスダック100が -1.99%。同じ米国株でも方向が分かれた一日です（旧来型の大型と大型ハイテクの違い）。",
+        "VIXは 26.36。60日平均の 18.33 を上回っており、株式市場が見込む先行きの振れ幅は平常より大きめです。"
       ]
     },
     "jp": {
-      "asOf": "2026-11-20",
+      "asOf": "2026-11-25",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 56436.65,
-          "changeDay": -5.06,
-          "changeWeek": -7.7
+          "value": 57011.62,
+          "changeDay": -2.78,
+          "changeWeek": -3.14
         }
       ],
-      "range52": 33.1,
-      "usdChangeDay": -4.26,
+      "range52": 35.6,
+      "usdChangeDay": -2.94,
       "lines": [
-        "日経平均は -5.06%、この1週間では -7.70%。過去1年の値幅の中では下から 33% の位置です。",
-        "ドル建てでは -4.26%。円高のぶん、海外から見た日本株の動きは円建てより大きくなっています。"
+        "日経平均は -2.78%、この1週間では -3.14%。過去1年の値幅の中では下から 36% の位置です。"
       ]
     },
     "failed": []
