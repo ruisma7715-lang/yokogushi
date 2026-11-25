@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-24T19:01:48.903Z",
-  "today": "2026-11-24",
+  "generatedAt": "2026-11-25T04:31:47.908Z",
+  "today": "2026-11-25",
   "calendar": [
     {
       "date": "2026-11-24",
@@ -40,6 +40,13 @@
   ],
   "headlines": [
     {
+      "source": "日本銀行",
+      "title": "貸出約定平均金利（9月）",
+      "url": "https://www.boj.or.jp/statistics/dl/loan/yaku/yaku2609.pdf",
+      "date": "2026-11-24",
+      "tag": "統計"
+    },
+    {
       "source": "FRB",
       "title": "Minutes of the Board's discount rate meetings on October 19 and October 28, 2026",
       "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
@@ -73,13 +80,6 @@
       "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261118a.htm",
       "date": "2026-11-18",
       "tag": "議事要旨"
-    },
-    {
-      "source": "米Census",
-      "title": "New Residential Construction",
-      "url": "https://www.census.gov/construction/nrc/index.html",
-      "date": "2026-11-18",
-      "tag": "住宅"
     }
   ],
   "failed": [],
