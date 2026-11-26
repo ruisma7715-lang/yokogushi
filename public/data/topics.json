@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T03:44:15.382Z",
+  "generatedAt": "2026-11-26T17:51:42.211Z",
   "today": "2026-11-26",
   "calendar": [
     {
@@ -45,6 +45,13 @@
   ],
   "headlines": [
     {
+      "source": "内閣府",
+      "title": "景気動向指数（令和8年9月分速報からの改訂状況）",
+      "url": "https://www.esri.cao.go.jp/jp/stat/di/di.html",
+      "date": "2026-11-26",
+      "tag": "景況"
+    },
+    {
       "source": "日本銀行",
       "title": "【挨拶】田村審議委員「わが国の経済・物価情勢と金融政策」（山梨）",
       "url": "https://www.boj.or.jp/about/press/koen_2026/ko261126a.htm",
@@ -78,13 +85,6 @@
       "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261124a.htm",
       "date": "2026-11-24",
       "tag": "金利"
-    },
-    {
-      "source": "内閣府",
-      "title": "月例経済報告（11月）",
-      "url": "https://www5.cao.go.jp/keizai3/getsurei/getsurei-index.html",
-      "date": "2026-11-24",
-      "tag": "景況"
     }
   ],
   "failed": [],
@@ -137,20 +137,20 @@
       ]
     },
     "jp": {
-      "asOf": "2026-11-25",
+      "asOf": "2026-11-26",
       "indices": [
         {
           "id": "nikkei",
           "name": "日経平均",
-          "value": 57011.62,
-          "changeDay": -2.78,
-          "changeWeek": -3.14
+          "value": 57499.16,
+          "changeDay": 0.86,
+          "changeWeek": -2.58
         }
       ],
-      "range52": 35.6,
-      "usdChangeDay": -2.94,
+      "range52": 37.6,
+      "usdChangeDay": 0.89,
       "lines": [
-        "日経平均は -2.78%、この1週間では -3.14%。過去1年の値幅の中では下から 36% の位置です。"
+        "日経平均は +0.86%、この1週間では -2.58%。過去1年の値幅の中では下から 38% の位置です。"
       ]
     },
     "failed": []
