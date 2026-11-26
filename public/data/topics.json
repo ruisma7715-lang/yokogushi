@@ -1,12 +1,7 @@
 {
-  "generatedAt": "2026-11-25T18:08:16.051Z",
-  "today": "2026-11-25",
+  "generatedAt": "2026-11-26T03:44:15.382Z",
+  "today": "2026-11-26",
   "calendar": [
-    {
-      "date": "2026-11-24",
-      "name": "米鉱工業生産",
-      "why": "製造業の体温"
-    },
     {
       "date": "2026-11-25",
       "name": "米GDP",
@@ -36,9 +31,26 @@
       "date": "2026-12-04",
       "name": "米雇用統計",
       "why": "利下げ観測が動き、ドル円に効く"
+    },
+    {
+      "date": "2026-12-10",
+      "name": "米CPI（消費者物価）",
+      "why": "米金利と金の前提が動く"
+    },
+    {
+      "date": "2026-12-10",
+      "name": "米新規失業保険申請",
+      "why": "毎週出る雇用の速報"
     }
   ],
   "headlines": [
+    {
+      "source": "日本銀行",
+      "title": "【挨拶】田村審議委員「わが国の経済・物価情勢と金融政策」（山梨）",
+      "url": "https://www.boj.or.jp/about/press/koen_2026/ko261126a.htm",
+      "date": "2026-11-26",
+      "tag": "見通し"
+    },
     {
       "source": "米BEA",
       "title": "GDP, (Second Estimate) and Corporate Profits, 3rd Quarter 2026",
@@ -59,13 +71,6 @@
       "url": "https://www.boj.or.jp/research/research_data/cpi/index.htm",
       "date": "2026-11-25",
       "tag": "物価"
-    },
-    {
-      "source": "日本銀行",
-      "title": "貸出約定平均金利（9月）",
-      "url": "https://www.boj.or.jp/statistics/dl/loan/yaku/yaku2609.pdf",
-      "date": "2026-11-24",
-      "tag": "統計"
     },
     {
       "source": "FRB",
